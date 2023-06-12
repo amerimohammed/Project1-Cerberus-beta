@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,4 +25,7 @@ public class Subject {
     private Long subjectId;
 
     private String subjectName;
+
+    @ManyToMany
+    private List<Teacher> teachers = new ArrayList<>();
 }
