@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:fragment="baseheader(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title th:replace="${title}"></title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+</head>
+<body>
+<div th:fragment="navbar">
+    <div class="nav justify-content-center">
+        <div class="nav-item">
+            <a class="nav-link" th:href="@{/subject/all}">Subjects</a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" th:href="@{/cohort/all}">Cohorts</a>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="footer">
+    <hr>
+    <footer><p class="text-center text text-muted">Copyright Cerberus &copy;2023</p></footer>
+</div>
+
+<div th:fragment="bottomScripts">
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</div>
+</body>
+</html>
