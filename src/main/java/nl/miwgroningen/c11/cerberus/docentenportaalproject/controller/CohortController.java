@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO Validation of dates (startDate before endDate)
+//TODO Editing cohort form only adds students
+//TODO No date input leads to crashes
 
 @Controller
 @RequiredArgsConstructor
@@ -74,7 +76,7 @@ public class CohortController {
     private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
 
         if(!result.hasErrors()) {
-            //Save cohort first
+            //Save cohort
             cohortRepository.save(cohortToBeSaved);
 
             List<Student> students = cohortToBeSaved.getStudents();
