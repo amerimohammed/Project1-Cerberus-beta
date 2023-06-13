@@ -2,7 +2,6 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,14 +22,14 @@ public class StudentController {
     private String showStudentOverview(Model model) {
         model.addAttribute("allStudents", studentRepository.findAll());
 
-        return "studentOverview";
+        return "Student/studentOverview";
     }
 
     @GetMapping("/student/new")
     private String showCreateStudentForm(Model model) {
-        model.addAttribute("subject", new Subject());
+        model.addAttribute("student", new Student());
 
-        return "createStudentForm";
+        return "Student/createStudentForm";
     }
 
     @GetMapping("/student/edit/{studentId}")
@@ -39,7 +38,7 @@ public class StudentController {
 
         if (optionalStudent.isPresent()) {
             model.addAttribute("student", optionalStudent.get());
-            return "createStudentForm";
+            return "Student/createStudentForm";
         }
 
         return "redirect:/student/all";
