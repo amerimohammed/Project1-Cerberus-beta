@@ -14,7 +14,7 @@
                     <th scope="col" th:text="${cohort.cohortName}"></th>
                 </tr>
             </thead>
-            <tobdy>
+            <tbody>
                 <tr>
                     <td>Startdatum: &nbsp&nbsp&nbsp<span th:text="${cohort.displayStartDate()}"></span></td>
                 </tr>
@@ -35,9 +35,11 @@
                     <td>
                         <div th:replace="fragments/buttons
                         :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                        <div th:replace="fragments/buttons
+                        :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
                     </td>
                 </tr>
-            </tobdy>
+            </tbody>
         </table>
     </div>
     <a th:href="@{/cohort/new}" class="btn btn-primary">Add Cohort</a>

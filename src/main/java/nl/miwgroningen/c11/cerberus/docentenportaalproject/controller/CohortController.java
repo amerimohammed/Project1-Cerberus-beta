@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,6 +81,26 @@ public class CohortController {
                 student.setCohort(cohortToBeSaved);
                 studentRepository.save(student);
             }
+        }
+
+        return "redirect:/cohort/all";
+    }
+
+    @GetMapping("cohort/delete/{cohortId}")
+    private String deleteCohort(@PathVariable("cohortId") Long cohortId) {
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+
+        if(optionalCohort.isPresent()) {
+            Cohort cohort = optionalCohort.get();
+
+            //First, remove the cohort in question from all students
+            for (Student student : cohort.getStudents()) {
+                student.setCohort(null);
+                studentRepository.save(student);
+            }
+
+            //Then, remove cohort
+            cohortRepository.delete(optionalCohort.get());
         }
 
         return "redirect:/cohort/all";
