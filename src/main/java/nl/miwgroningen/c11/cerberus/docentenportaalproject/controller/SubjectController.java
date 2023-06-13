@@ -29,12 +29,13 @@ public class SubjectController {
 
     @GetMapping("/subject/new")
     private String showCreateSubjectForm(Model model) {
+        model.addAttribute("allTeachers", teacherRepository.findAll());
         model.addAttribute("subject", new Subject());
 
         return "Subject/createSubjectForm";
     }
 
-    @GetMapping("/edit/{subjectId}")
+    @GetMapping("subject/edit/{subjectId}")
     private String showEditSubjectForm(@PathVariable("subjectId") Long subjectId, Model model) {
         Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
 
@@ -48,7 +49,7 @@ public class SubjectController {
         return "redirect:/subject/all";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/subject/new")
     private String saveOrUpdateStudent(@ModelAttribute("subject") Subject subjectToBeSaved, BindingResult result) {
 
         if (!result.hasErrors()) {
@@ -58,7 +59,7 @@ public class SubjectController {
         return "redirect:/subject/all";
     }
 
-    @GetMapping("/delete/{subjectId}")
+    @GetMapping("subject/delete/{subjectId}")
     private String deleteSubject(@PathVariable("subjectId") Long subjectId) {
         Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
 

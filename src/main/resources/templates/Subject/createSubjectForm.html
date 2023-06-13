@@ -6,6 +6,31 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
+<div class="container main-content">
+    <h1 class="text-center">Create or edit a subject</h1>
+
+    <form th:action="@{/subject/new}" method="post" th:object="${subject}">
+        <input type="hidden" th:field="*{subjectId}">
+        <table>
+            <tr>
+                <th>Subject name</th>
+                <th>Teachers</th>
+            </tr>
+            <tr>
+                <td><input class="form-control" type="text" th:field="*{subjectName}"></td>
+                <td><select class="form-select" th:field="*{teachers}" multiple>
+                    <option th:each="teacher : ${allTeachers}"
+                            th:value="${teacher.teacherId}"
+                            th:text="${teacher.teacherName}">
+                    </option></select>
+                </td>
+            </tr>
+        </table>
+
+        <div th:replace="fragments/buttons :: save"></div>
+    </form>
+</div>
+
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
 </body>
