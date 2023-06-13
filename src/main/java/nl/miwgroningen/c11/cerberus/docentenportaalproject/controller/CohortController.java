@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 //TODO Validation of dates (startDate before endDate)
-//TODO Show only students without cohort
+//TODO Cohort overview template --> students to table (like teacher table)
 
 @Controller
 @RequiredArgsConstructor
@@ -37,7 +39,10 @@ public class CohortController {
     @GetMapping("/cohort/new")
     private String showCreateCohortForm(Model model) {
         model.addAttribute("cohort", new Cohort());
-        model.addAttribute("allStudents", studentRepository.findAll());
+
+        List<Student> allStudents = getListOfStudentsWithoutCohort();
+
+        model.addAttribute("allStudents", allStudents);
 
         return "/cohort/createCohortForm";
     }
@@ -51,8 +56,14 @@ public class CohortController {
         }
 
         Cohort cohort = optionalCohort.get();
+
+        //In the edit form, show a list of students that either have no cohort or are in the current cohort
+        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        List<Student> studentsCurrentCohort = cohort.getStudents();
+        allStudents.addAll(studentsCurrentCohort);
+
         model.addAttribute("cohort", cohort);
-        model.addAttribute("allStudents", studentRepository.findAll());
+        model.addAttribute("allStudents", allStudents);
 
         return "/cohort/createCohortForm";
     }
@@ -66,7 +77,7 @@ public class CohortController {
 
             List<Student> students = cohortToBeSaved.getStudents();
 
-            //Then, set all students to that cohort
+            //Set all selected students to that cohort
             for (Student student : students) {
                 student.setCohort(cohortToBeSaved);
                 studentRepository.save(student);
@@ -74,5 +85,23 @@ public class CohortController {
         }
 
         return "redirect:/cohort/all";
+    }
+
+    private List<Student> getListOfStudentsWithoutCohort() {
+        List<Student> allStudents = studentRepository.findAll();
+        List<Student> studentsToBeRemoved = new ArrayList<>();
+
+        //Done this way to not edit list during iteration
+        for (Student student : allStudents) {
+
+            if(student.getCohort() != null) {
+                studentsToBeRemoved.add(student);
+            }
+
+        }
+
+        allStudents.removeAll(studentsToBeRemoved);
+
+        return allStudents;
     }
 }
