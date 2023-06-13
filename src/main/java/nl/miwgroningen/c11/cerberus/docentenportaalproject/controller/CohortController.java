@@ -10,9 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
+import java.util.Optional;
+
+//TODO Validation of dates (startDate before endDate)
+//TODO Show only students without cohort
 
 @Controller
 @RequiredArgsConstructor
@@ -32,6 +37,21 @@ public class CohortController {
     @GetMapping("/cohort/new")
     private String showCreateCohortForm(Model model) {
         model.addAttribute("cohort", new Cohort());
+        model.addAttribute("allStudents", studentRepository.findAll());
+
+        return "/cohort/createCohortForm";
+    }
+
+    @GetMapping("/cohort/edit/{cohortId}")
+    private String showEditCohortForm(@PathVariable("cohortId") Long cohortId, Model model) {
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+
+        if(optionalCohort.isEmpty()) {
+            return "redirect:/cohort/all";
+        }
+
+        Cohort cohort = optionalCohort.get();
+        model.addAttribute("cohort", cohort);
         model.addAttribute("allStudents", studentRepository.findAll());
 
         return "/cohort/createCohortForm";

@@ -23,6 +23,8 @@
         <ul class="list-group d-inline-block" th:each="student : ${cohort.students}">
             <li class="list-group-item" th:text="${student.studentName}"></li>
         </ul>
+        <br><br>
+        <a th:href="@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})}">Edit Cohort</a>
         <br> <br>
     </div>
 
