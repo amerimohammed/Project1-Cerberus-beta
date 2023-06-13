@@ -8,26 +8,48 @@
 
 <div class="container">
     <div th:each="cohort : ${allCohorts}">
-        <h1 th:text="${cohort.cohortName}"></h1>
-        <hr>
-        <div class="row">
-            <div class="col-2">Startdatum:</div>
-            <div class="col-2" th:text="${cohort.displayStartDate()}"></div>
-        </div>
-        <div class="row">
-            <div class="col-2">Einddatum:</div>
-            <div class="col-2" th:text="${cohort.displayEndDate()}"></div>
-        </div>
-        <br>
-        <h2>Studenten:</h2>
-        <ul class="list-group d-inline-block" th:each="student : ${cohort.students}">
-            <li class="list-group-item" th:text="${student.studentName}"></li>
-        </ul>
-        <br><br>
-        <a th:href="@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})}">Edit Cohort</a>
-        <br> <br>
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" th:text="${cohort.cohortName}"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Programme: &nbsp&nbsp&nbsp&nbsp
+                        <span
+                            th:text="${cohort.programme} ?
+                            ${cohort.programme.programmeName} : 'None'">
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Starting date: &nbsp&nbsp&nbsp<span th:text="${cohort.displayStartDate()}"></span></td>
+                </tr>
+                <tr>
+                    <td>Ending date: &nbsp&nbsp&nbsp&nbsp<span th:text="${cohort.displayEndDate()}"></span></td>
+                </tr>
+                <tr><td></td></tr>
+                <tr>
+                    <th>Students:</th>
+                </tr>
+                <tr th:each="student : ${cohort.students}">
+                    <td th:text="${student.studentName}"></td>
+                </tr>
+                <tr>
+                    <th scope="col">Actions:</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div th:replace="fragments/buttons
+                        :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                        <div th:replace="fragments/buttons
+                        :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
     <a th:href="@{/cohort/new}" class="btn btn-primary">Add Cohort</a>
 </div>
 

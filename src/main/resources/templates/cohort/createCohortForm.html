@@ -8,10 +8,21 @@
 
 <div class="container">
     <form th:action="@{/cohort/new}" method="post" th:object="${cohort}">
+        <input type="hidden" th:field="*{cohortId}">
         <div class="form-group">
             <label for="cohortName">Cohort name</label>
             <input type="text" th:field="*{cohortName}"
                    class="form-control" id="cohortName" placeholder="Enter cohort name">
+        </div>
+        <div class="form-group">
+            <label for="programmeSelect">Programme</label>
+            <select id="programmeSelect" class="form-select" th:field="*{programme}">
+                <option th:value="null">None</option>
+                <option th:each="programme : ${allProgrammes}"
+                        th:value="${programme.programmeId}"
+                        th:text="${programme.programmeName}">
+                </option>
+            </select>
         </div>
         <div class="form-group">
             <label for="startDate">Starting date</label>
@@ -24,7 +35,7 @@
                    class="form-control" id="endDate" placeholder="Ending date">
         </div>
         <div class="form-group">
-            <label for="studentSelect" class="form-label">Add students:</label>
+            <label for="studentSelect" class="form-label">Students:</label>
             <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
                 <option th:each="student : ${allStudents}"
                         th:value="${student.studentId}"
