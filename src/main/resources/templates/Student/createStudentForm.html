@@ -6,8 +6,8 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
-<div>
-  <h1>Create or edit student</h1>
+<div class="container main-content">
+  <h1 class="text-center">Create or edit student</h1>
 
   <form th:action="@{/student/new}" method="post" th:object="${student}">
     <input type="hidden" th:field="*{studentId}">
@@ -17,8 +17,8 @@
         <th>Cohort</th>
       </tr>
       <tr>
-        <td><input type="text" th:field="*{studentName}"></td>
-        <td><select th:field="*{cohort}">
+        <td><input class="form-control" type="text" th:field="*{studentName}"></td>
+        <td><select class="form-select" th:field="*{cohort}">
           <option th:each="cohort : ${allCohorts}"
                   th:value="${cohort.cohortId}"
                   th:text="${cohort.cohortName}">
