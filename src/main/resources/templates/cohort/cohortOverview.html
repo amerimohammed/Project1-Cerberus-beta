@@ -7,6 +7,8 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container">
+    <h1 class="text-center">Cohort Overview</h1>
+    <div th:replace="fragments/buttons :: new(@{/cohort/new})"></div>
     <div th:each="cohort : ${allCohorts}">
         <table class="table table-hover">
             <thead class="table-dark">
@@ -50,10 +52,10 @@
             </tbody>
         </table>
     </div>
-    <a th:href="@{/cohort/new}" class="btn btn-primary">Add Cohort</a>
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
+<div th:replace="fragments/general :: activeScriptCohorts"></div>
 </body>
 </html>
