@@ -59,4 +59,15 @@ public class TeacherController {
 
         return "redirect:/teacher/all";
     }
+
+    @GetMapping("/delete/{teacherId}")
+    private String deleteTeacher(@PathVariable("teacherId") Long teacherId) {
+        Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+
+        if (optionalTeacher.isPresent()) {
+            teacherRepository.delete(optionalTeacher.get());
+        }
+
+        return "redirect:/teacher/all";
+    }
 }
