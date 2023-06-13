@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Buttons</title>
+</head>
+<body>
+
+<!-- New button fragment-->
+<div th:fragment="new(link)" class="d-flex mb-3 justify-content-end">
+    <a type="button" class="btn btn-outline-success"
+       th:href="${link}"
+    >
+        New +
+    </a>
+</div>
+
+<!-- Edit button fragment-->
+<span th:fragment="edit(link)">
+    <a type="button" class="btn btn-outline-success"
+       th:href="${link}"
+    >
+        <span th:replace="fragments/icons :: editIcon"></span>
+    </a>
+</span>
+
+<!-- Delete button fragment-->
+<span th:fragment="delete(link)">
+    <a type="button" class="btn btn-outline-danger"
+       th:href="${link}"
+    >
+        <span th:replace="fragments/icons :: editIcon"></span>
+    </a>
+</span>
+</body>
+</html>
