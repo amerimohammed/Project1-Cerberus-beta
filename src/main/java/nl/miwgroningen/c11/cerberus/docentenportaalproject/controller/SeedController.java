@@ -1,18 +1,14 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Cohort;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Programme;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.*;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Seed the database with some inital data
@@ -24,6 +20,7 @@ public class SeedController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
+    private final TeacherRepository teacherRepository;
     private final ProgrammeRepository programmeRepository;
 
     @GetMapping("/seed")
@@ -66,9 +63,19 @@ public class SeedController {
         studentRepository.save(vierdeStudent);
         studentRepository.save(vijfdeStudent);
 
+        Teacher teacherOne = new Teacher();
+        teacherOne.setTeacherName("Keenan Mcneil");
+        Teacher teacherTwo = new Teacher();
+        teacherTwo.setTeacherName("Kiara Floyd");
+        teacherRepository.save(teacherOne);
+        teacherRepository.save(teacherTwo);
+
+        List<Teacher> teachersOop = new ArrayList<>();
+        teachersOop.add(teacherOne);
+
         Subject oop = new Subject();
         oop.setSubjectName("OOP");
-        //Add teachers here when teacher repository is made
+        oop.setTeachers(teachersOop);
         subjectRepository.save(oop);
 
         return "redirect:/";
