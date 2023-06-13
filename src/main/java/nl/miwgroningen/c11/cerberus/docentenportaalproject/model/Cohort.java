@@ -34,4 +34,11 @@ public class Cohort {
     @OneToMany(mappedBy = "cohort")
     private List<Student> students = new ArrayList<>();
 
+    public String displayStartDate() {
+        return String.format("%2d - %2d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
+    }
+
+    public String displayEndDate() {
+        return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+    }
 }
