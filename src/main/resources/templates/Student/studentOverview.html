@@ -6,22 +6,27 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
-<div>
-  <h1>All students</h1>
+<div class="container main-content">
+  <h1 class="text-center">All students</h1>
 
-  <table>
+  <div th:replace="fragments/buttons :: new(@{new})"></div>
+  <table class="table table-hover">
     <tr>
-      <th>Student id</th>
-      <th>Name</th>
-      <th>Cohort</th>
+      <th scope="col">Student id</th>
+      <th scope="col">Name</th>
+      <th scope="col">Cohort</th>
+      <th></th>
     </tr>
     <tr th:each="student : ${allStudents}">
-      <td th:text="${student.studentId}"></td>
+      <th scope="col" th:text="${student.studentId}"></th>
       <td th:text="${student.studentName}"></td>
       <td th:text="${student.cohort.cohortName}"></td>
-      <td><a th:href="@{delete/{studentId}(studentId=${student.studentId})}">Delete</a></td>
+      <td class="text-end">
+        <div th:replace="fragments/buttons :: delete(@{delete/{studentId}(studentId=${student.studentId})})"></div>
+      </td>
     </tr>
   </table>
+
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
