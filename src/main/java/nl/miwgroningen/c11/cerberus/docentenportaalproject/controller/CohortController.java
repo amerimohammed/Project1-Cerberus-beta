@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Cohort;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 //TODO Validation of dates (startDate before endDate)
-//TODO Cohort overview template --> students to table (like teacher table)
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +26,7 @@ public class CohortController {
 
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
+    private final ProgrammeRepository programmeRepository;
 
     @GetMapping("/cohort/all")
     private String showAllCohorts(Model model) {
@@ -42,6 +43,7 @@ public class CohortController {
         List<Student> allStudents = getListOfStudentsWithoutCohort();
 
         model.addAttribute("allStudents", allStudents);
+        model.addAttribute("allProgrammes", programmeRepository.findAll());
 
         return "/cohort/createCohortForm";
     }
@@ -63,6 +65,7 @@ public class CohortController {
 
         model.addAttribute("cohort", cohort);
         model.addAttribute("allStudents", allStudents);
+        model.addAttribute("allProgrammes", programmeRepository.findAll());
 
         return "/cohort/createCohortForm";
     }

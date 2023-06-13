@@ -35,6 +35,9 @@ public class Cohort {
     @OneToMany(mappedBy = "cohort", cascade = CascadeType.PERSIST)
     private List<Student> students = new ArrayList<>();
 
+    @ManyToOne
+    private Programme programme;
+
     public String displayStartDate() {
         return String.format("%2d - %2d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }

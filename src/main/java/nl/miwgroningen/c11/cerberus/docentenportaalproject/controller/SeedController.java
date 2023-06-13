@@ -2,9 +2,11 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Cohort;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Programme;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import org.springframework.stereotype.Controller;
@@ -22,9 +24,17 @@ public class SeedController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
+    private final ProgrammeRepository programmeRepository;
 
     @GetMapping("/seed")
     private String seedDatabase() {
+        Programme programme = new Programme();
+        programme.setProgrammeName("Software Engineering");
+        Programme programmeTwo = new Programme();
+        programmeTwo.setProgrammeName("Data-analyse");
+        programmeRepository.save(programme);
+        programmeRepository.save(programmeTwo);
+
         Cohort cohort11 = new Cohort();
         cohort11.setCohortName("Cohort 11");
         cohort11.setStartDate(LocalDate.of(2023, 3, 1));

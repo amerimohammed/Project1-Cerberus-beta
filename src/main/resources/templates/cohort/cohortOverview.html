@@ -16,14 +16,22 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>Startdatum: &nbsp&nbsp&nbsp<span th:text="${cohort.displayStartDate()}"></span></td>
+                    <td>Programme: &nbsp&nbsp&nbsp&nbsp
+                        <span
+                            th:text="${cohort.programme} ?
+                            ${cohort.programme.programmeName} : 'None'">
+                        </span>
+                    </td>
                 </tr>
                 <tr>
-                    <td>Einddatum: &nbsp&nbsp&nbsp&nbsp<span th:text="${cohort.displayEndDate()}"></span></td>
+                    <td>Starting date: &nbsp&nbsp&nbsp<span th:text="${cohort.displayStartDate()}"></span></td>
+                </tr>
+                <tr>
+                    <td>Ending date: &nbsp&nbsp&nbsp&nbsp<span th:text="${cohort.displayEndDate()}"></span></td>
                 </tr>
                 <tr><td></td></tr>
                 <tr>
-                    <th>Studenten:</th>
+                    <th>Students:</th>
                 </tr>
                 <tr th:each="student : ${cohort.students}">
                     <td th:text="${student.studentName}"></td>
