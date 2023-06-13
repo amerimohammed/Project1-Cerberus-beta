@@ -37,21 +37,24 @@ public class SeedController {
         cohortRepository.save(cohort12);
 
         Student eersteStudent = new Student();
-        eersteStudent.setStudentName("Joost Schreuder");
+        eersteStudent.setStudentName("Kees de Vries");
         eersteStudent.setCohort(cohort11);
         Student tweedeStudent = new Student();
-        tweedeStudent.setStudentName("Mohammed Alameri");
+        tweedeStudent.setStudentName("Clara Bakker");
         tweedeStudent.setCohort(cohort11);
         Student derdeStudent = new Student();
-        derdeStudent.setStudentName("Marianne Kooistra");
+        derdeStudent.setStudentName("John Doe");
         derdeStudent.setCohort(cohort11);
         Student vierdeStudent = new Student();
         vierdeStudent.setStudentName("Jane Do");
         vierdeStudent.setCohort(cohort12);
+        Student vijfdeStudent = new Student();
+        vijfdeStudent.setStudentName("Henk Bouwer");
         studentRepository.save(eersteStudent);
         studentRepository.save(tweedeStudent);
         studentRepository.save(derdeStudent);
         studentRepository.save(vierdeStudent);
+        studentRepository.save(vijfdeStudent);
 
         Subject oop = new Subject();
         oop.setSubjectName("OOP");

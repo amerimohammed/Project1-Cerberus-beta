@@ -8,7 +8,7 @@
 
 <div class="container main-content">
     <h1 class="text-center">Teachers Overview</h1>
-
+    <div th:replace="fragments/buttons :: new(@{/teacher/new})"></div>
     <table>
         <tr>
             <th>Teacher id</th>
@@ -18,7 +18,10 @@
         <tr th:each="teacher : ${allTeachers}">
             <td th:text="${teacher.teacherId}"></td>
             <td th:text="${teacher.teacherName}"></td>
-            <td>Details, edit, delete</td>
+            <td>
+                <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.teacherId})})"></div>
+                <div th:replace="fragments/buttons :: delete(link)(@{/teacher/delete/{teacherId}(teacherId=${teacher.teacherId})})"></div>
+            </td>
         </tr>
     </table>
 </div>
