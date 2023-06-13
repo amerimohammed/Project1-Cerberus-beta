@@ -9,16 +9,16 @@
 <div class="container main-content">
     <h1 class="text-center">Teachers Overview</h1>
     <div th:replace="fragments/buttons :: new(@{/teacher/new})"></div>
-    <table>
+    <table class="table table-hover">
         <tr>
-            <th>Teacher id</th>
-            <th>Name</th>
-            <th>Actions</th>
+            <th scope="col">Teacher id</th>
+            <th scope="col">Name</th>
+            <th scope="col" class="text-end">Actions</th>
         </tr>
         <tr th:each="teacher : ${allTeachers}">
-            <td th:text="${teacher.teacherId}"></td>
+            <th scope="row" th:text="${teacher.teacherId}"></th>
             <td th:text="${teacher.teacherName}"></td>
-            <td>
+            <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.teacherId})})"></div>
                 <div th:replace="fragments/buttons :: delete(link)(@{/teacher/delete/{teacherId}(teacherId=${teacher.teacherId})})"></div>
             </td>
