@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Create or edit teacher</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+    <h1 class="text-center">Create or edit teacher</h1>
+
+    <form th:action="@{/teacher}" method="post" th:object="${teacher}">
+        <input type="hidden" th:field="*{teacherId}">
+        <table>
+            <tr>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td><input type="text" th:field="*{teacherName}"></td>
+            </tr>
+        </table>
+
+        <input type="submit" value="Save">
+    </form>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+</body>
+</html>

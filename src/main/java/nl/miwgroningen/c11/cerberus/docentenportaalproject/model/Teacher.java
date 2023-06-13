@@ -23,7 +23,7 @@ public class Teacher {
     @GeneratedValue
     private Long teacherId;
 
-    private String name;
+    private String teacherName;
 
     @ManyToMany
     private List<Subject> subjects = new ArrayList<>();

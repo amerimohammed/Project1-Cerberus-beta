@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Teachers Overview</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+    <h1 class="text-center">Teachers Overview</h1>
+
+    <table>
+        <tr>
+            <th>Teacher id</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+        <tr th:each="teacher : ${allTeachers}">
+            <td th:text="${teacher.teacherId}"></td>
+            <td th:text="${teacher.teacherName}"></td>
+            <td>Details, edit, delete</td>
+        </tr>
+    </table>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+</body>
+</html>

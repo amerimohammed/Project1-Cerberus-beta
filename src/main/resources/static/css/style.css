@@ -1,0 +1,6 @@
+.main-content {
+    /* to push the footer to the bottom of the page */
+    min-height: calc(100vh - 100px);
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
