@@ -19,6 +19,7 @@
       <td th:text="${student.studentId}"></td>
       <td th:text="${student.studentName}"></td>
       <td th:text="${student.cohort.cohortName}"></td>
+      <td><a th:href="@{delete/{studentId}(studentId=${student.studentId})}">Delete</a></td>
     </tr>
   </table>
 </div>
