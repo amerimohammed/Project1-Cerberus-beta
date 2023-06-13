@@ -2,6 +2,7 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 public class StudentController {
+    private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
 
     @GetMapping("/student/all")
@@ -27,6 +29,7 @@ public class StudentController {
 
     @GetMapping("/student/new")
     private String showCreateStudentForm(Model model) {
+        model.addAttribute("allCohorts", cohortRepository.findAll());
         model.addAttribute("student", new Student());
 
         return "Student/createStudentForm";

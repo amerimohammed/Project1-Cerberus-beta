@@ -18,6 +18,7 @@
     <tr th:each="student : ${allStudents}">
       <td th:text="${student.studentId}"></td>
       <td th:text="${student.studentName}"></td>
+      <td th:text="${student.cohort.cohortName}"></td>
     </tr>
   </table>
 </div>

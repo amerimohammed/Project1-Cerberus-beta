@@ -18,6 +18,12 @@
       </tr>
       <tr>
         <td><input type="text" th:field="*{studentName}"></td>
+        <td><select th:field="*{cohort}">
+          <option th:each="cohort : ${allCohorts}"
+                  th:value="${cohort.cohortId}"
+                  th:text="${cohort.cohortName}">
+          </option>
+        </select></td>
       </tr>
     </table>
 
