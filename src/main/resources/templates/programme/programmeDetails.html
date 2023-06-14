@@ -20,7 +20,6 @@
             <strong th:text="${programme.programmeName}"></strong>
         </div>
     </div>
-    <div th:replace="fragments/buttons :: new(@{/subject/new/{programmeId}(programmeId=${programme.programmeId})})"></div>
     <table class="table table-hover">
         <thead>
         <tr>
