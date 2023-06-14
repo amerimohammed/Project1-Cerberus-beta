@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Cohort {
+public class Cohort implements Comparable<Cohort> {
 
     @Id
     @GeneratedValue
@@ -44,6 +44,11 @@ public class Cohort {
 
     public String displayEndDate() {
         return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+    }
+
+    @Override
+    public int compareTo(Cohort otherCohort) {
+        return cohortName.compareTo(otherCohort.cohortName);
     }
 
     public int getStudentCount() {

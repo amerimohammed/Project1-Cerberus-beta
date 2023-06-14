@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +32,10 @@ public class CohortController {
 
     @GetMapping("/cohort/all")
     private String showAllCohorts(Model model) {
+        List<Cohort> allCohorts = cohortRepository.findAll();
+        Collections.sort(allCohorts);
 
-        model.addAttribute("allCohorts", cohortRepository.findAll());
+        model.addAttribute("allCohorts", allCohorts);
 
         return "/cohort/cohortOverview";
     }
@@ -93,11 +96,9 @@ public class CohortController {
 
         //Done this way to not edit list during iteration
         for (Student student : allStudents) {
-
             if(student.getCohort() != null) {
                 studentsToBeRemoved.add(student);
             }
-
         }
 
         allStudents.removeAll(studentsToBeRemoved);
@@ -121,6 +122,13 @@ public class CohortController {
 
             //Save cohort
             cohortRepository.save(cohortToBeSaved);
+
+            //If cohort has no name, give it a name based on its id
+            //Needs to be here since otherwise cohort has no id
+            if(cohortToBeSaved.getCohortName().equals("")) {
+                cohortToBeSaved.setCohortName("Cohort " + cohortToBeSaved.getCohortId());
+                cohortRepository.save(cohortToBeSaved);
+            }
 
             List<Student> students = cohortToBeSaved.getStudents();
 
