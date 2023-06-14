@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Cohort Overview</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+    <h1 class="text-center">Cohort Overview</h1>
+    <div>
+        <table class="table table-hover">
+            <tr>
+                <th scope="col" th:text="${cohort.cohortName}"></th>
+            </tr>
+            <tbody>
+            <tr>
+                <td>Programme: &nbsp&nbsp&nbsp&nbsp
+                    <span
+                            th:text="${cohort.programme} ?
+                            ${cohort.programme.programmeName} : 'None'">
+                        </span>
+                </td>
+            </tr>
+            <tr>
+                <td>Starting date: &nbsp&nbsp&nbsp<span th:text="${cohort.displayStartDate()}"></span></td>
+            </tr>
+            <tr>
+                <td>Ending date: &nbsp&nbsp&nbsp&nbsp<span th:text="${cohort.displayEndDate()}"></span></td>
+            </tr>
+            <tr><td></td></tr>
+            <tr>
+                <th>Students:</th>
+            </tr>
+            <tr th:each="student : ${cohort.students}">
+                <td th:text="${student.studentName}"></td>
+            </tr>
+            <tr>
+                <th scope="col">Actions:</th>
+            </tr>
+            <tr>
+                <td>
+                    <div th:replace="fragments/buttons
+                        :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                    <div th:replace="fragments/buttons
+                        :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form th:action="@{/cohort/new}" method="post" th:object="${cohort}">
+            <input type="hidden" th:field="*{cohortId}">
+            <input type="hidden" th:field="*{cohortName}">
+            <input type="hidden" th:field="*{programme}">
+            <input type="hidden" th:field="*{startDate}">
+            <input type="hidden" th:field="*{endDate}">
+            <div class="form-group">
+                <label for="studentSelect" class="form-label">Students:</label>
+                <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
+                    <option th:each="student : ${allStudents}"
+                            th:value="${student.studentId}"
+                            th:text="${student.displayNameAndId()}">
+                    </option>
+                </select>
+            </div>
+
+            <div th:replace="fragments/buttons :: save"></div>
+        </form>
+    </div>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+<div th:replace="fragments/general :: activeScriptCohorts"></div>
+</body>
+</html>

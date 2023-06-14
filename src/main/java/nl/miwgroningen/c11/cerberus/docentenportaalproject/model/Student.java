@@ -23,4 +23,8 @@ public class Student {
 
     @ManyToOne
     private Cohort cohort;
+
+    public String displayNameAndId() {
+        return String.format("%d: %s", studentId, studentName);
+    }
 }
