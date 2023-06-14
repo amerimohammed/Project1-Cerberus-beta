@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-//TODO Validation of dates (startDate before endDate)
-
 @Controller
 @RequiredArgsConstructor
 public class CohortController {
@@ -45,9 +43,11 @@ public class CohortController {
         Cohort cohort = getCohortDetails(cohortId);
         if (cohort == null) return "redirect:/cohort/all";
 
-        List<Student> allStudents = getListOfStudentsWithoutOrInCurrentCohort(cohort);
+        List<Student> allStudents = getListOfStudentsWithoutCohort();
         model.addAttribute("allStudents", allStudents);
 
+        long studentId = 0;
+        model.addAttribute("studentId", studentId);
         model.addAttribute("cohort", cohort);
 
         return "/cohort/cohortDetails";
@@ -161,6 +161,29 @@ public class CohortController {
         }
     }
 
+    @GetMapping("cohort/{cohortId}/add/{studentId}")
+    private String addStudentToCohort(@PathVariable("studentId") Long studentId,
+                                      @PathVariable("cohortId") Long cohortId) {
+
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+
+        if(optionalCohort.isEmpty() || optionalStudent.isEmpty()) {
+            return "redirect:/cohort/all";
+        }
+
+        Cohort cohort = optionalCohort.get();
+        Student student = optionalStudent.get();
+
+        cohort.addStudentToCohort(student);
+        cohortRepository.save(cohort);
+
+        student.setCohort(cohort);
+        studentRepository.save(student);
+
+        return "redirect:/cohort/" + cohortId;
+    }
+
     @GetMapping("cohort/delete/{cohortId}")
     private String deleteCohort(@PathVariable("cohortId") Long cohortId) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
@@ -178,6 +201,6 @@ public class CohortController {
             cohortRepository.delete(optionalCohort.get());
         }
 
-        return "redirect:/cohort/all";
+        return "redirect:/cohort/" + cohortId;
     }
 }

@@ -38,6 +38,10 @@ public class Cohort implements Comparable<Cohort> {
     @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
 
+    public void addStudentToCohort(Student student) {
+        students.add(student);
+    }
+
     public String displayStartDate() {
         return String.format("%2d - %2d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }

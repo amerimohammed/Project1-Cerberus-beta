@@ -42,7 +42,16 @@
                 document.getElementById('endDate').min = [[${cohort.startDate}]];
             </script>
         </div>
-        <div th:replace="fragments/cohort :: cohortStudentSelect"></div>
+        <div class="form-group">
+            <label for="studentSelect" class="form-label">Students:</label>
+            <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
+                <option th:value="null" th:text="None"></option>
+                <option th:each="student : ${allStudents}"
+                        th:value="${student.studentId}"
+                        th:text="${student.displayNameAndId()}">
+                </option>
+            </select>
+        </div>
 
         <div th:replace="fragments/buttons :: save"></div>
     </form>
