@@ -34,7 +34,7 @@ public class Cohort {
     @OneToMany(mappedBy = "cohort", cascade = CascadeType.PERSIST)
     private List<Student> students = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
 
     public String displayStartDate() {
