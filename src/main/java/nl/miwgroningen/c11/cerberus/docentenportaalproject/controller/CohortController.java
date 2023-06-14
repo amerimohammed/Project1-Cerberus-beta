@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,11 +71,39 @@ public class CohortController {
         return "/cohort/createCohortForm";
     }
 
+    private List<Student> getListOfStudentsWithoutCohort() {
+        List<Student> allStudents = studentRepository.findAll();
+        List<Student> studentsToBeRemoved = new ArrayList<>();
+
+        //Done this way to not edit list during iteration
+        for (Student student : allStudents) {
+
+            if(student.getCohort() != null) {
+                studentsToBeRemoved.add(student);
+            }
+
+        }
+
+        allStudents.removeAll(studentsToBeRemoved);
+
+        return allStudents;
+    }
+
     @PostMapping("/cohort/new")
     private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
 
         if(!result.hasErrors()) {
-            //Save cohort first
+            removeAllStudentsFromCohort(cohortToBeSaved);
+
+            //Check whether dates are set; if not, set date to today
+            if(cohortToBeSaved.getStartDate() == null) {
+                cohortToBeSaved.setStartDate(LocalDate.now());
+            }
+            if(cohortToBeSaved.getEndDate() == null) {
+                cohortToBeSaved.setEndDate(LocalDate.now());
+            }
+
+            //Save cohort
             cohortRepository.save(cohortToBeSaved);
 
             List<Student> students = cohortToBeSaved.getStudents();
@@ -87,6 +116,22 @@ public class CohortController {
         }
 
         return "redirect:/cohort/all";
+    }
+
+    private void removeAllStudentsFromCohort(Cohort cohortToBeSaved) {
+        //See if there is a cohort with the same id
+        if(cohortToBeSaved.getCohortId() != null) {
+            Optional<Cohort> optionalOldCohort = cohortRepository.findById(cohortToBeSaved.getCohortId());
+
+            //If so, set the cohort of all students in that cohort to null
+            if(optionalOldCohort.isPresent()) {
+                Cohort cohort = optionalOldCohort.get();
+
+                for (Student student : cohort.getStudents()) {
+                    student.setCohort(null);
+                }
+            }
+        }
     }
 
     @GetMapping("cohort/delete/{cohortId}")
@@ -107,23 +152,5 @@ public class CohortController {
         }
 
         return "redirect:/cohort/all";
-    }
-
-    private List<Student> getListOfStudentsWithoutCohort() {
-        List<Student> allStudents = studentRepository.findAll();
-        List<Student> studentsToBeRemoved = new ArrayList<>();
-
-        //Done this way to not edit list during iteration
-        for (Student student : allStudents) {
-
-            if(student.getCohort() != null) {
-                studentsToBeRemoved.add(student);
-            }
-
-        }
-
-        allStudents.removeAll(studentsToBeRemoved);
-
-        return allStudents;
     }
 }

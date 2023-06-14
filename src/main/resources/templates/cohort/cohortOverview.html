@@ -6,7 +6,7 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
-<div class="container">
+<div class="container main-content">
     <h1 class="text-center">Cohort Overview</h1>
     <div th:replace="fragments/buttons :: new(@{/cohort/new})"></div>
     <div th:each="cohort : ${allCohorts}">
