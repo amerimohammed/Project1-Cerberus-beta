@@ -45,9 +45,6 @@ public class CohortController {
 
         List<Student> allStudents = getListOfStudentsWithoutCohort();
         model.addAttribute("allStudents", allStudents);
-
-        long studentId = 0;
-        model.addAttribute("studentId", studentId);
         model.addAttribute("cohort", cohort);
 
         return "/cohort/cohortDetails";
@@ -144,7 +141,7 @@ public class CohortController {
         return "redirect:/cohort/" + cohortId;
     }
 
-    //Finds if there is a cohort with the same id, sets empty the cohort of all students in there
+    //Finds if there is a cohort with the same id, empties the cohort attribute of all students in there
     private void removeAllStudentsFromOldCohort(Cohort cohortToBeSaved) {
         //See if there is a cohort with the same id
         if(cohortToBeSaved.getCohortId() != null) {
