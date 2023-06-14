@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head th:replace="fragments/general :: baseheader(~{:: title})">
     <title>Teachers Overview</title>
 </head>
@@ -10,24 +10,28 @@
     <h1 class="text-center">Teachers Overview</h1>
     <div th:replace="fragments/buttons :: new(@{/teacher/new})"></div>
     <table class="table table-hover">
+        <thead>
         <tr>
             <th scope="col">Teacher id</th>
             <th scope="col">Name</th>
             <th scope="col" class="text-end">Actions</th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="teacher : ${allTeachers}">
             <th scope="row" th:text="${teacher.teacherId}"></th>
             <td th:text="${teacher.teacherName}"></td>
             <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.teacherId})})"></div>
-                <div th:replace="fragments/buttons :: delete(link)(@{/teacher/delete/{teacherId}(teacherId=${teacher.teacherId})})"></div>
+                <div th:replace="fragments/buttons :: delete(@{/teacher/delete/{teacherId}(teacherId=${teacher.teacherId})})"></div>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
-<div th:replace="fragments/general :: activeScriptTeachers"></div>
+<div th:replace="fragments/general :: activeLink('#teachers')"></div>
 </body>
 </html>
