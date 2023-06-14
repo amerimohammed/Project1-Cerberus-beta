@@ -18,14 +18,14 @@
         <h3>Programmes</h3>
         <div class="col-8 ">
             <div class="w-50 p-3 m-3" th:each="programme : ${allProgrammes}">
-                <div class="p-3 my-3 bg-light">
+                <div class="p-3 my-3 bg-light card" >
+                    <a class="stretched-link" th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"></a>
                     <h5 th:text="${programme.programmeName}"></h5>
                     <p>Hier kunnen we een kleine beschrijving of andere informatie kwijt.</p>
-                    <div class="text-end">
-                        <div class="float-end" th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}
-                        (programmeId=${programme.programmeId})})"></div>
-                    </div>
                 </div>
+                <div class="text-end">
+                <div class="float-end" th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}(programmeId=${programme.programmeId})})"></div>
+            </div>
             </div>
         </div>
         <div class="col-4">
