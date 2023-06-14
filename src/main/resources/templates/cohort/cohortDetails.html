@@ -54,15 +54,7 @@
             <input type="hidden" th:field="*{programme}">
             <input type="hidden" th:field="*{startDate}">
             <input type="hidden" th:field="*{endDate}">
-            <div class="form-group">
-                <label for="studentSelect" class="form-label">Students:</label>
-                <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
-                    <option th:each="student : ${allStudents}"
-                            th:value="${student.studentId}"
-                            th:text="${student.displayNameAndId()}">
-                    </option>
-                </select>
-            </div>
+            <div th:replace="fragments/cohort :: cohortStudentSelect"></div>
 
             <div th:replace="fragments/buttons :: save"></div>
         </form>
@@ -71,6 +63,6 @@
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
-<div th:replace="fragments/general :: activeScriptCohorts"></div>
+<div th:replace="fragments/general :: activeLink('#cohorts')"></div>
 </body>
 </html>

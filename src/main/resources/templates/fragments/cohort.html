@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cohort student select</title>
+</head>
+<body>
+
+    <div class="form-group" th:fragment="cohortStudentSelect">
+        <label for="studentSelect" class="form-label">Students:</label>
+        <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
+            <option th:value="null" th:text="None"></option>
+            <option th:each="student : ${allStudents}"
+                    th:value="${student.studentId}"
+                    th:text="${student.displayNameAndId()}">
+            </option>
+        </select>
+    </div>
+
+</body>
+</html>

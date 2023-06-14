@@ -39,19 +39,12 @@ public class CohortController {
 
     @GetMapping("/cohort/{cohortId}")
     private String getCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
-        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+        Cohort cohort = getCohortDetails(cohortId);
+        if (cohort == null) return "redirect:/cohort/all";
 
-        if(optionalCohort.isEmpty()) {
-            return "redirect:/cohort/all";
-        }
-
-        Cohort cohort = optionalCohort.get();
-
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
-        List<Student> studentsCurrentCohort = cohort.getStudents();
-        allStudents.addAll(studentsCurrentCohort);
-
+        List<Student> allStudents = getListOfStudentsWithoutOrInCurrentCohort(cohort);
         model.addAttribute("allStudents", allStudents);
+
         model.addAttribute("cohort", cohort);
 
         return "/cohort/cohortDetails";
@@ -75,24 +68,23 @@ public class CohortController {
 
     @GetMapping("/cohort/edit/{cohortId}")
     private String showEditCohortForm(@PathVariable("cohortId") Long cohortId, Model model) {
-        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
-
-        if(optionalCohort.isEmpty()) {
-            return "redirect:/cohort/all";
-        }
-
-        Cohort cohort = optionalCohort.get();
+        Cohort cohort = getCohortDetails(cohortId);
+        if (cohort == null) return "redirect:/cohort/all";
 
         //In the edit form, show a list of students that either have no cohort or are in the current cohort
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
-        List<Student> studentsCurrentCohort = cohort.getStudents();
-        allStudents.addAll(studentsCurrentCohort);
+        List<Student> allStudents = getListOfStudentsWithoutOrInCurrentCohort(cohort);
 
         model.addAttribute("cohort", cohort);
         model.addAttribute("allStudents", allStudents);
         model.addAttribute("allProgrammes", programmeRepository.findAll());
 
         return "/cohort/createCohortForm";
+    }
+
+    private Cohort getCohortDetails(Long cohortId) {
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+
+        return optionalCohort.orElse(null);
     }
 
     private List<Student> getListOfStudentsWithoutCohort() {
@@ -110,6 +102,14 @@ public class CohortController {
 
         allStudents.removeAll(studentsToBeRemoved);
 
+        return allStudents;
+    }
+
+    //Gets a list of students that either (1) do not have a cohort (2) or are in the cohort that is passed on
+    private List<Student> getListOfStudentsWithoutOrInCurrentCohort(Cohort cohort) {
+        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        List<Student> studentsCurrentCohort = cohort.getStudents();
+        allStudents.addAll(studentsCurrentCohort);
         return allStudents;
     }
 

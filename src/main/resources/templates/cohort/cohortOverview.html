@@ -15,19 +15,16 @@
                 <th scope="col">Programme</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
+                <th scope="col">Aantal Studenten</th>
                 <th scope="col" class="text-end">Actions</th>
             </tr>
             <tr th:each="cohort : ${allCohorts}">
                 <td><a th:href="@{/cohort/{cohortId}(cohortId=${cohort.cohortId})}"
                        th:text="${cohort.cohortName}"></a></td>
-                <td>Programme: &nbsp&nbsp&nbsp&nbsp
-                    <span
-                        th:text="${cohort.programme} ?
-                        ${cohort.programme.programmeName} : 'None'">
-                    </span>
-                </td>
+                <td th:text="${cohort.programme} ? ${cohort.programme.programmeName} : 'None'"></td>
                 <td th:text="${cohort.displayStartDate()}"></td>
                 <td th:text="${cohort.displayEndDate()}"></td>
+                <td th:text="${cohort.getStudentCount()}"></td>
                 <td class="text-end">
                     <div th:replace="fragments/buttons
                     :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>

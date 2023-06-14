@@ -23,6 +23,7 @@ public class Cohort {
     @GeneratedValue
     private Long cohortId;
 
+    @Column(nullable = false)
     private String cohortName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -43,5 +44,9 @@ public class Cohort {
 
     public String displayEndDate() {
         return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+    }
+
+    public int getStudentCount() {
+        return students.size();
     }
 }
