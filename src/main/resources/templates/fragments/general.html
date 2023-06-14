@@ -38,40 +38,16 @@
 </div>
 
 <!-- active navbar link -->
-<div th:fragment="activeScriptSubjects">
-    <script>
+<div th:fragment="activeLink(linkId)">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
         $(document).ready(function () {
             $(".active").removeClass("active");
-            $("#subjects").addClass("active");
+            $([[${linkId}]]).addClass("active");
         });
+        /*]]>*/
     </script>
 </div>
 
-<div th:fragment="activeScriptCohorts">
-    <script>
-        $(document).ready(function () {
-            $(".active").removeClass("active");
-            $("#cohorts").addClass("active");
-        });
-    </script>
-</div>
-
-<div th:fragment="activeScriptTeachers">
-    <script>
-        $(document).ready(function () {
-            $(".active").removeClass("active");
-            $("#teachers").addClass("active");
-        });
-    </script>
-</div>
-
-<div th:fragment="activeScriptStudents">
-    <script>
-        $(document).ready(function () {
-            $(".active").removeClass("active");
-            $("#students").addClass("active");
-        });
-    </script>
-</div>
 </body>
 </html>
