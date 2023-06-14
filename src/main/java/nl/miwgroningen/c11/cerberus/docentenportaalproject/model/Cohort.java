@@ -17,12 +17,13 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Cohort {
+public class Cohort implements Comparable<Cohort> {
 
     @Id
     @GeneratedValue
     private Long cohortId;
 
+    @Column(nullable = false)
     private String cohortName;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -34,7 +35,7 @@ public class Cohort {
     @OneToMany(mappedBy = "cohort", cascade = CascadeType.PERSIST)
     private List<Student> students = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
 
     public String displayStartDate() {
@@ -43,5 +44,14 @@ public class Cohort {
 
     public String displayEndDate() {
         return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+    }
+
+    @Override
+    public int compareTo(Cohort otherCohort) {
+        return cohortName.compareTo(otherCohort.cohortName);
+    }
+
+    public int getStudentCount() {
+        return students.size();
     }
 }

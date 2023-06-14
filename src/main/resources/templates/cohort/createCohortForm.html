@@ -27,22 +27,22 @@
         <div class="form-group">
             <label for="startDate">Starting date</label>
             <input type="date" th:field="*{startDate}"
-                   class="form-control" id="startDate" placeholder="Starting date">
+                   class="form-control" id="startDate" placeholder="Starting date"
+                   onchange="document.getElementById('endDate').min = document.getElementById('startDate').value;">
+            <script th:inline="javascript">
+                document.getElementById('startDate').max = [[${cohort.endDate}]];
+            </script>
         </div>
         <div class="form-group">
             <label for="endDate">Ending date</label>
             <input type="date" th:field="*{endDate}"
-                   class="form-control" id="endDate" placeholder="Ending date">
+                   class="form-control" id="endDate" placeholder="Ending date"
+                   onchange="document.getElementById('startDate').max = document.getElementById('endDate').value;">
+            <script th:inline="javascript">
+                document.getElementById('endDate').min = [[${cohort.startDate}]];
+            </script>
         </div>
-        <div class="form-group">
-            <label for="studentSelect" class="form-label">Students:</label>
-            <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
-                <option th:each="student : ${allStudents}"
-                        th:value="${student.studentId}"
-                        th:text="${student.studentName}">
-                </option>
-            </select>
-        </div>
+        <div th:replace="fragments/cohort :: cohortStudentSelect"></div>
 
         <div th:replace="fragments/buttons :: save"></div>
     </form>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Docenten portaal</title>
+</head>
+<body>
+
+<div class="mt-3 me-3">
+    <div class="nav nav-tabs justify-content-end mt-3 me-3">
+        <div class="nav-item">
+            <a>Logout</a> <!-- this is for layout design purpose, functionality needs to be added later. -->
+        </div>
+    </div>
+</div>
+
+<div class="container main-content">
+    <div class="row">
+        <h3>Programmes</h3>
+        <div class="col-8 ">
+            <div class="w-50 p-3 m-3" th:each="programme : ${allProgrammes}">
+                <div class="p-3 my-3 bg-light">
+                    <h5 th:text="${programme.programmeName}"></h5>
+                    <p>Hier kunnen we een kleine beschrijving of andere informatie kwijt.</p>
+                    <div class="text-end">
+                        <div class="float-end" th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}
+                        (programmeId=${programme.programmeId})})"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="px-3 my-3">
+                <a th:href="@{cohort/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all cohorts</a>
+            </div>
+            <div class="px-3 my-3">
+                <a th:href="@{subject/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all subjects</a>
+            </div>
+            <div class="px-3 my-3">
+                <a th:href="@{student/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all students</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+</body>
+</html>
