@@ -3,10 +3,14 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Programme;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Optional;
 
@@ -19,16 +23,34 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProgrammeController {
     private final ProgrammeRepository programmeRepository;
+    private final SubjectRepository subjectRepository;
 
-    @GetMapping("/home")
-    // TODO: "/home" needs to be just "/" but but subjects/all still has that.
+    @GetMapping({"/home"})
+    //TODO: "/" because it's the homepage.
     private String showHomePage(Model model) {
         model.addAttribute("allProgrammes", programmeRepository.findAll());
 
         return "HomePage";
     }
 
-    // TODO: new and edit?
+    @GetMapping("/programme/new")
+    private String showCreateProgrammeForm(Model model) {
+        model.addAttribute("allSubjects", subjectRepository.findAll());
+        model.addAttribute("programme", new Programme());
+
+        return "programme/createProgrammeForm";
+    }
+    // TODO: edit functionality?
+
+    @PostMapping("/programme/new")
+    private String saveOrUpdateProgramme(@ModelAttribute("programme") Programme programmeToBeSaved, BindingResult result) {
+
+        if (!result.hasErrors()) {
+            programmeRepository.save(programmeToBeSaved);
+        }
+
+        return "redirect:/home";
+    }
 
     @GetMapping("/home/delete/{programmeId}")
     private String deleteProgramme(@PathVariable("programmeId") Long programmeId) {
