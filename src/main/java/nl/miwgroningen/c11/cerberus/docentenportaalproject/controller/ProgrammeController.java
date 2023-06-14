@@ -40,7 +40,20 @@ public class ProgrammeController {
 
         return "programme/createProgrammeForm";
     }
-    // TODO: edit functionality?
+
+    @GetMapping("programme/edit/{programmeId}")
+    private String showEditProgrammeForm(@PathVariable("programmeId") Long programmeId, Model model) {
+        Optional<Programme> optionalProgramme = programmeRepository.findById(programmeId);
+
+        if (optionalProgramme.isPresent()) {
+            model.addAttribute("programme", optionalProgramme.get());
+            model.addAttribute("allSubjects", subjectRepository.findAll());
+
+            return "programme/createProgrammeForm";
+        }
+
+        return "redirect:/home";
+    }
 
     @PostMapping("/programme/new")
     private String saveOrUpdateProgramme(@ModelAttribute("programme") Programme programmeToBeSaved, BindingResult result) {

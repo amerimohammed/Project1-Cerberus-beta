@@ -24,7 +24,8 @@
                     <p>Hier kunnen we een kleine beschrijving of andere informatie kwijt.</p>
                 </div>
                 <div class="text-end">
-                <div class="float-end" th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}(programmeId=${programme.programmeId})})"></div>
+                    <div th:replace="fragments/buttons :: edit(@{programme/edit/{programmeId}(programmeId=${programme.programmeId})})"></div>
+                    <div th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}(programmeId=${programme.programmeId})})"></div>
             </div>
             </div>
             <a type="button" class="btn btn-outline-success" th:href="@{programme/new}">New +</a>
