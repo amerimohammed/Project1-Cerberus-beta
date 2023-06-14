@@ -1,13 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
-<head th:replace="fragments/general :: baseHeader(~{:: title})">
-  <title>programmeDetails</title>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>programmeDetails</title>
 </head>
 <body>
 
 <div th:replace="fragments/general :: navbar"></div>
 
-<div class="container">
+<div class="container main-content">
+    <h1 class="text-center">Programme Details</h1>
+    <div class="row mt-5 mb-5">
+
+        <div class="col border">
+            <span>Programme Id:</span>
+            <strong th:text="${'#'+programme.programmeId}"></strong>
+        </div>
+        <div class="col border">
+            <span>Programme Name:</span>
+            <strong th:text="${programme.programmeName}"></strong>
+        </div>
+    </div>
+    <div th:replace="fragments/buttons :: new(@{/subject/new/{programmeId}(programmeId=${programme.programmeId})})"></div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Subject Id</th>
+            <th scope="col">Subject Name</th>
+            <th scope="col" class="text-end">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subject : ${programme.subjects}">
+            <th scope="row" th:text="${subject.subjectId}"></th>
+            <td th:text="${subject.subjectName}"></td>
+            <td class="text-end">
+                <div th:replace="fragments/buttons :: edit(@{/subject/edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
+                <div th:replace="fragments/buttons :: delete(@{/subject/delete/{subjectId}(subjectId=${subject.subjectId})})"></div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
