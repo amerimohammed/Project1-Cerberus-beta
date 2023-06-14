@@ -35,17 +35,6 @@
             <tr th:each="student : ${cohort.students}">
                 <td th:text="${student.studentName}"></td>
             </tr>
-            <tr>
-                <th scope="col">Actions:</th>
-            </tr>
-            <tr>
-                <td>
-                    <div th:replace="fragments/buttons
-                        :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
-                    <div th:replace="fragments/buttons
-                        :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
-                </td>
-            </tr>
             </tbody>
         </table>
         <div class="form-group">
@@ -58,24 +47,37 @@
                 </option>
             </select>
         </div>
-        <div class="text-end mt-3">
-            <a type="button" class="btn btn-primary" id="addStudent"
-               th:href="@{/cohort/{cohortId}/add/(cohortId=${cohort.cohortId})}"
-            >
-                <span th:replace="fragments/icons :: saveIcon"></span>
-                Add Student
-            </a>
-            <script th:inline="javascript">
-                let originalLink = document.getElementById('addStudent').href;
+        <div>
+            <table class="table table-hover">
+                <tr>
+                    <th scope="col">Actions:</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div th:replace="fragments/buttons
+                        :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                        <div th:replace="fragments/buttons
+                        :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
+                        <a type="button" class="btn btn-primary" id="addStudent"
+                           th:href="@{/cohort/{cohortId}/add/(cohortId=${cohort.cohortId})}"
+                        >
+                            <span th:replace="fragments/icons :: saveIcon"></span>
+                            Add Student
+                        </a>
+                        <script th:inline="javascript">
+                            let originalLink = document.getElementById('addStudent').href;
 
-                document.getElementById('addStudent').href =
-                    originalLink + document.getElementById('studentSelect').value;
+                            document.getElementById('addStudent').href =
+                                originalLink + document.getElementById('studentSelect').value;
 
-                function changeLink() {
-                    document.getElementById('addStudent').href =
-                        originalLink + document.getElementById('studentSelect').value;
-                }
-            </script>
+                            function changeLink() {
+                                document.getElementById('addStudent').href =
+                                    originalLink + document.getElementById('studentSelect').value;
+                            }
+                        </script>
+                    </td>
+                </tr>
+            </table>
         </div>
     </div>
 </div>
