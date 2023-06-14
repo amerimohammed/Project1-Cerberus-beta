@@ -40,7 +40,7 @@ public class CohortController {
 
     @GetMapping("/cohort/{cohortId}")
     private String getCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
-        Cohort cohort = getCohortDetails(cohortId);
+        Cohort cohort = getCohortWithId(cohortId);
         if (cohort == null) return "redirect:/cohort/all";
 
         List<Student> allStudents = getListOfStudentsWithoutCohort();
@@ -68,7 +68,7 @@ public class CohortController {
 
     @GetMapping("/cohort/edit/{cohortId}")
     private String showEditCohortForm(@PathVariable("cohortId") Long cohortId, Model model) {
-        Cohort cohort = getCohortDetails(cohortId);
+        Cohort cohort = getCohortWithId(cohortId);
         if (cohort == null) return "redirect:/cohort/all";
 
         //In the edit form, show a list of students that either have no cohort or are in the current cohort
@@ -81,7 +81,7 @@ public class CohortController {
         return "/cohort/createCohortForm";
     }
 
-    private Cohort getCohortDetails(Long cohortId) {
+    private Cohort getCohortWithId(Long cohortId) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
 
         return optionalCohort.orElse(null);
