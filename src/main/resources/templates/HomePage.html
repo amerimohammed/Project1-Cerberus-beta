@@ -16,10 +16,9 @@
 <div class="container main-content">
     <div class="row">
         <h3>Programmes</h3>
-        <div class="col-8 bg-light">
-<!--        bg-light border to make it easier to see while designing.-->
-            <div class="w-50 " th:each="programme : ${allProgrammes}">
-                <div class="p-3 my-3 border">
+        <div class="col-8 ">
+            <div class="w-50 p-3 m-3" th:each="programme : ${allProgrammes}">
+                <div class="p-3 my-3 bg-light">
                     <h5 th:text="${programme.programmeName}"></h5>
                     <p>Hier kunnen we een kleine beschrijving of andere informatie kwijt.</p>
                     <div class="text-end">
@@ -29,9 +28,19 @@
                 </div>
             </div>
         </div>
-        <div class="col-4 bg-light">
-<!--        bg-light border to make it easier to see while designing.-->
-            <h3>tweede col</h3>
+        <div class="col-4">
+            <div class="px-3 my-3">
+                <a th:href="@{cohort/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all cohorts</a>
+            </div>
+            <div class="px-3 my-3">
+                <a th:href="@{subject/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all subjects</a>
+            </div>
+            <div class="px-3 my-3">
+                <a th:href="@{student/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                    View all students</a>
+            </div>
         </div>
     </div>
 </div>
