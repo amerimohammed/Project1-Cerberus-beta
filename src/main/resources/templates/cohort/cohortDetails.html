@@ -33,7 +33,7 @@
                 <th>Students:</th>
             </tr>
             <tr th:each="student : ${cohort.students}">
-                <td th:text="${student.studentName}"></td>
+                <td th:text="${student.fullName}"></td>
             </tr>
             </tbody>
         </table>
@@ -41,7 +41,7 @@
             <label for="studentSelect" class="form-label">Students:</label>
             <select id="studentSelect" class="form-select" onchange="changeLink()">
                 <option th:each="student : ${allStudents}"
-                        th:value="${student.studentId}"
+                        th:value="${student.userId}"
                         th:text="${student.displayNameAndId()}"
                         >
                 </option>

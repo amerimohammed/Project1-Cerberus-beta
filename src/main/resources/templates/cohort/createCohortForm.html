@@ -47,7 +47,7 @@
             <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
                 <option th:value="null" th:text="None"></option>
                 <option th:each="student : ${allStudents}"
-                        th:value="${student.studentId}"
+                        th:value="${student.userId}"
                         th:text="${student.displayNameAndId()}">
                 </option>
             </select>

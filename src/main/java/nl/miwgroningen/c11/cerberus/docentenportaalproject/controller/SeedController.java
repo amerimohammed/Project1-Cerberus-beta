@@ -126,7 +126,6 @@ public class SeedController {
         for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
             Teacher teacher = new Teacher();
             teacher.setFullName(createFakeName());
-
             teacherRepository.save(teacher);
         }
     }
