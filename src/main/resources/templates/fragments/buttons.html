@@ -40,5 +40,11 @@
          Save
     </button>
 </div>
+
+<div th:fragment="home">
+    <a type="button" class="mx-3" th:href="@{/home}">
+        <span th:replace="fragments/icons :: homeIcon"></span>
+    </a>
+</div>
 </body>
 </html>

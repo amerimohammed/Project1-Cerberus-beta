@@ -27,4 +27,6 @@ public class Programme {
 
     @ManyToMany
     private List<Subject> subjects = new ArrayList<>();
+
+    private String shortDescription;
 }

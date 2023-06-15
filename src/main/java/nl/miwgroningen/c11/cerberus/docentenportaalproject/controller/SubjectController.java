@@ -20,7 +20,7 @@ public class SubjectController {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
 
-    @GetMapping({"/","/subject/all"})
+    @GetMapping("/subject/all")
     private String showSubjectOverview(Model model) {
         model.addAttribute("allSubjects", subjectRepository.findAll());
 
