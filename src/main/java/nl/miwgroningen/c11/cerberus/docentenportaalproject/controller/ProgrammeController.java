@@ -25,8 +25,7 @@ public class ProgrammeController {
     private final ProgrammeRepository programmeRepository;
     private final SubjectRepository subjectRepository;
 
-    @GetMapping({"/home"})
-    //TODO: "/" because it's the homepage.
+    @GetMapping({"/", "/home"})
     private String showHomePage(Model model) {
         model.addAttribute("allProgrammes", programmeRepository.findAll());
 
