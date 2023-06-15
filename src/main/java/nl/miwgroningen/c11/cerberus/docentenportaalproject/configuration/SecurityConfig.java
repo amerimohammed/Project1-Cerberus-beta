@@ -28,7 +28,9 @@ public class SecurityConfig {
         httpSecurity.authorizeRequests(authorize -> authorize
                         .antMatchers("/css/**", "/webjars/**", "/images/**", "/js/**").permitAll()
                         .antMatchers("/").permitAll()
-                        .anyRequest().authenticated()
+                        .antMatchers("/teacher/all").hasAuthority("ADMIN")
+                        .antMatchers("/student/all").hasAuthority("TEACHER")
+                        .anyRequest().permitAll()
                 )
                 .formLogin().and().logout().logoutSuccessUrl("/");
         return httpSecurity.build();
