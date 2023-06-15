@@ -1,7 +1,6 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -16,7 +15,9 @@ import java.util.List;
  */
 
 @Entity
+@Builder
 @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class Cohort implements Comparable<Cohort> {
 
     @Id

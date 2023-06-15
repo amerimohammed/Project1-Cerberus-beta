@@ -84,6 +84,11 @@
 			<artifactId>webjars-locator</artifactId>
 			<version>0.45</version>
 		</dependency>
+		<dependency>
+			<groupId>net.datafaker</groupId>
+			<artifactId>datafaker</artifactId>
+			<version>1.9.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

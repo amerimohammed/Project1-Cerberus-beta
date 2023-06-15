@@ -1,22 +1,33 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import net.datafaker.Faker;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.*;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
- * Seed the database with some inital data
+ * Seed the database with some initial data
  */
 
 @Controller
 @RequiredArgsConstructor
 public class SeedController {
+    private static final int SUBJECT_AMOUNT = 10;
+    private static final int TEACHER_AMOUNT = 5;
+    private static final int PROGRAMME_AMOUNT = 5;
+    private static final int COHORT_AMOUNT = 10;
+    private static final int STUDENT_AMOUNT = 50;
+    private static final int SUBJECTS_IN_PROGRAMME_AMOUNT = 5;
+
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
@@ -25,59 +36,161 @@ public class SeedController {
 
     @GetMapping("/seed")
     private String seedDatabase() {
-        Programme programme = new Programme();
-        programme.setProgrammeName("Software Engineering");
-        Programme programmeTwo = new Programme();
-        programmeTwo.setProgrammeName("Data-analyse");
-        programmeRepository.save(programme);
-        programmeRepository.save(programmeTwo);
+        createSubject(SUBJECT_AMOUNT);
+        createTeacher(TEACHER_AMOUNT);
+        createProgramme(PROGRAMME_AMOUNT);
+        createCohort(COHORT_AMOUNT);
+        createStudent(STUDENT_AMOUNT);
 
-        Cohort cohort11 = new Cohort();
-        cohort11.setCohortName("Cohort 11");
-        cohort11.setStartDate(LocalDate.of(2023, 3, 1));
-        cohort11.setEndDate(LocalDate.of(2023, 11, 20));
-        Cohort cohort12 = new Cohort();
-        cohort12.setCohortName("Cohort 12");
-        cohort12.setStartDate(LocalDate.of(2023, 8, 2));
-        cohort12.setEndDate(LocalDate.of(2024, 2, 15));
-        cohortRepository.save(cohort11);
-        cohortRepository.save(cohort12);
-
-        Student eersteStudent = new Student();
-        eersteStudent.setStudentName("Kees de Vries");
-        eersteStudent.setCohort(cohort11);
-        Student tweedeStudent = new Student();
-        tweedeStudent.setStudentName("Clara Bakker");
-        tweedeStudent.setCohort(cohort11);
-        Student derdeStudent = new Student();
-        derdeStudent.setStudentName("John Doe");
-        derdeStudent.setCohort(cohort11);
-        Student vierdeStudent = new Student();
-        vierdeStudent.setStudentName("Jane Do");
-        vierdeStudent.setCohort(cohort12);
-        Student vijfdeStudent = new Student();
-        vijfdeStudent.setStudentName("Henk Bouwer");
-        studentRepository.save(eersteStudent);
-        studentRepository.save(tweedeStudent);
-        studentRepository.save(derdeStudent);
-        studentRepository.save(vierdeStudent);
-        studentRepository.save(vijfdeStudent);
-
-        Teacher teacherOne = new Teacher();
-        teacherOne.setTeacherName("Keenan Mcneil");
-        Teacher teacherTwo = new Teacher();
-        teacherTwo.setTeacherName("Kiara Floyd");
-        teacherRepository.save(teacherOne);
-        teacherRepository.save(teacherTwo);
-
-        List<Teacher> teachersOop = new ArrayList<>();
-        teachersOop.add(teacherOne);
-
-        Subject oop = new Subject();
-        oop.setSubjectName("OOP");
-        oop.setTeachers(teachersOop);
-        subjectRepository.save(oop);
+        assignSubjectsToProgrammes(SUBJECTS_IN_PROGRAMME_AMOUNT);
+        assignProgrammesToCohorts();
+        assignTeachersToSubjects();
+        assignCohortsToStudents();
 
         return "redirect:/";
+    }
+
+    private void createProgramme(int amount) {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < amount; index++) {
+            Programme programme = new Programme();
+            programme.setProgrammeName(faker.educator().course());
+
+            programmeRepository.save(programme);
+        }
+    }
+
+    //Randomize the subjects of programmes
+    private void assignSubjectsToProgrammes(int subjectAmount) {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<Programme> programmes = programmeRepository.findAll();
+
+        if (subjects.size() < 1) {
+            return;
+        }
+
+        for (Programme programme : programmes) {
+            List<Subject> programmeSubjects = new ArrayList<>();
+
+            for (int subject = 0; subject < subjectAmount; subject++) {
+                int randomSubject = (int) (Math.random() * subjects.size());
+                programmeSubjects.add(subjects.get(randomSubject));
+            }
+            programme.setSubjects(programmeSubjects);
+        }
+    }
+
+    private void createCohort(int amount) {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < amount; index++) {
+            Date startDate = faker.date().past(1000, TimeUnit.DAYS);
+            Date endDate = faker.date().future(1000, TimeUnit.DAYS);
+
+            LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            String cohortName = faker.color().name();
+            cohortName = cohortName.substring(0, 1).toUpperCase() + cohortName.substring(1);
+
+            Cohort cohort = Cohort.builder()
+                    .cohortName(cohortName)
+                    .startDate(startLocalDate)
+                    .endDate(endLocalDate)
+                    .build();
+
+            cohortRepository.save(cohort);
+        }
+    }
+
+    //Randomize the programme of cohorts
+    private void assignProgrammesToCohorts() {
+        List<Cohort> cohorts = cohortRepository.findAll();
+        List<Programme> programmes = programmeRepository.findAll();
+
+        if(programmes.size() < 1) {
+            return;
+        }
+
+        for (Cohort cohort : cohorts) {
+            int randomProgramme = (int) (Math.random() * programmes.size());
+            cohort.setProgramme(programmes.get(randomProgramme));
+            cohortRepository.save(cohort);
+        }
+    }
+
+    private void createTeacher(int amount) {
+        for (int index = 0; index < amount; index++) {
+            Teacher teacher = new Teacher();
+            teacher.setTeacherName(createFakeName());
+
+            teacherRepository.save(teacher);
+        }
+    }
+
+    private void createSubject(int amount) {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < amount; index++) {
+            Subject subject = new Subject();
+            subject.setSubjectName(faker.educator().subjectWithNumber());
+
+            subjectRepository.save(subject);
+        }
+    }
+
+    //Randomize the teachers of subjects
+    private void assignTeachersToSubjects() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<Teacher> allTeachers = teacherRepository.findAll();
+
+        if(allTeachers.size() < 1) {
+            return;
+        }
+
+        for (Subject subject : subjects) {
+            List<Teacher> subjectTeachers = new ArrayList<>();
+
+            int randomTeacher = (int) (Math.random() * allTeachers.size());
+            subjectTeachers.add(allTeachers.get(randomTeacher));
+
+            subject.setTeachers(subjectTeachers);
+
+            subjectRepository.save(subject);
+        }
+    }
+
+    private void createStudent(int amount) {
+        for (int index = 0; index < amount; index++) {
+
+            Student student = new Student();
+            student.setStudentName(createFakeName());
+
+            studentRepository.save(student);
+        }
+    }
+
+    //Randomize the cohorts of students
+    private void assignCohortsToStudents() {
+        List<Cohort> cohorts = cohortRepository.findAll();
+        List<Student> students = studentRepository.findAll();
+
+        if(cohorts.size() < 1) {
+            return;
+        }
+
+        for (Student student : students) {
+            int randomCohort = (int) (Math.random() * cohorts.size());
+            student.setCohort(cohorts.get(randomCohort));
+            studentRepository.save(student);
+        }
+    }
+
+    private String createFakeName() {
+        Faker faker = new Faker();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        return stringBuilder.append(faker.name().firstName()).append(" ").append(faker.name().lastName()).toString();
     }
 }
