@@ -18,12 +18,12 @@
       <th></th>
     </tr>
     <tr th:each="student : ${allStudents}">
-      <th scope="col" th:text="${student.studentId}"></th>
-      <td th:text="${student.studentName}"></td>
+      <th scope="col" th:text="${student.userId}"></th>
+      <td th:text="${student.fullName}"></td>
       <td th:text="${student.cohort} ? ${student.cohort.cohortName} : 'unknown' "></td>
       <td class="text-end">
-        <div th:replace="fragments/buttons :: edit(@{edit/{studentId}(studentId=${student.studentId})})"></div>
-        <div th:replace="fragments/buttons :: delete(@{delete/{studentId}(studentId=${student.studentId})})"></div>
+        <div th:replace="fragments/buttons :: edit(@{edit/{studentId}(studentId=${student.userId})})"></div>
+        <div th:replace="fragments/buttons :: delete(@{delete/{studentId}(studentId=${student.userId})})"></div>
       </td>
     </tr>
   </table>

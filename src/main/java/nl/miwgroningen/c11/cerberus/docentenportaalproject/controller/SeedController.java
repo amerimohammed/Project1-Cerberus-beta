@@ -123,7 +123,7 @@ public class SeedController {
     private void createTeacher(int amount) {
         for (int index = 0; index < amount; index++) {
             Teacher teacher = new Teacher();
-            teacher.setTeacherName(createFakeName());
+            teacher.setFullName(createFakeName());
 
             teacherRepository.save(teacher);
         }
@@ -165,7 +165,7 @@ public class SeedController {
         for (int index = 0; index < amount; index++) {
 
             Student student = new Student();
-            student.setStudentName(createFakeName());
+            student.setFullName(createFakeName());
 
             studentRepository.save(student);
         }

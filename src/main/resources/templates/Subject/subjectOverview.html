@@ -20,7 +20,7 @@
             <th scope="col" th:text="${subject.subjectName}"></th>
             <td>
                 <ul th:each="teacher : ${subject.teachers}">
-                    <li class="list-group-item" th:text="${teacher.teacherName}"></li>
+                    <li class="list-group-item" th:text="${teacher.fullName}"></li>
                 </ul>
             </td>
             <td>

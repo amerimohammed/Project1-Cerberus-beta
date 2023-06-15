@@ -18,13 +18,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Teacher {
-    @Id
-    @GeneratedValue
-    private Long teacherId;
-
-    private String teacherName;
-
+public class Teacher extends User{
     @ManyToMany
     private List<Subject> subjects = new ArrayList<>();
 }

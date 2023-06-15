@@ -47,10 +47,25 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    private String saveOrUpdateStudent(@ModelAttribute("student") Student studentToBeSaved, BindingResult result) {
+    private String saveOrUpdateStudent(@ModelAttribute("student") Student studentToBeSaved, BindingResult result, Model model) {
 
         if (!result.hasErrors()) {
-            studentRepository.save(studentToBeSaved);
+            if (studentToBeSaved.getUserId() == null) {
+                studentToBeSaved.generateUsernameAndPassword();
+                String tempPassword = studentToBeSaved.getPassword();
+                studentToBeSaved.hashPassword();
+                studentRepository.save(studentToBeSaved);
+                model.addAttribute("username", studentToBeSaved.getUsername());
+                model.addAttribute("password", tempPassword);
+                return "Student/studentAccount";
+            } else {
+                Optional<Student> storedStudent = studentRepository.findById(studentToBeSaved.getUserId());
+                if (storedStudent.isPresent()) {
+                    studentToBeSaved.setUsername(storedStudent.get().getUsername());
+                    studentToBeSaved.setPassword(storedStudent.get().getPassword());
+                    studentRepository.save(studentToBeSaved);
+                }
+            }
         }
 
         return "redirect:/student/all";

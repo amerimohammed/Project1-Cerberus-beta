@@ -19,11 +19,11 @@
         </thead>
         <tbody>
         <tr th:each="teacher : ${allTeachers}">
-            <th scope="row" th:text="${teacher.teacherId}"></th>
-            <td th:text="${teacher.teacherName}"></td>
+            <th scope="row" th:text="${teacher.userId}"></th>
+            <td th:text="${teacher.fullName}"></td>
             <td class="text-end">
-                <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.teacherId})})"></div>
-                <div th:replace="fragments/buttons :: delete(@{/teacher/delete/{teacherId}(teacherId=${teacher.teacherId})})"></div>
+                <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.userId})})"></div>
+                <div th:replace="fragments/buttons :: delete(@{/teacher/delete/{teacherId}(teacherId=${teacher.userId})})"></div>
             </td>
         </tr>
         </tbody>

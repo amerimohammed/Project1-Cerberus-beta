@@ -10,10 +10,10 @@
     <h1 class="text-center">Create or edit teacher</h1>
 
     <form th:action="@{/teacher}" method="post" th:object="${teacher}">
-        <input type="hidden" th:field="*{teacherId}">
+        <input type="hidden" th:field="*{userId}">
         <div class="form-group">
             <label for="teacherName">Teacher Name:</label>
-            <input th:field="*{teacherName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">
+            <input th:field="*{fullName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">
         </div>
         <div th:replace="fragments/buttons :: save"></div>
     </form>
