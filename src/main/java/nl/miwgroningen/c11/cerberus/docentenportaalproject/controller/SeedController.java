@@ -36,13 +36,13 @@ public class SeedController {
 
     @GetMapping("/seed")
     private String seedDatabase() {
-        createSubject(SUBJECT_AMOUNT);
-        createTeacher(TEACHER_AMOUNT);
-        createProgramme(PROGRAMME_AMOUNT);
-        createCohort(COHORT_AMOUNT);
-        createStudent(STUDENT_AMOUNT);
+        createSubject();
+        createTeacher();
+        createProgramme();
+        createCohort();
+        createStudent();
 
-        assignSubjectsToProgrammes(SUBJECTS_IN_PROGRAMME_AMOUNT);
+        assignSubjectsToProgrammes();
         assignProgrammesToCohorts();
         assignTeachersToSubjects();
         assignCohortsToStudents();
@@ -50,19 +50,21 @@ public class SeedController {
         return "redirect:/";
     }
 
-    private void createProgramme(int amount) {
+    private void createProgramme() {
         Faker faker = new Faker();
 
-        for (int index = 0; index < amount; index++) {
-            Programme programme = new Programme();
-            programme.setProgrammeName(faker.educator().course());
+        for (int index = 0; index < SeedController.PROGRAMME_AMOUNT; index++) {
+            Programme programme = Programme.builder()
+                    .programmeName(faker.educator().course())
+                    .shortDescription(faker.lorem().paragraph(1))
+                    .build();
 
             programmeRepository.save(programme);
         }
     }
 
     //Randomize the subjects of programmes
-    private void assignSubjectsToProgrammes(int subjectAmount) {
+    private void assignSubjectsToProgrammes() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Programme> programmes = programmeRepository.findAll();
 
@@ -73,7 +75,7 @@ public class SeedController {
         for (Programme programme : programmes) {
             List<Subject> programmeSubjects = new ArrayList<>();
 
-            for (int subject = 0; subject < subjectAmount; subject++) {
+            for (int subject = 0; subject < SeedController.SUBJECTS_IN_PROGRAMME_AMOUNT; subject++) {
                 int randomSubject = (int) (Math.random() * subjects.size());
                 programmeSubjects.add(subjects.get(randomSubject));
             }
@@ -81,10 +83,10 @@ public class SeedController {
         }
     }
 
-    private void createCohort(int amount) {
+    private void createCohort() {
         Faker faker = new Faker();
 
-        for (int index = 0; index < amount; index++) {
+        for (int index = 0; index < SeedController.COHORT_AMOUNT; index++) {
             Date startDate = faker.date().past(1000, TimeUnit.DAYS);
             Date endDate = faker.date().future(1000, TimeUnit.DAYS);
 
@@ -120,8 +122,8 @@ public class SeedController {
         }
     }
 
-    private void createTeacher(int amount) {
-        for (int index = 0; index < amount; index++) {
+    private void createTeacher() {
+        for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
             Teacher teacher = new Teacher();
             teacher.setFullName(createFakeName());
 
@@ -129,10 +131,10 @@ public class SeedController {
         }
     }
 
-    private void createSubject(int amount) {
+    private void createSubject() {
         Faker faker = new Faker();
 
-        for (int index = 0; index < amount; index++) {
+        for (int index = 0; index < SeedController.SUBJECT_AMOUNT; index++) {
             Subject subject = new Subject();
             subject.setSubjectName(faker.educator().subjectWithNumber());
 
@@ -161,8 +163,8 @@ public class SeedController {
         }
     }
 
-    private void createStudent(int amount) {
-        for (int index = 0; index < amount; index++) {
+    private void createStudent() {
+        for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
 
             Student student = new Student();
             student.setFullName(createFakeName());
@@ -189,8 +191,7 @@ public class SeedController {
 
     private String createFakeName() {
         Faker faker = new Faker();
-        StringBuilder stringBuilder = new StringBuilder();
 
-        return stringBuilder.append(faker.name().firstName()).append(" ").append(faker.name().lastName()).toString();
+        return faker.name().firstName() + " " + faker.name().lastName();
     }
 }
