@@ -8,7 +8,7 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1 class="text-center">Programme Details</h1>
+    <h1 class="text-center" th:text="${programme.programmeName}">Programme Details</h1>
     <div class="row mt-5 mb-5">
 
         <div class="col border">
@@ -19,8 +19,13 @@
             <span>Programme Name:</span>
             <strong th:text="${programme.programmeName}"></strong>
         </div>
+        <div class="row">
+            <span>Description:</span>
+            <p th:text="${programme.shortDescription}"></p>
+        </div>
     </div>
     <table class="table table-hover">
+        <h3>Contains the following subjects:</h3>
         <thead>
         <tr>
             <th scope="col">Subject Id</th>

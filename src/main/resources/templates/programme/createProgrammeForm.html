@@ -11,7 +11,7 @@
 
     <form th:action="@{/programme/new}" method="post" th:object="${programme}">
         <input type="hidden" th:field="*{programmeId}">
-        <table>
+        <table class="w-50">
             <tr>
                 <th>Programme name</th>
                 <th>Subjects</th>
@@ -26,6 +26,10 @@
                 </td>
             </tr>
         </table>
+        <div class="w-50 pt-3">
+            <p><strong>Give a short description of the programme:</strong></p>
+            <input class="form-control" type="text" th:field="*{shortDescription}" maxlength="255">
+        </div>
 
         <div th:replace="fragments/buttons :: save"></div>
     </form>
