@@ -27,10 +27,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests(authorize -> authorize
                         .antMatchers("/css/**", "/webjars/**", "/images/**", "/js/**").permitAll()
-                        .antMatchers("/").permitAll()
-                        .antMatchers("/teacher/all").hasAuthority("ADMIN")
-                        .antMatchers("/student/all").hasAuthority("TEACHER")
-                        .anyRequest().permitAll()
+                        .antMatchers("/", "/home", "/programme/view/**").permitAll()
+                        .antMatchers("/teacher/**", "/seed").hasAuthority("ADMIN")
+                        .anyRequest().hasAnyAuthority("ADMIN", "TEACHER")
                 )
                 .formLogin().and().logout().logoutSuccessUrl("/");
         return httpSecurity.build();

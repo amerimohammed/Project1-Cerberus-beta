@@ -12,7 +12,8 @@
         <div class="col-8">
             <div class="w-50 p-3 m-3 row" th:each="programme : ${allProgrammes}">
                 <div class="p-3 my-3 bg-light card col-10">
-                    <a class="stretched-link" th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"></a>
+                    <a class="stretched-link"
+                       th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"></a>
                     <h5 th:text="${programme.programmeName}"></h5>
                     <p th:text="${programme.shortDescription}"></p>
                 </div>
@@ -25,19 +26,23 @@
                     </div>
                 </div>
             </div>
-            <a type="button" class="btn btn-outline-success" th:href="@{programme/new}">New +</a>
+            <a type="button" class="btn btn-outline-success" th:href="@{programme/new}"
+               sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">New +</a>
         </div>
-        <div class="col-4">
+        <div class="col-4"  sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
             <div class="px-3 my-3">
-                <a th:href="@{cohort/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                <a th:href="@{cohort/all}" type="button"
+                   class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
                     View all cohorts</a>
             </div>
             <div class="px-3 my-3">
-                <a th:href="@{subject/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                <a th:href="@{subject/all}" type="button"
+                   class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
                     View all subjects</a>
             </div>
             <div class="px-3 my-3">
-                <a th:href="@{student/all}" type="button" class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
+                <a th:href="@{student/all}" type="button"
+                   class="bg-primary bg-opacity-50 p-3 m-3 text-decoration-none text-black h5">
                     View all students</a>
             </div>
         </div>
