@@ -54,8 +54,10 @@ public class SeedController {
         Faker faker = new Faker();
 
         for (int index = 0; index < amount; index++) {
-            Programme programme = new Programme();
-            programme.setProgrammeName(faker.educator().course());
+            Programme programme = Programme.builder()
+                    .programmeName(faker.educator().course())
+                    .shortDescription(faker.lorem().paragraph(1))
+                    .build();
 
             programmeRepository.save(programme);
         }
