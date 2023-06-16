@@ -2,8 +2,11 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.stereotype.Controller;
@@ -11,9 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Handles all pages of the teacher
@@ -92,8 +93,10 @@ public class TeacherController {
     @GetMapping("/delete/{teacherId}")
     private String deleteTeacher(@PathVariable("teacherId") Long teacherId) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
+        Optional<User> optionalUser = userRepository.findById(teacherId);
 
-        if (optionalTeacher.isPresent()) {
+        if (optionalTeacher.isPresent() && optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
             teacherRepository.delete(optionalTeacher.get());
         }
 

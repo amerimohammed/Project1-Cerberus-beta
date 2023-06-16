@@ -3,10 +3,7 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +26,6 @@ public class Subject {
 
     private int durationWeeks;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.DETACH)
     private List<Teacher> teachers = new ArrayList<>();
 }

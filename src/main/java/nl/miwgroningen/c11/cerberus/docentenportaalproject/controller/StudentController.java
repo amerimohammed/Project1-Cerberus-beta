@@ -2,6 +2,7 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
@@ -77,8 +78,10 @@ public class StudentController {
     @GetMapping("/delete/{studentId}")
     private String deleteStudent(@PathVariable("studentId") Long studentId) {
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
+        Optional<User> optionalUser = userRepository.findById(studentId);
 
-        if (optionalStudent.isPresent()) {
+        if (optionalStudent.isPresent() && optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
             studentRepository.delete(optionalStudent.get());
         }
 
