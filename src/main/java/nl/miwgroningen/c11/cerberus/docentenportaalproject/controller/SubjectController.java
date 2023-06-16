@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -58,11 +59,18 @@ public class SubjectController {
     }
 
     @GetMapping("/delete/{subjectId}")
-    private String deleteSubject(@PathVariable("subjectId") Long subjectId) {
+    private String deleteSubject(@PathVariable("subjectId") Long subjectId, Model model) {
         Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
 
         if (optionalSubject.isPresent()) {
-            subjectRepository.delete(optionalSubject.get());
+            try {
+                subjectRepository.delete(optionalSubject.get());
+            } catch (DataIntegrityViolationException dataIntegrityViolationException) {
+                System.out.println(dataIntegrityViolationException.getMessage());
+                model.addAttribute("errorMessage",
+                        "This Subject can't be deleted due to relation to other entities");
+                return "error";
+            }
         }
 
         return "redirect:/subject/all";
