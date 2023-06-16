@@ -27,6 +27,8 @@ public class SeedController {
     private static final int COHORT_AMOUNT = 10;
     private static final int STUDENT_AMOUNT = 50;
     private static final int SUBJECTS_IN_PROGRAMME_AMOUNT = 5;
+    private static final int SUBJECT_MAX_DURATION = 10;
+    private static final int SUBJECT_MIN_DURATION = 1;
 
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
@@ -138,6 +140,7 @@ public class SeedController {
         for (int index = 0; index < SeedController.SUBJECT_AMOUNT; index++) {
             Subject subject = new Subject();
             subject.setSubjectName(faker.educator().subjectWithNumber());
+            subject.setDurationWeeks((int) ((Math.random() * SUBJECT_MAX_DURATION) + SUBJECT_MIN_DURATION));
 
             subjectRepository.save(subject);
         }
