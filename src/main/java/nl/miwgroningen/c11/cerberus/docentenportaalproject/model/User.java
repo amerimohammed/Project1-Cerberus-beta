@@ -2,6 +2,7 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -69,11 +70,27 @@ public class User implements UserDetails {
         return enabled;
     }
 
-    public void generateUsernameAndPassword() {
+    public void generateUsernameAndPassword(UserRepository userRepository) {
         password = new Random().ints(10, 33, 122)
                 .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
 
-        username = this.fullName.substring(0, fullName.indexOf(' ')).toLowerCase() + password;
+        String[] firstNameLastName = fullName.split(" ");
+        username = String.valueOf(firstNameLastName[0].charAt(0));
+        if(firstNameLastName.length > 1){
+            username = username + "." + firstNameLastName[1];
+        }
+        username = username.toLowerCase();
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        Integer counter = 2;
+        StringBuilder usernameBuilder = new StringBuilder(username + "." + counter);
+        while (optionalUser.isPresent()) {
+            username = usernameBuilder.toString();
+            optionalUser = userRepository.findByUsername(username);
+            counter++;
+            usernameBuilder.deleteCharAt(usernameBuilder.length() - 1).append(counter);
+        }
     }
 
     public void hashPassword() {

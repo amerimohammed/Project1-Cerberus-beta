@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class StudentController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/all")
     private String showStudentOverview(Model model) {
@@ -51,7 +53,7 @@ public class StudentController {
 
         if (!result.hasErrors()) {
             if (studentToBeSaved.getUserId() == null) {
-                studentToBeSaved.generateUsernameAndPassword();
+                studentToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = studentToBeSaved.getPassword();
                 studentToBeSaved.hashPassword();
                 studentRepository.save(studentToBeSaved);

@@ -5,6 +5,7 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ public class TeacherController {
 
     private final TeacherRepository teacherRepository;
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
     @GetMapping({"", "/all"})
     private String showTeacherOverview(Model model) {
@@ -59,7 +61,7 @@ public class TeacherController {
 
         if (!result.hasErrors()) {
             if (teacherToBeSaved.getUserId() == null) {
-                teacherToBeSaved.generateUsernameAndPassword();
+                teacherToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = teacherToBeSaved.getPassword();
                 teacherToBeSaved.hashPassword();
                 Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
