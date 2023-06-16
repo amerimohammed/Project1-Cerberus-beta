@@ -9,10 +9,7 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRep
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,13 +19,13 @@ import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/cohort")
 public class CohortController {
-
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final ProgrammeRepository programmeRepository;
 
-    @GetMapping("/cohort/all")
+    @GetMapping("/all")
     private String showAllCohorts(Model model) {
         List<Cohort> allCohorts = cohortRepository.findAll();
         Collections.sort(allCohorts);
@@ -38,7 +35,7 @@ public class CohortController {
         return "/cohort/cohortOverview";
     }
 
-    @GetMapping("/cohort/{cohortId}")
+    @GetMapping("/{cohortId}")
     private String getCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
         Cohort cohort = getCohortWithId(cohortId);
         if (cohort == null) return "redirect:/cohort/all";
@@ -50,7 +47,7 @@ public class CohortController {
         return "/cohort/cohortDetails";
     }
 
-    @GetMapping("/cohort/new")
+    @GetMapping("/new")
     private String showCreateCohortForm(Model model) {
         //New cohort, but with both dates set to avoid a NullPointerException
         Cohort newCohort = new Cohort();
@@ -66,7 +63,7 @@ public class CohortController {
         return "/cohort/createCohortForm";
     }
 
-    @GetMapping("/cohort/edit/{cohortId}")
+    @GetMapping("/edit/{cohortId}")
     private String showEditCohortForm(@PathVariable("cohortId") Long cohortId, Model model) {
         Cohort cohort = getCohortWithId(cohortId);
         if (cohort == null) return "redirect:/cohort/all";
@@ -108,10 +105,11 @@ public class CohortController {
         List<Student> allStudents = getListOfStudentsWithoutCohort();
         List<Student> studentsCurrentCohort = cohort.getStudents();
         allStudents.addAll(studentsCurrentCohort);
+
         return allStudents;
     }
 
-    @PostMapping("/cohort/new")
+    @PostMapping("/new")
     private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
 
         if(!result.hasErrors()) {
@@ -158,7 +156,7 @@ public class CohortController {
         }
     }
 
-    @GetMapping("cohort/{cohortId}/add/{studentId}")
+    @GetMapping("/{cohortId}/add/{studentId}")
     private String addStudentToCohort(@PathVariable("studentId") Long studentId,
                                       @PathVariable("cohortId") Long cohortId) {
 
@@ -181,7 +179,7 @@ public class CohortController {
         return "redirect:/cohort/" + cohortId;
     }
 
-    @GetMapping("cohort/delete/{cohortId}")
+    @GetMapping("/delete/{cohortId}")
     private String deleteCohort(@PathVariable("cohortId") Long cohortId) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
 

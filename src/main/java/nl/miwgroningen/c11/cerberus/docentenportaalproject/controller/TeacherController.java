@@ -16,16 +16,15 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * /**
- * handles all pages of the teacher
+ * Handles all pages of the teacher
  *
  * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/teacher")
 public class TeacherController {
-
     private final TeacherRepository teacherRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
@@ -50,6 +49,7 @@ public class TeacherController {
 
         if (optionalTeacher.isPresent()) {
             model.addAttribute("teacher", optionalTeacher.get());
+
             return "teacher/createTeacherForm";
         }
 
@@ -73,6 +73,7 @@ public class TeacherController {
                 teacherRepository.save(teacherToBeSaved);
                 model.addAttribute("username", teacherToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
+
                 return "teacher/teacherAccount";
             } else {
                 Optional<Teacher> storedTeacher = teacherRepository.findById(teacherToBeSaved.getUserId());

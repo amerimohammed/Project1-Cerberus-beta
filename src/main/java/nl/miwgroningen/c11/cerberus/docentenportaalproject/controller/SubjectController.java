@@ -7,27 +7,25 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRep
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/subject")
 public class SubjectController {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
 
-    @GetMapping("/subject/all")
+    @GetMapping("/all")
     private String showSubjectOverview(Model model) {
         model.addAttribute("allSubjects", subjectRepository.findAll());
 
         return "Subject/subjectOverview";
     }
 
-    @GetMapping("/subject/new")
+    @GetMapping("/new")
     private String showCreateSubjectForm(Model model) {
         model.addAttribute("allTeachers", teacherRepository.findAll());
         model.addAttribute("subject", new Subject());
@@ -35,7 +33,7 @@ public class SubjectController {
         return "Subject/createSubjectForm";
     }
 
-    @GetMapping("subject/edit/{subjectId}")
+    @GetMapping("/edit/{subjectId}")
     private String showEditSubjectForm(@PathVariable("subjectId") Long subjectId, Model model) {
         Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
 
@@ -49,7 +47,7 @@ public class SubjectController {
         return "redirect:/subject/all";
     }
 
-    @PostMapping("/subject/new")
+    @PostMapping("/new")
     private String saveOrUpdateStudent(@ModelAttribute("subject") Subject subjectToBeSaved, BindingResult result) {
 
         if (!result.hasErrors()) {
@@ -59,7 +57,7 @@ public class SubjectController {
         return "redirect:/subject/all";
     }
 
-    @GetMapping("subject/delete/{subjectId}")
+    @GetMapping("/delete/{subjectId}")
     private String deleteSubject(@PathVariable("subjectId") Long subjectId) {
         Optional<Subject> optionalSubject = subjectRepository.findById(subjectId);
 
