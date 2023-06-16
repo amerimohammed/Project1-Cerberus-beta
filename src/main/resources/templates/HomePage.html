@@ -8,6 +8,7 @@
 
 <div class="container main-content">
     <h3>Programmes</h3>
+    <div th:replace="fragments/buttons :: new(@{/programme/new})"></div>
     <div class="row row-cols-3">
         <div class="col" th:each="programme : ${allProgrammes}">
             <div class="p-2 m-2 row">

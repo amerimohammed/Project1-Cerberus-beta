@@ -56,12 +56,10 @@
 <!-- active navbar link -->
 <div th:fragment="activeLink(linkId)">
     <script th:inline="javascript">
-        /*<![CDATA[*/
         $(document).ready(function () {
             $(".active").removeClass("active");
             $([[${linkId}]]).addClass("active");
         });
-        /*]]>*/
     </script>
 </div>
 
