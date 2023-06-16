@@ -35,6 +35,7 @@ public class SeedController {
     private final SubjectRepository subjectRepository;
     private final TeacherRepository teacherRepository;
     private final ProgrammeRepository programmeRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/seed")
     private String seedDatabase() {
@@ -157,6 +158,31 @@ public class SeedController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    private void createTeacher() {
+        for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
+            Teacher teacher = new Teacher();
+            teacher.setFullName(createFakeName());
+            teacher.generateUsernameAndPassword(userRepository);
+            teacher.hashPassword();
+            teacherRepository.save(teacher);
+        }
+    }
+
+    private void createSubject() {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < SeedController.SUBJECT_AMOUNT; index++) {
+            Subject subject = new Subject();
+            subject.setSubjectName(faker.educator().subjectWithNumber());
+            subject.setDurationWeeks((int) ((Math.random() * SUBJECT_MAX_DURATION) + SUBJECT_MIN_DURATION));
+
+            subjectRepository.save(subject);
+        }
+    }
+
+>>>>>>> 944df5837c06e9b5eb87c25366285f8957283e96
     //Randomize the teachers of subjects
     private void assignTeachersToSubjects() {
         List<Subject> subjects = subjectRepository.findAll();
@@ -178,6 +204,20 @@ public class SeedController {
         }
     }
 
+<<<<<<< HEAD
+=======
+    private void createStudent() {
+        for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
+
+            Student student = new Student();
+            student.setFullName(createFakeName());
+            student.generateUsernameAndPassword(userRepository);
+            student.hashPassword();
+            studentRepository.save(student);
+        }
+    }
+
+>>>>>>> 944df5837c06e9b5eb87c25366285f8957283e96
     //Randomize the cohorts of students
     private void assignCohortsToStudents() {
         List<Cohort> cohorts = cohortRepository.findAll();

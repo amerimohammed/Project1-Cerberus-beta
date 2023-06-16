@@ -54,7 +54,7 @@ public class StudentController {
 
         if (!result.hasErrors()) {
             if (studentToBeSaved.getUserId() == null) {
-                studentToBeSaved.generateUsernameAndPassword();
+                studentToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = studentToBeSaved.getPassword();
                 studentToBeSaved.hashPassword();
                 studentRepository.save(studentToBeSaved);

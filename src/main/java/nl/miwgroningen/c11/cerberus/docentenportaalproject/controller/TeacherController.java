@@ -30,7 +30,6 @@ public class TeacherController {
     private final TeacherRepository teacherRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-    private final SubjectRepository subjectRepository;
 
     @GetMapping({"", "/all"})
     private String showTeacherOverview(Model model) {
@@ -63,7 +62,7 @@ public class TeacherController {
 
         if (!result.hasErrors()) {
             if (teacherToBeSaved.getUserId() == null) {
-                teacherToBeSaved.generateUsernameAndPassword();
+                teacherToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = teacherToBeSaved.getPassword();
                 teacherToBeSaved.hashPassword();
                 Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
