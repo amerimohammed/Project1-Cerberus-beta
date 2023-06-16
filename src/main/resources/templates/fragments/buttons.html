@@ -28,12 +28,13 @@
 
 <!-- Delete button fragment-->
 <span th:fragment="delete(link)">
-    <a type="button" class="btn btn-outline-danger"
-       th:href="${link}"
-       sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+            th:attr="data-bs-target='#delete-modal' + ${#strings.replace(link, '/', '')}"
+            sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
     >
         <span th:replace="fragments/icons :: deleteIcon"></span>
-    </a>
+    </button>
+    <span th:replace="fragments/modals :: deleteModal(${link})"></span>
 </span>
 
 <!-- Save button fragment -->
