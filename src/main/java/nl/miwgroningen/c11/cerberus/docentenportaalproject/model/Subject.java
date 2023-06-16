@@ -26,6 +26,6 @@ public class Subject {
 
     private int durationWeeks;
 
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();
 }
