@@ -28,6 +28,9 @@
             <a class="nav-link" id="students" th:href="@{/student/all}">Students</a>
         </div>
         <div class="nav-item">
+            <dr class="nav-link"></dr>
+        </div>
+        <div class="nav-item">
             <a class="nav-link disabled" sec:authorize="isAuthenticated()">Hi, <span th:text="${#authentication.name}"></span></a>
         </div>
         <div class="nav-item" sec:authorize="isAuthenticated()">
