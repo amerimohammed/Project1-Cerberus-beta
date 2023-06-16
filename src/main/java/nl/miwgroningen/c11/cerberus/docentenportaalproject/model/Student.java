@@ -12,9 +12,9 @@ import javax.persistence.*;
  */
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 public class Student extends User {
+
     @ManyToOne
     private Cohort cohort;
 

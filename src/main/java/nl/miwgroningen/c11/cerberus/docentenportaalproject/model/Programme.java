@@ -21,7 +21,8 @@ import java.util.List;
 @NoArgsConstructor @AllArgsConstructor
 public class Programme {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long programmeId;
 
     private String programmeName;

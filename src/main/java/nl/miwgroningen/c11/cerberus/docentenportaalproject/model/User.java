@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  */
 
 @Entity
-@Setter
-@Getter
+@Getter @Setter
 public class User implements UserDetails {
+
     @Id
     @GeneratedValue
     protected Long userId;
