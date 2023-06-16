@@ -15,9 +15,9 @@ import javax.persistence.Id;
  */
 
 @Entity
-@Setter
-@Getter
+@Getter @Setter
 public class Role {
+
     @Id
     @GeneratedValue
     private Long roleId;
