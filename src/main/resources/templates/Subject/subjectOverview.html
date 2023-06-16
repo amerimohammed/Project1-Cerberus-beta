@@ -16,7 +16,7 @@
             <th scope="col">Subject</th>
             <th>Duration (weeks)</th>
             <th>Teachers</th>
-            <th></th>
+            <th class="text-end">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -24,9 +24,9 @@
             <th scope="col" th:text="${subject.subjectName}"></th>
             <td th:text="${subject.durationWeeks}"></td>
             <td>
-                <ul th:each="teacher : ${subject.teachers}">
-                    <li class="list-group-item" th:text="${teacher.fullName}"></li>
-                </ul>
+                <table class="table" th:each="teacher : ${subject.teachers}">
+                    <tr th:text="${teacher.fullName}"></tr>
+                </table>
             </td>
             <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
