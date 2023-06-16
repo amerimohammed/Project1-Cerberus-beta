@@ -101,11 +101,7 @@ public class SeedController {
             String cohortName = faker.color().name();
             cohortName = cohortName.substring(0, 1).toUpperCase() + cohortName.substring(1);
 
-            Cohort cohort = Cohort.builder()
-                    .cohortName(cohortName)
-                    .startDate(startLocalDate)
-                    .endDate(endLocalDate)
-                    .build();
+            Cohort cohort = new Cohort(cohortName, startLocalDate, endLocalDate);
 
             cohortRepository.save(cohort);
         }

@@ -15,9 +15,8 @@ import java.util.List;
  */
 
 @Entity
-@Builder
 @Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@NoArgsConstructor
 public class Cohort implements Comparable<Cohort> {
 
     @Id
@@ -27,9 +26,11 @@ public class Cohort implements Comparable<Cohort> {
     @Column(nullable = false)
     private String cohortName;
 
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
 
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
@@ -38,6 +39,12 @@ public class Cohort implements Comparable<Cohort> {
 
     @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
+
+    public Cohort(String cohortName, LocalDate startDate, LocalDate endDate) {
+        this.cohortName = cohortName;
+        setStartDate(startDate);
+        setEndDate(endDate);
+    }
 
     public void addStudentToCohort(Student student) {
         students.add(student);
@@ -54,6 +61,20 @@ public class Cohort implements Comparable<Cohort> {
     @Override
     public int compareTo(Cohort otherCohort) {
         return cohortName.compareTo(otherCohort.cohortName);
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        if(startDate == null || endDate == null || startDate.isBefore(endDate)) {
+            this.startDate = startDate;
+        }
+        else throw new IllegalArgumentException("Startdatum kan niet na einddatum zijn.");
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        if(startDate == null || endDate == null || endDate.isAfter(startDate)) {
+            this.endDate = endDate;
+        }
+        else throw new IllegalArgumentException("Einddatum kan niet voor startdatum zijn.");
     }
 
     public int getStudentCount() {
