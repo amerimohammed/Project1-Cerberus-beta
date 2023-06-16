@@ -7,6 +7,7 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -89,13 +90,20 @@ public class TeacherController {
     }
 
     @GetMapping("/delete/{teacherId}")
-    private String deleteTeacher(@PathVariable("teacherId") Long teacherId) {
+    private String deleteTeacher(@PathVariable("teacherId") Long teacherId, Model model) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
         Optional<User> optionalUser = userRepository.findById(teacherId);
 
         if (optionalTeacher.isPresent() && optionalUser.isPresent()) {
+            try {
             userRepository.delete(optionalUser.get());
             teacherRepository.delete(optionalTeacher.get());
+            } catch (DataIntegrityViolationException dataIntegrityViolationException) {
+                System.out.println(dataIntegrityViolationException.getMessage());
+                model.addAttribute("errorMessage",
+                        "This Teacher can't be deleted due to relation to other entities");
+                return "error";
+            }
         }
 
         return "redirect:/teacher/all";
