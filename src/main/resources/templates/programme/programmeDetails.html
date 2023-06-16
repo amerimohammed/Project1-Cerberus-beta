@@ -10,14 +10,11 @@
 <div class="container main-content">
     <h1 class="text-center" th:text="${programme.programmeName}">Programme Details</h1>
     <div class="row mt-5 mb-5">
-
-        <div class="col border">
-            <span>Programme Id:</span>
-            <strong th:text="${'#'+programme.programmeId}"></strong>
-        </div>
         <div class="col border">
             <span>Programme Name:</span>
             <strong th:text="${programme.programmeName}"></strong>
+        </div>
+        <div class="col">
         </div>
         <div class="row">
             <span>Description:</span>
@@ -28,14 +25,12 @@
         <h3>Contains the following subjects:</h3>
         <thead>
         <tr>
-            <th scope="col">Subject Id</th>
             <th scope="col">Subject Name</th>
             <th scope="col" class="text-end">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="subject : ${programme.subjects}">
-            <th scope="row" th:text="${subject.subjectId}"></th>
             <td th:text="${subject.subjectName}"></td>
             <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{/subject/edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
