@@ -2,8 +2,10 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class StudentController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
     @GetMapping("/all")
     private String showStudentOverview(Model model) {
@@ -74,8 +77,10 @@ public class StudentController {
     @GetMapping("/delete/{studentId}")
     private String deleteStudent(@PathVariable("studentId") Long studentId) {
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
+        Optional<User> optionalUser = userRepository.findById(studentId);
 
-        if (optionalStudent.isPresent()) {
+        if (optionalStudent.isPresent() && optionalUser.isPresent()) {
+            userRepository.delete(optionalUser.get());
             studentRepository.delete(optionalStudent.get());
         }
 

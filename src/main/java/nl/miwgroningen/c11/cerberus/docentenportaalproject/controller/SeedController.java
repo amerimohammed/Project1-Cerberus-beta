@@ -52,6 +52,28 @@ public class SeedController {
         return "redirect:/";
     }
 
+    private void createSubject() {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < SeedController.SUBJECT_AMOUNT; index++) {
+            Subject subject = new Subject();
+            subject.setSubjectName(faker.educator().subjectWithNumber());
+            subject.setDurationWeeks((int) ((Math.random() * SUBJECT_MAX_DURATION) + SUBJECT_MIN_DURATION));
+
+            subjectRepository.save(subject);
+        }
+    }
+
+    private void createTeacher() {
+        for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
+            Teacher teacher = new Teacher();
+            teacher.setFullName(createFakeName());
+            teacher.generateUsernameAndPassword();
+            teacher.hashPassword();
+            teacherRepository.save(teacher);
+        }
+    }
+
     private void createProgramme() {
         Faker faker = new Faker();
 
@@ -62,26 +84,6 @@ public class SeedController {
                     .build();
 
             programmeRepository.save(programme);
-        }
-    }
-
-    //Randomize the subjects of programmes
-    private void assignSubjectsToProgrammes() {
-        List<Subject> subjects = subjectRepository.findAll();
-        List<Programme> programmes = programmeRepository.findAll();
-
-        if (subjects.size() < 1) {
-            return;
-        }
-
-        for (Programme programme : programmes) {
-            List<Subject> programmeSubjects = new ArrayList<>();
-
-            for (int subject = 0; subject < SeedController.SUBJECTS_IN_PROGRAMME_AMOUNT; subject++) {
-                int randomSubject = (int) (Math.random() * subjects.size());
-                programmeSubjects.add(subjects.get(randomSubject));
-            }
-            programme.setSubjects(programmeSubjects);
         }
     }
 
@@ -108,6 +110,37 @@ public class SeedController {
         }
     }
 
+    private void createStudent() {
+        for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
+
+            Student student = new Student();
+            student.setFullName(createFakeName());
+            student.generateUsernameAndPassword();
+            student.hashPassword();
+            studentRepository.save(student);
+        }
+    }
+
+    //Randomize the subjects of programmes
+    private void assignSubjectsToProgrammes() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<Programme> programmes = programmeRepository.findAll();
+
+        if (subjects.size() < 1) {
+            return;
+        }
+
+        for (Programme programme : programmes) {
+            List<Subject> programmeSubjects = new ArrayList<>();
+
+            for (int subject = 0; subject < SeedController.SUBJECTS_IN_PROGRAMME_AMOUNT; subject++) {
+                int randomSubject = (int) (Math.random() * subjects.size());
+                programmeSubjects.add(subjects.get(randomSubject));
+            }
+            programme.setSubjects(programmeSubjects);
+        }
+    }
+
     //Randomize the programme of cohorts
     private void assignProgrammesToCohorts() {
         List<Cohort> cohorts = cohortRepository.findAll();
@@ -121,28 +154,6 @@ public class SeedController {
             int randomProgramme = (int) (Math.random() * programmes.size());
             cohort.setProgramme(programmes.get(randomProgramme));
             cohortRepository.save(cohort);
-        }
-    }
-
-    private void createTeacher() {
-        for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
-            Teacher teacher = new Teacher();
-            teacher.setFullName(createFakeName());
-            teacher.generateUsernameAndPassword();
-            teacher.hashPassword();
-            teacherRepository.save(teacher);
-        }
-    }
-
-    private void createSubject() {
-        Faker faker = new Faker();
-
-        for (int index = 0; index < SeedController.SUBJECT_AMOUNT; index++) {
-            Subject subject = new Subject();
-            subject.setSubjectName(faker.educator().subjectWithNumber());
-            subject.setDurationWeeks((int) ((Math.random() * SUBJECT_MAX_DURATION) + SUBJECT_MIN_DURATION));
-
-            subjectRepository.save(subject);
         }
     }
 
@@ -164,17 +175,6 @@ public class SeedController {
             subject.setTeachers(subjectTeachers);
 
             subjectRepository.save(subject);
-        }
-    }
-
-    private void createStudent() {
-        for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
-
-            Student student = new Student();
-            student.setFullName(createFakeName());
-            student.generateUsernameAndPassword();
-            student.hashPassword();
-            studentRepository.save(student);
         }
     }
 
