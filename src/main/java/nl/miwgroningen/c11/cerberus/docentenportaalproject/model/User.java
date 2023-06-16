@@ -5,9 +5,12 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * a person who has an account on the app
@@ -21,13 +24,15 @@ import java.util.*;
 public class User implements UserDetails {
     @Id
     @GeneratedValue
-    private Long userId;
+    protected Long userId;
 
     @Column(unique = true, nullable = false)
     private String username;
 
     private String password;
     private boolean enabled = true;
+
+    protected String fullName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles = new HashSet<>();
@@ -62,5 +67,17 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void generateUsernameAndPassword() {
+        password = new Random().ints(10, 33, 122)
+                .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
+
+        username = this.fullName.substring(0, fullName.indexOf(' ')).toLowerCase();
+    }
+
+    public void hashPassword() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        password = encoder.encode(password);
     }
 }

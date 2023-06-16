@@ -125,8 +125,9 @@ public class SeedController {
     private void createTeacher() {
         for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
             Teacher teacher = new Teacher();
-            teacher.setTeacherName(createFakeName());
-
+            teacher.setFullName(createFakeName());
+            teacher.generateUsernameAndPassword();
+            teacher.hashPassword();
             teacherRepository.save(teacher);
         }
     }
@@ -167,8 +168,9 @@ public class SeedController {
         for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
 
             Student student = new Student();
-            student.setStudentName(createFakeName());
-
+            student.setFullName(createFakeName());
+            student.generateUsernameAndPassword();
+            student.hashPassword();
             studentRepository.save(student);
         }
     }

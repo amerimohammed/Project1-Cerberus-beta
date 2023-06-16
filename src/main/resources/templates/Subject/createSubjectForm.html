@@ -20,8 +20,8 @@
                 <td><input class="form-control" type="text" th:field="*{subjectName}"></td>
                 <td><select class="form-select" th:field="*{teachers}" multiple>
                     <option th:each="teacher : ${allTeachers}"
-                            th:value="${teacher.teacherId}"
-                            th:text="${teacher.teacherName}">
+                            th:value="${teacher.userId}"
+                            th:text="${teacher.fullName}">
                     </option></select>
                 </td>
             </tr>

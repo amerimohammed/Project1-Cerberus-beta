@@ -10,14 +10,14 @@
   <h1 class="text-center">Create or edit student</h1>
 
   <form th:action="@{/student/new}" method="post" th:object="${student}">
-    <input type="hidden" th:field="*{studentId}">
+    <input type="hidden" th:field="*{userId}">
     <table>
       <tr>
         <th>Name</th>
         <th>Cohort</th>
       </tr>
       <tr>
-        <td><input class="form-control" type="text" th:field="*{studentName}"></td>
+        <td><input class="form-control" type="text" th:field="*{fullName}"></td>
         <td><select class="form-select" th:field="*{cohort}">
           <option th:each="cohort : ${allCohorts}"
                   th:value="${cohort.cohortId}"

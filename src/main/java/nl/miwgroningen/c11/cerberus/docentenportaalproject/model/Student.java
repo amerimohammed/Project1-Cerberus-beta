@@ -12,19 +12,13 @@ import javax.persistence.*;
  */
 
 @Entity
-@Getter @Setter
-public class Student {
-
-    @Id
-    @GeneratedValue
-    private Long studentId;
-
-    private String studentName;
-
+@Getter
+@Setter
+public class Student extends User {
     @ManyToOne
     private Cohort cohort;
 
     public String displayNameAndId() {
-        return String.format("%d: %s", studentId, studentName);
+        return String.format("%d: %s", userId, fullName);
     }
 }

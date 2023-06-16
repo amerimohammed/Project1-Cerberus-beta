@@ -10,6 +10,7 @@
     <h1 class="text-center">Cohort Overview</h1>
     <div th:replace="fragments/buttons :: new(@{/cohort/new})"></div>
         <table class="table table-hover">
+            <thead>
             <tr>
                 <th scope="col">Cohort name</th>
                 <th scope="col">Programme</th>
@@ -18,6 +19,8 @@
                 <th scope="col">Aantal Studenten</th>
                 <th scope="col" class="text-end">Actions</th>
             </tr>
+            </thead>
+            <tbody>
             <tr th:each="cohort : ${allCohorts}">
                 <td><a th:href="@{/cohort/{cohortId}(cohortId=${cohort.cohortId})}"
                        th:text="${cohort.cohortName}"></a></td>
@@ -31,6 +34,7 @@
                     <div th:replace="fragments/buttons
                     :: delete(@{/cohort/delete/{cohortId}(cohortId=${cohort.cohortId})})"></div>
                 </td>
+            </tbody>
         </table>
 </div>
 

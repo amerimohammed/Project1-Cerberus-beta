@@ -11,23 +11,27 @@
 
     <div th:replace="fragments/buttons :: new(@{/subject/new})"></div>
     <table class="table table-hover">
+        <thead>
         <tr>
             <th scope="col">Subject</th>
             <th>Teachers</th>
             <th></th>
         </tr>
+        </thead>
+        <tbody>
         <tr th:each="subject : ${allSubjects}">
             <th scope="col" th:text="${subject.subjectName}"></th>
             <td>
                 <ul th:each="teacher : ${subject.teachers}">
-                    <li class="list-group-item" th:text="${teacher.teacherName}"></li>
+                    <li class="list-group-item" th:text="${teacher.fullName}"></li>
                 </ul>
             </td>
-            <td>
+            <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
                 <div th:replace="fragments/buttons :: delete(@{delete/{subjectId}(subjectId=${subject.subjectId})})"></div>
             </td>
         </tr>
+        </tbody>
     </table>
 </div>
 
