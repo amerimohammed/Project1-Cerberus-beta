@@ -2,11 +2,9 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.stereotype.Controller;
