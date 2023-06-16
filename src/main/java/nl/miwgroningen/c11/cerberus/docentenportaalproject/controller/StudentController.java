@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/student")
 @RequiredArgsConstructor
+@RequestMapping("/student")
 public class StudentController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
@@ -60,6 +60,7 @@ public class StudentController {
                 studentRepository.save(studentToBeSaved);
                 model.addAttribute("username", studentToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
+
                 return "Student/studentAccount";
             } else {
                 Optional<Student> storedStudent = studentRepository.findById(studentToBeSaved.getUserId());

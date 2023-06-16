@@ -16,7 +16,8 @@ import java.util.Optional;
 
 /**
  * Handels all actions concerning programme.
- * Gemaakt door Marianne Kooistra (me.kooistra@st.hanze.nl) op 14/06/2023
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */
 
 @Controller
@@ -80,8 +81,10 @@ public class ProgrammeController {
         Optional<Programme> optionalProgramme = programmeRepository.findById(programmeId);
         if (optionalProgramme.isPresent()) {
             model.addAttribute("programme", optionalProgramme.get());
+
             return "programme/programmeDetails";
         }
+
         return "redirect:/programme/all";
     }
 
