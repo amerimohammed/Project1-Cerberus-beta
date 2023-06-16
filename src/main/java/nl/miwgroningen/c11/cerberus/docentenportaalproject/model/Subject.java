@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class Subject {
     private Long subjectId;
 
     private String subjectName;
+
+    private int durationWeeks;
 
     @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();

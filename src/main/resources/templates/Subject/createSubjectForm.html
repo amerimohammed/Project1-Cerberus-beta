@@ -14,10 +14,12 @@
         <table>
             <tr>
                 <th>Subject name</th>
+                <th>Duration (weeks)</th>
                 <th>Teachers</th>
             </tr>
             <tr>
                 <td><input class="form-control" type="text" th:field="*{subjectName}"></td>
+                <td><input class="form-control" type="text" th:field="*{durationWeeks}"></td>
                 <td><select class="form-select" th:field="*{teachers}" multiple>
                     <option th:each="teacher : ${allTeachers}"
                             th:value="${teacher.userId}"
