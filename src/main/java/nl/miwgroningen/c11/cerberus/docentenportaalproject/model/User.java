@@ -73,7 +73,7 @@ public class User implements UserDetails {
         password = new Random().ints(10, 33, 122)
                 .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
 
-        username = this.fullName.substring(0, fullName.indexOf(' ')).toLowerCase();
+        username = this.fullName.substring(0, fullName.indexOf(' ')).toLowerCase() + password;
     }
 
     public void hashPassword() {
