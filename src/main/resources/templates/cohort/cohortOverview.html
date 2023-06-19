@@ -22,7 +22,8 @@
             </thead>
             <tbody>
             <tr th:each="cohort : ${allCohorts}">
-                <td th:text="${cohort.cohortId}"></td>
+                <td><a th:href="@{/cohort/{cohortId}(cohortId=${cohort.cohortId})}"
+                       th:text="${cohort.cohortId}"></a></td>
                 <td th:text="${cohort.programme} ? ${cohort.programme.programmeName} : 'None'"></td>
                 <td th:text="${cohort.displayStartDate()}"></td>
                 <td th:text="${cohort.displayEndDate()}"></td>
