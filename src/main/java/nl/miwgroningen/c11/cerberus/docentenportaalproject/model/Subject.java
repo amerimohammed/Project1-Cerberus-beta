@@ -27,4 +27,7 @@ public class Subject {
 
     @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();
+
+    @OneToMany
+    private List<Test> tests = new ArrayList<>();
 }
