@@ -20,11 +20,8 @@ import java.util.List;
 public class Cohort implements Comparable<Cohort> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cohortId;
-
-    @Column(nullable = false)
-    private String cohortName;
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -40,8 +37,7 @@ public class Cohort implements Comparable<Cohort> {
     @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
 
-    public Cohort(String cohortName, LocalDate startDate, LocalDate endDate) {
-        this.cohortName = cohortName;
+    public Cohort(LocalDate startDate, LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
     }
@@ -60,7 +56,7 @@ public class Cohort implements Comparable<Cohort> {
 
     @Override
     public int compareTo(Cohort otherCohort) {
-        return cohortName.compareTo(otherCohort.cohortName);
+        return cohortId.compareTo(otherCohort.cohortId);
     }
 
     public void setStartDate(LocalDate startDate) {

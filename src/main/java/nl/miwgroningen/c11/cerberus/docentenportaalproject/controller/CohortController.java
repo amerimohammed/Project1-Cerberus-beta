@@ -111,13 +111,6 @@ public class CohortController {
             //Save cohort
             cohortRepository.save(cohortToBeSaved);
 
-            //If cohort has no name, give it a name based on its id
-            //Needs to be here since otherwise cohort has no id
-            if(cohortToBeSaved.getCohortName().equals("")) {
-                cohortToBeSaved.setCohortName("Cohort " + cohortToBeSaved.getCohortId());
-                cohortRepository.save(cohortToBeSaved);
-            }
-
             List<Student> students = cohortToBeSaved.getStudents();
 
             //Set all selected students to that cohort
