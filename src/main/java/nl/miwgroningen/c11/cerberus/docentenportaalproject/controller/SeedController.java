@@ -106,10 +106,7 @@ public class SeedController {
             LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            String cohortName = faker.color().name();
-            cohortName = cohortName.substring(0, 1).toUpperCase() + cohortName.substring(1);
-
-            Cohort cohort = new Cohort(cohortName, startLocalDate, endLocalDate);
+            Cohort cohort = new Cohort(startLocalDate, endLocalDate);
 
             cohortRepository.save(cohort);
         }
@@ -117,7 +114,6 @@ public class SeedController {
 
     private void createStudent() {
         for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
-
             Student student = new Student();
             student.setFullName(createFakeName());
             student.generateUsernameAndPassword(userRepository);
@@ -151,7 +147,7 @@ public class SeedController {
         }
     }
 
-    //Randomize the subjects of programmes
+    //Assign random subjects to programmes
     private void assignSubjectsToProgrammes() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Programme> programmes = programmeRepository.findAll();
@@ -171,7 +167,7 @@ public class SeedController {
         }
     }
 
-    //Randomize the programme of cohorts
+    //Assign a random programme to each cohort
     private void assignProgrammesToCohorts() {
         List<Cohort> cohorts = cohortRepository.findAll();
         List<Programme> programmes = programmeRepository.findAll();
@@ -187,7 +183,7 @@ public class SeedController {
         }
     }
 
-    //Randomize the teachers of subjects
+    //Assign a random teacher to each subject
     private void assignTeachersToSubjects() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Teacher> allTeachers = teacherRepository.findAll();
@@ -208,7 +204,7 @@ public class SeedController {
         }
     }
 
-    //Randomize the cohorts of students
+    //Assign a random cohort to each student
     private void assignCohortsToStudents() {
         List<Cohort> cohorts = cohortRepository.findAll();
         List<Student> students = studentRepository.findAll();

@@ -21,7 +21,7 @@
         <td><select class="form-select" th:field="*{cohort}">
           <option th:each="cohort : ${allCohorts}"
                   th:value="${cohort.cohortId}"
-                  th:text="${cohort.cohortName}">
+                  th:text="${cohort.cohortId}">
           </option>
         </select></td>
       </tr>

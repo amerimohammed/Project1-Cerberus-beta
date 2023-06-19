@@ -20,11 +20,8 @@ import java.util.List;
 public class Cohort implements Comparable<Cohort> {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cohortId;
-
-    @Column(nullable = false)
-    private String cohortName;
 
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -40,8 +37,7 @@ public class Cohort implements Comparable<Cohort> {
     @ManyToOne(cascade = CascadeType.DETACH)
     private Programme programme;
 
-    public Cohort(String cohortName, LocalDate startDate, LocalDate endDate) {
-        this.cohortName = cohortName;
+    public Cohort(LocalDate startDate, LocalDate endDate) {
         setStartDate(startDate);
         setEndDate(endDate);
     }
@@ -51,27 +47,27 @@ public class Cohort implements Comparable<Cohort> {
     }
 
     public String displayStartDate() {
-        return String.format("%2d - %2d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
+        return String.format("%02d - %02d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }
 
     public String displayEndDate() {
-        return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+        return String.format("%02d - %02d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
     }
 
     @Override
     public int compareTo(Cohort otherCohort) {
-        return cohortName.compareTo(otherCohort.cohortName);
+        return cohortId.compareTo(otherCohort.cohortId);
     }
 
     public void setStartDate(LocalDate startDate) {
-        if(startDate == null || endDate == null || startDate.isBefore(endDate)) {
+        if(endDate == null || startDate.isBefore(endDate)) {
             this.startDate = startDate;
         }
         else throw new IllegalArgumentException("Startdatum kan niet na einddatum zijn.");
     }
 
     public void setEndDate(LocalDate endDate) {
-        if(startDate == null || endDate == null || endDate.isAfter(startDate)) {
+        if(startDate == null || endDate.isAfter(startDate)) {
             this.endDate = endDate;
         }
         else throw new IllegalArgumentException("Einddatum kan niet voor startdatum zijn.");

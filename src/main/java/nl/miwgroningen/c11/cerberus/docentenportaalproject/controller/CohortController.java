@@ -69,7 +69,9 @@ public class CohortController {
         if (cohort == null) return "redirect:/cohort/all";
 
         //In the edit form, show a list of students that either have no cohort or are in the current cohort
-        List<Student> allStudents = getListOfStudentsWithoutOrInCurrentCohort(cohort);
+        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        List<Student> studentsCurrentCohort = cohort.getStudents();
+        allStudents.addAll(studentsCurrentCohort);
 
         model.addAttribute("cohort", cohort);
         model.addAttribute("allStudents", allStudents);
@@ -100,15 +102,6 @@ public class CohortController {
         return allStudents;
     }
 
-    //Gets a list of students that either (1) do not have a cohort (2) or are in the cohort that is passed on
-    private List<Student> getListOfStudentsWithoutOrInCurrentCohort(Cohort cohort) {
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
-        List<Student> studentsCurrentCohort = cohort.getStudents();
-        allStudents.addAll(studentsCurrentCohort);
-
-        return allStudents;
-    }
-
     @PostMapping("/new")
     private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
 
@@ -117,13 +110,6 @@ public class CohortController {
 
             //Save cohort
             cohortRepository.save(cohortToBeSaved);
-
-            //If cohort has no name, give it a name based on its id
-            //Needs to be here since otherwise cohort has no id
-            if(cohortToBeSaved.getCohortName().equals("")) {
-                cohortToBeSaved.setCohortName("Cohort " + cohortToBeSaved.getCohortId());
-                cohortRepository.save(cohortToBeSaved);
-            }
 
             List<Student> students = cohortToBeSaved.getStudents();
 
