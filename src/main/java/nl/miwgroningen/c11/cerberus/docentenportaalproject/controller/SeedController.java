@@ -126,7 +126,7 @@ public class SeedController {
         Faker faker = new Faker();
 
         for (int index = 0; index < TEST_AMOUNT; index++) {
-            String testName = faker.verb().ingForm() + " " + faker.educator().subjectWithNumber();
+            String testName = faker.educator().subjectWithNumber() + " " + faker.verb().ingForm();
             Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
             LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 

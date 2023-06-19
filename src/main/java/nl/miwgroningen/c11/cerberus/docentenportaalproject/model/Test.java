@@ -28,4 +28,8 @@ public class Test {
 
     @ManyToOne
     private Subject subject;
+
+    public String displayTestDate() {
+        return String.format("%02d - %02d - %4d", testDate.getDayOfMonth(), testDate.getMonthValue(), testDate.getYear());
+    }
 }
