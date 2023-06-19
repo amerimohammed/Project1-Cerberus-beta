@@ -2,20 +2,21 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Cohort;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,11 +28,16 @@ public class CohortController {
 
     @GetMapping("/all")
     private String showAllCohorts(Model model) {
-        List<Cohort> allCohorts = cohortRepository.findAll();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Cohort> allCohorts;
+        Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+        if (!userRoles.contains("ADMIN")) {
+            allCohorts = cohortRepository.findCohortsByUsername(user.getUsername());
+        } else {
+            allCohorts = cohortRepository.findAll();
+        }
         Collections.sort(allCohorts);
-
         model.addAttribute("allCohorts", allCohorts);
-
         return "/cohort/cohortOverview";
     }
 
