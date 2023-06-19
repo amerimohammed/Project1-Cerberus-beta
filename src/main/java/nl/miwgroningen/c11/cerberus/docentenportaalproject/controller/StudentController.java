@@ -25,7 +25,7 @@ public class StudentController {
     private String showStudentOverview(Model model) {
         model.addAttribute("allStudents", studentRepository.findAll());
 
-        return "Student/studentOverview";
+        return "student/studentOverview";
     }
 
     @GetMapping("/new")
@@ -33,7 +33,7 @@ public class StudentController {
         model.addAttribute("allCohorts", cohortRepository.findAll());
         model.addAttribute("student", new Student());
 
-        return "Student/createStudentForm";
+        return "student/createStudentForm";
     }
 
     @GetMapping("/edit/{studentId}")
@@ -43,7 +43,7 @@ public class StudentController {
         if (optionalStudent.isPresent()) {
             model.addAttribute("student", optionalStudent.get());
             model.addAttribute("allCohorts", cohortRepository.findAll());
-            return "Student/createStudentForm";
+            return "student/createStudentForm";
         }
 
         return "redirect:/student/all";
@@ -61,7 +61,7 @@ public class StudentController {
                 model.addAttribute("username", studentToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
 
-                return "Student/studentAccount";
+                return "student/studentAccount";
             } else {
                 Optional<Student> storedStudent = studentRepository.findById(studentToBeSaved.getUserId());
                 if (storedStudent.isPresent()) {

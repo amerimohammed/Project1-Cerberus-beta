@@ -23,7 +23,7 @@ public class SubjectController {
     private String showSubjectOverview(Model model) {
         model.addAttribute("allSubjects", subjectRepository.findAll());
 
-        return "Subject/subjectOverview";
+        return "subject/subjectOverview";
     }
 
     @GetMapping("/new")
@@ -31,7 +31,7 @@ public class SubjectController {
         model.addAttribute("allTeachers", teacherRepository.findAll());
         model.addAttribute("subject", new Subject());
 
-        return "Subject/createSubjectForm";
+        return "subject/createSubjectForm";
     }
 
     @GetMapping("/edit/{subjectId}")
@@ -42,7 +42,7 @@ public class SubjectController {
             model.addAttribute("subject", optionalSubject.get());
             model.addAttribute("allTeachers", teacherRepository.findAll());
 
-            return "Subject/createSubjectForm";
+            return "subject/createSubjectForm";
         }
 
         return "redirect:/subject/all";
@@ -54,6 +54,12 @@ public class SubjectController {
         if (!result.hasErrors()) {
             subjectRepository.save(subjectToBeSaved);
         }
+
+        return "redirect:/subject/all";
+    }
+
+    @PostMapping(value = "/new", params = "cancel")
+    private String cancelForm(@ModelAttribute("subject") Subject subjectToCancelSave) {
 
         return "redirect:/subject/all";
     }

@@ -45,6 +45,14 @@
     </button>
 </div>
 
+<!-- Cancel button fragment -->
+<div th:fragment="cancel" class="text-end mt-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+    <button type="submit" name="cancel" class="btn btn-primary">
+        Cancel
+    </button>
+</div>
+
+<!-- Home button fragment -->
 <div th:fragment="home">
     <a type="button" class="mx-3" th:href="@{/home}">
         <span th:replace="fragments/icons :: homeIcon"></span>
