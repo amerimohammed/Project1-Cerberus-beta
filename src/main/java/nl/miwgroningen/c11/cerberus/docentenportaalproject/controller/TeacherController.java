@@ -89,6 +89,12 @@ public class TeacherController {
         return "redirect:/teacher/all";
     }
 
+    @PostMapping(value = "", params = "cancel")
+    private String cancelForm() {
+
+        return "redirect:/teacher/all";
+    }
+
     @GetMapping("/delete/{teacherId}")
     private String deleteTeacher(@PathVariable("teacherId") Long teacherId, Model model) {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);

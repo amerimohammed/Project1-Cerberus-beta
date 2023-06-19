@@ -65,6 +65,12 @@ public class ProgrammeController {
         return "redirect:/home";
     }
 
+    @PostMapping(value = "/programme/new", params = "cancel")
+    private String cancelForm() {
+
+        return "redirect:/home";
+    }
+
     @GetMapping("/home/delete/{programmeId}")
     private String deleteProgramme(@PathVariable("programmeId") Long programmeId) {
         Optional<Programme> optionalProgramme = programmeRepository.findById(programmeId);

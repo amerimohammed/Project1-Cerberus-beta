@@ -156,6 +156,12 @@ public class CohortController {
         }
     }
 
+    @PostMapping(value = "/new", params = "cancel")
+    private String cancelForm() {
+
+        return "redirect:/cohort/all";
+    }
+
     @GetMapping("/{cohortId}/add/{studentId}")
     private String addStudentToCohort(@PathVariable("studentId") Long studentId,
                                       @PathVariable("cohortId") Long cohortId) {

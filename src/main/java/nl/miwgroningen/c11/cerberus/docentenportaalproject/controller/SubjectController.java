@@ -59,7 +59,7 @@ public class SubjectController {
     }
 
     @PostMapping(value = "/new", params = "cancel")
-    private String cancelForm(@ModelAttribute("subject") Subject subjectToCancelSave) {
+    private String cancelForm() {
 
         return "redirect:/subject/all";
     }
