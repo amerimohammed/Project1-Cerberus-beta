@@ -64,14 +64,14 @@ public class Cohort implements Comparable<Cohort> {
     }
 
     public void setStartDate(LocalDate startDate) {
-        if(startDate == null || endDate == null || startDate.isBefore(endDate)) {
+        if(endDate == null || startDate.isBefore(endDate)) {
             this.startDate = startDate;
         }
         else throw new IllegalArgumentException("Startdatum kan niet na einddatum zijn.");
     }
 
     public void setEndDate(LocalDate endDate) {
-        if(startDate == null || endDate == null || endDate.isAfter(startDate)) {
+        if(startDate == null || endDate.isAfter(startDate)) {
             this.endDate = endDate;
         }
         else throw new IllegalArgumentException("Einddatum kan niet voor startdatum zijn.");
