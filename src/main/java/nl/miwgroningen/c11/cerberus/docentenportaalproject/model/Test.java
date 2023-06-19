@@ -1,7 +1,7 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,7 +13,9 @@ import java.time.LocalDate;
  */
 
 @Entity
+@Builder
 @Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class Test {
 
     @Id

@@ -26,6 +26,8 @@ public class SeedController {
     private static final int PROGRAMME_AMOUNT = 5;
     private static final int COHORT_AMOUNT = 10;
     private static final int STUDENT_AMOUNT = 50;
+    private static final int TEST_AMOUNT = 10;
+    private static final int ASSIGNMENT_AMOUNT = 15;
     private static final int SUBJECTS_IN_PROGRAMME_AMOUNT = 5;
     private static final int SUBJECT_MAX_DURATION = 10;
     private static final int SUBJECT_MIN_DURATION = 1;
@@ -36,6 +38,8 @@ public class SeedController {
     private final TeacherRepository teacherRepository;
     private final ProgrammeRepository programmeRepository;
     private final UserRepository userRepository;
+    private final TestRepository testRepository;
+    private final AssignmentRepository assignmentRepository;
 
     @GetMapping("/seed")
     private String seedDatabase() {
@@ -44,11 +48,15 @@ public class SeedController {
         createProgramme();
         createCohort();
         createStudent();
+        createTest();
+        createAssignment();
 
         assignSubjectsToProgrammes();
         assignProgrammesToCohorts();
         assignTeachersToSubjects();
         assignCohortsToStudents();
+        assignSubjectToTest();
+        assignSubjectToAssignment();
 
         return "redirect:/";
     }
@@ -111,6 +119,31 @@ public class SeedController {
             student.generateUsernameAndPassword(userRepository);
             student.hashPassword();
             studentRepository.save(student);
+        }
+    }
+
+    private void createTest() {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < TEST_AMOUNT; index++) {
+            String testName = faker.verb().ingForm() + " " + faker.educator().subjectWithNumber();
+            Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
+            LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            Test test = Test.builder().testName(testName).testDate(futureLocalDate).build();
+
+            testRepository.save(test);
+        }
+    }
+
+    private void createAssignment() {
+        Faker faker = new Faker();
+
+        for (int index = 0; index < ASSIGNMENT_AMOUNT; index++) {
+            Assignment assignment = Assignment.builder()
+                    .assignmentName(faker.lorem().sentence(1, 4)).build();
+
+            assignmentRepository.save(assignment);
         }
     }
 
@@ -184,6 +217,38 @@ public class SeedController {
             int randomCohort = (int) (Math.random() * cohorts.size());
             student.setCohort(cohorts.get(randomCohort));
             studentRepository.save(student);
+        }
+    }
+
+    private void assignSubjectToTest() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<Test> tests = testRepository.findAll();
+
+        if(subjects.size() < 1) {
+            return;
+        }
+
+        for (Test test : tests) {
+            int randomSubject = (int) (Math.random() * subjects.size());
+            test.setSubject(subjects.get(randomSubject));
+
+            testRepository.save(test);
+        }
+    }
+
+    private void assignSubjectToAssignment() {
+        List<Subject> subjects = subjectRepository.findAll();
+        List<Assignment> assignments = assignmentRepository.findAll();
+
+        if (subjects.size() < 1) {
+            return;
+        }
+
+        for (Assignment assignment : assignments) {
+            int randomSubject = (int) (Math.random() * subjects.size());
+            assignment.setSubject(subjects.get(randomSubject));
+
+            assignmentRepository.save(assignment);
         }
     }
 
