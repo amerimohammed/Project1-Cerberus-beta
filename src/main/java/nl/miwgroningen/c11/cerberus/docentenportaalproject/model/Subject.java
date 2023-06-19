@@ -30,4 +30,7 @@ public class Subject {
 
     @OneToMany
     private List<Test> tests = new ArrayList<>();
+
+    @OneToMany
+    private List<Assignment> assignments = new ArrayList<>();
 }
