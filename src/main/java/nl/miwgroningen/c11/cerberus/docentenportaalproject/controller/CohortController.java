@@ -52,7 +52,7 @@ public class CohortController {
         //New cohort, but with both dates set to avoid a NullPointerException
         Cohort newCohort = new Cohort();
         newCohort.setStartDate(LocalDate.now());
-        newCohort.setEndDate(LocalDate.now());
+        newCohort.setEndDate(LocalDate.now().plusDays(1));
         model.addAttribute("cohort", newCohort);
 
         List<Student> allStudents = getListOfStudentsWithoutCohort();
