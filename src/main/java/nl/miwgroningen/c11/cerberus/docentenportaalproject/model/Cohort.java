@@ -51,11 +51,11 @@ public class Cohort implements Comparable<Cohort> {
     }
 
     public String displayStartDate() {
-        return String.format("%2d - %2d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
+        return String.format("%02d - %02d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }
 
     public String displayEndDate() {
-        return String.format("%2d - %2d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+        return String.format("%02d - %02d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
     }
 
     @Override

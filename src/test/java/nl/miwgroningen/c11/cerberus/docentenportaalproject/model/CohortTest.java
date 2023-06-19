@@ -5,15 +5,13 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-/**
-    * DOEL VAN PROGRAMMA HIER!!!!
-    *
-    * @author Joost Schreuder
-*/class CohortTest {
 
+class CohortTest {
+
+    private static final String TEST_START_DATE_STRING = "01 - 01 - 1999";
+    private static final String TEST_END_DATE_STRING = "02 - 01 - 1999";
     private static final LocalDate TEST_DATE = LocalDate.parse("1999-01-01");
 
-    //Tests whether error is thrown when end-date is before start-date
     @Test
     void setStartDate() {
         Cohort cohort = new Cohort();
@@ -34,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
         assertDoesNotThrow(() -> cohort.setStartDate(TEST_DATE.minusDays(1)));
 
         //Check whether date is set right
-        assertEquals(cohort.getStartDate(), TEST_DATE.minusDays(1));
+        assertEquals(TEST_DATE.minusDays(1), cohort.getStartDate());
     }
 
     @Test
@@ -57,6 +55,17 @@ import static org.junit.jupiter.api.Assertions.*;
         assertDoesNotThrow(() -> cohort.setEndDate(TEST_DATE.plusDays(1)));
 
         //Check whether date is set right
-        assertEquals(cohort.getEndDate(), TEST_DATE.plusDays(1));
+        assertEquals(TEST_DATE.plusDays(1), cohort.getEndDate());
+    }
+
+    @Test
+    void displayDate() {
+        Cohort cohort = new Cohort();
+
+        cohort.setStartDate(TEST_DATE);
+        cohort.setEndDate(TEST_DATE.plusDays(1));
+
+        assertEquals(TEST_START_DATE_STRING, cohort.displayStartDate());
+        assertEquals(TEST_END_DATE_STRING, cohort.displayEndDate());
     }
 }
