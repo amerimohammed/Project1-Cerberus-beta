@@ -39,8 +39,21 @@ public class TestController {
         return "testPages/createTestForm";
     }
 
+    @GetMapping("/edit/{testId}")
+    private String showEditTestForm(@PathVariable("testId") Long testId, Model model) {
+        Optional<Test> optionalTest = testRepository.findById(testId);
+
+        if (optionalTest.isPresent()) {
+            model.addAttribute("test", optionalTest.get());
+            model.addAttribute("allSubjects", subjectRepository.findAll());
+            return "testPages/createTestForm";
+        }
+
+        return "redirect:/test/all";
+    }
+
     @GetMapping("/delete/{testId}")
-    private String deleteTest(@PathVariable("testId") Long testId, Model model) {
+    private String deleteTest(@PathVariable("testId") Long testId) {
         Optional<Test> optionalTest = testRepository.findById(testId);
 
         if (optionalTest.isPresent()) {
@@ -56,6 +69,12 @@ public class TestController {
         if (!result.hasErrors()) {
             testRepository.save(testToBeSaved);
         }
+
+        return "redirect:/test/all";
+    }
+
+    @PostMapping(value = "/new", params = "cancel")
+    private String cancelForm() {
 
         return "redirect:/test/all";
     }
