@@ -24,12 +24,20 @@ public class Test {
 
     private String testName;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate testDate;
 
     @ManyToOne
     private Subject subject;
 
     public String displayTestDate() {
-        return String.format("%02d - %02d - %4d", testDate.getDayOfMonth(), testDate.getMonthValue(), testDate.getYear());
+        String display;
+        if (testDate == null) {
+            display = "No date";
+        } else {
+            display = String.format("%02d - %02d - %4d", testDate.getDayOfMonth(), testDate.getMonthValue(), testDate.getYear());
+        }
+
+        return display;
     }
 }

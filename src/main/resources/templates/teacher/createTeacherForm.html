@@ -14,21 +14,23 @@
         <input type="hidden" th:field="*{username}">
         <input type="hidden" th:field="*{password}">
         <input type="hidden" th:field="*{roles}">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="teacherName">Teacher Name:</label>
             <input th:field="*{fullName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">
         </div>
-        <div>
+        <div class="mb-3">
             <label for="subjectSelect">Subjects:</label>
-            <select id="subjectSelect" class="form-select" multiple th:field="*{subjects}">
+            <select id="subjectSelect" class="form-select multiple-select" multiple th:field="*{subjects}">
             <option th:each="subject : ${allSubjects}"
                     th:value="${subject.subjectId}"
                     th:text="${subject.subjectName}">
             </option>
             </select>
         </div>
-        <div th:replace="fragments/buttons :: save"></div>
-        <div th:replace="fragments/buttons :: cancel"></div>
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
     </form>
 </div>
 

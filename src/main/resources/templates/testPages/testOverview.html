@@ -9,6 +9,7 @@
 <div class="container main-content">
   <h1 class="text-center">All tests</h1>
 
+  <div th:replace="fragments/buttons :: new(@{new})"></div>
   <table class="table table-hover">
     <thead>
     <tr>
@@ -19,10 +20,11 @@
     </thead>
     <tbody>
     <tr th:each="test : ${allTests}">
+      <td><a th:href="@{/test/{testId}(testId=${test.testId})}" th:text="${test.testName}"></a></td>
       <td th:text="${test.subject.subjectName}"></td>
-      <td th:text="${test.testName}"></td>
       <td th:text="${test.displayTestDate()}"></td>
       <td class="text-end">
+        <div th:replace="fragments/buttons :: edit(@{edit/{testId}(testId=${test.testId})})"></div>
         <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${test.testId})})"></div>
       </td>
     </tr>

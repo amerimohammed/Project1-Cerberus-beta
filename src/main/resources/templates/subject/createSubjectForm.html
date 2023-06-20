@@ -11,26 +11,27 @@
 
     <form th:action="@{/subject/new}" method="post" th:object="${subject}">
         <input type="hidden" th:field="*{subjectId}">
-        <table>
-            <tr>
-                <th>Subject name</th>
-                <th>Duration (weeks)</th>
-                <th>Teachers</th>
-            </tr>
-            <tr>
-                <td><input class="form-control" type="text" th:field="*{subjectName}"></td>
-                <td><input class="form-control" type="text" th:field="*{durationWeeks}"></td>
-                <td><select class="form-select" th:field="*{teachers}" multiple>
-                    <option th:each="teacher : ${allTeachers}"
-                            th:value="${teacher.userId}"
-                            th:text="${teacher.fullName}">
-                    </option></select>
-                </td>
-            </tr>
-        </table>
-
-        <div th:replace="fragments/buttons :: save"></div>
-        <div th:replace="fragments/buttons :: cancel"></div>
+        <div class="mb-3">
+            <label for="subjectName">Subject name:</label>
+            <input id="subjectName" class="form-control" type="text" th:field="*{subjectName}">
+        </div>
+        <div class="mb-3">
+            <label for="durationName">Duration (weeks):</label>
+            <input id="durationName" class="form-control" type="text" th:field="*{durationWeeks}">
+        </div>
+        <div class="mb-3">
+            <label for="teachers">Teachers:</label>
+            <select id="teachers" class="form-select multiple-select" th:field="*{teachers}" multiple>
+                <option th:each="teacher : ${allTeachers}"
+                        th:value="${teacher.userId}"
+                        th:text="${teacher.fullName}">
+                </option>
+            </select>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
     </form>
 </div>
 
