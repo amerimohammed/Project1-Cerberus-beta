@@ -1,18 +1,23 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Image;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Programme;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ImageRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Handels all actions concerning programme.
@@ -25,6 +30,8 @@ import java.util.Optional;
 public class ProgrammeController {
     private final ProgrammeRepository programmeRepository;
     private final SubjectRepository subjectRepository;
+    private final ImageRepository imageRepository;
+    private final String UPLOAD_DIRECTORY = System.getProperty("user.dir") + "/uploads";
 
     @GetMapping({"/", "/home"})
     private String showHomePage(Model model) {
@@ -56,9 +63,19 @@ public class ProgrammeController {
     }
 
     @PostMapping("/programme/new")
-    private String saveOrUpdateProgramme(@ModelAttribute("programme") Programme programmeToBeSaved, BindingResult result) {
+    private String saveOrUpdateProgramme(@ModelAttribute("programme") Programme programmeToBeSaved,
+                                         @RequestParam("imageFile") MultipartFile file,
+                                         BindingResult result) {
 
         if (!result.hasErrors()) {
+            if (!file.isEmpty()) {
+                try {
+                    Image image = saveImage(file);
+                    programmeToBeSaved.setImage(image);
+                } catch (IOException exception) {
+                    System.err.println(exception.getMessage());
+                }
+            }
             programmeRepository.save(programmeToBeSaved);
         }
 
@@ -78,7 +95,7 @@ public class ProgrammeController {
         if (optionalProgramme.isPresent()) {
             programmeRepository.delete(optionalProgramme.get());
         }
-        
+
         return "redirect:/home";
     }
 
@@ -92,6 +109,26 @@ public class ProgrammeController {
         }
 
         return "redirect:/programme/all";
+    }
+
+    private Image saveImage(MultipartFile file) throws IOException {
+        StringBuilder fileName = new StringBuilder();
+        fileName.append(UUID.randomUUID());
+        if (getExtensionByStringHandling(file.getOriginalFilename()).isPresent()) {
+            fileName.append(".").append(getExtensionByStringHandling(file.getOriginalFilename()).get());
+        }
+        Path fileNameAndPath = Paths.get(UPLOAD_DIRECTORY, fileName.toString());
+        Files.write(fileNameAndPath, file.getBytes());
+
+        Image image = new Image();
+        image.setImageName(fileName.toString());
+        return imageRepository.save(image);
+    }
+
+    private Optional<String> getExtensionByStringHandling(String filename) {
+        return Optional.ofNullable(filename)
+                .filter(f -> f.contains("."))
+                .map(f -> f.substring(filename.lastIndexOf(".") + 1));
     }
 
 }

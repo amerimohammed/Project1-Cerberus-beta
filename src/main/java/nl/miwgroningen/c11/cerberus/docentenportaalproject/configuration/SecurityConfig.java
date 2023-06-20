@@ -26,7 +26,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests(authorize -> authorize
-                        .antMatchers("/css/**", "/webjars/**", "/images/**", "/js/**").permitAll()
+                        .antMatchers("/css/**", "/webjars/**", "/images/**", "/js/**", "/photos/**").permitAll()
                         .antMatchers("/", "/home", "/programme/view/**").permitAll()
                         .antMatchers("/teacher/**", "/seed").hasAuthority("ADMIN")
                         .anyRequest().hasAnyAuthority("ADMIN", "TEACHER")

@@ -7,28 +7,38 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1>Create or edit programme</h1>
+    <h1 class="text-center">Create or edit programme</h1>
 
-    <form th:action="@{/programme/new}" method="post" th:object="${programme}">
+    <form th:action="@{/programme/new}" method="post" th:object="${programme}" enctype="multipart/form-data">
         <input type="hidden" th:field="*{programmeId}">
-        <table class="w-50">
-            <tr>
-                <th>Programme name</th>
-                <th>Subjects</th>
-            </tr>
-            <tr>
-                <td><input class="form-control" type="text" th:field="*{programmeName}"></td>
-                <td><select class="form-select" th:field="*{subjects}" multiple>
-                    <option th:each="subject : ${allSubjects}"
-                            th:value="${subject.subjectId}"
-                            th:text="${subject.subjectName}">
-                    </option></select>
-                </td>
-            </tr>
-        </table>
-        <div class="w-50 pt-3">
-            <p><strong>Give a short description of the programme:</strong></p>
-            <input class="form-control" type="text" th:field="*{shortDescription}" maxlength="255">
+        <input type="hidden" th:field="*{image}">
+        <div class="form-group">
+            <label for="programmeName">Programme name:</label>
+            <input class="form-control" id="programmeName" type="text" th:field="*{programmeName}"
+                   placeholder="Example: Software Engineering">
+        </div>
+        <div class="form-group">
+            <label for="programmeSubjects">Subjects:</label>
+            <select id="programmeSubjects" class="form-select" th:field="*{subjects}" multiple>
+                <option th:each="subject : ${allSubjects}"
+                        th:value="${subject.subjectId}"
+                        th:text="${subject.subjectName}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="programmeDescription">Description:</label>
+            <input id="programmeDescription" class="form-control" type="text"
+                   th:field="*{shortDescription}" maxlength="255"
+                   placeholder="Give a short description of the programme"
+            >
+        </div>
+        <div class="form-group">
+            <label for="programmeImage">Programme Photo:</label>
+            <input id="programmeImage" type="file" name="imageFile" accept="image/*" class="form-control-file"/>
+            <img class="img-thumbnail rounded d-block" id="programmeThumbnail"
+                 th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp'"
+            />
         </div>
 
         <div th:replace="fragments/buttons :: save"></div>
@@ -38,5 +48,22 @@
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
+
+<script>
+    $(document).ready(function () {
+        $('#programmeImage').change(function () {
+            showImageThumbnail(this)
+        })
+    })
+
+    function showImageThumbnail(fileInput) {
+        file = fileInput.files[0]
+        reader = new FileReader();
+        reader.onload = function (e){
+            $('#programmeThumbnail').attr('src', e.target.result)
+        }
+        reader.readAsDataURL(file)
+    }
+</script>
 </body>
 </html>

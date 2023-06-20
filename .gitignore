@@ -321,3 +321,6 @@ Temporary Items
 # Extra files that need to be ignored
 mvnw
 mvnw.cmd
+
+#to exclude the photos
+uploads/**

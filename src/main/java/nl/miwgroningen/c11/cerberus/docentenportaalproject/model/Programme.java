@@ -2,10 +2,7 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,4 +28,7 @@ public class Programme {
     private List<Subject> subjects = new ArrayList<>();
 
     private String shortDescription;
+
+    @OneToOne
+    private Image image;
 }
