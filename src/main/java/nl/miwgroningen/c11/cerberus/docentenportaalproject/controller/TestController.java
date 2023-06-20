@@ -31,6 +31,17 @@ public class TestController {
         return "testPages/testOverview";
     }
 
+    @GetMapping("/{testId}")
+    private String getTestDetails(@PathVariable("testId") Long testId, Model model) {
+        Optional<Test> optionalTest = testRepository.findById(testId);
+
+        if (optionalTest.isPresent()) {
+            model.addAttribute("test", optionalTest.get());
+        }
+
+        return "/testPages/testDetails";
+    }
+
     @GetMapping("/new")
     private String showCreateTestForm(Model model) {
         model.addAttribute("test", new Test());

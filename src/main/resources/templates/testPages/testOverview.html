@@ -20,7 +20,7 @@
     </thead>
     <tbody>
     <tr th:each="test : ${allTests}">
-      <td th:text="${test.testName}"></td>
+      <td><a th:href="@{/test/{testId}(testId=${test.testId})}" th:text="${test.testName}"></a></td>
       <td th:text="${test.subject.subjectName}"></td>
       <td th:text="${test.displayTestDate()}"></td>
       <td class="text-end">
