@@ -15,6 +15,15 @@
             <label for="teacherName">Teacher Name:</label>
             <input th:field="*{fullName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">
         </div>
+        <div>
+            <label for="subjectSelect">Subjects:</label>
+            <select id="subjectSelect" class="form-select" multiple th:field="*{subjects}">
+            <option th:each="subject : ${allSubjects}"
+                    th:value="${subject.subjectId}"
+                    th:text="${subject.subjectName}">
+            </option>
+            </select>
+        </div>
         <div th:replace="fragments/buttons :: save"></div>
         <div th:replace="fragments/buttons :: cancel"></div>
     </form>

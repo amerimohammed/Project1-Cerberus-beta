@@ -22,6 +22,9 @@
       <td th:text="${test.subject.subjectName}"></td>
       <td th:text="${test.testName}"></td>
       <td th:text="${test.displayTestDate()}"></td>
+      <td class="text-end">
+        <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${test.testId})})"></div>
+      </td>
     </tr>
     </tbody>
   </table>

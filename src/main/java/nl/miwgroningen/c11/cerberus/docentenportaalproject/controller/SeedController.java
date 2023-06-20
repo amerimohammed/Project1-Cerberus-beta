@@ -126,7 +126,11 @@ public class SeedController {
         Faker faker = new Faker();
 
         for (int index = 0; index < TEST_AMOUNT; index++) {
-            String testName = faker.educator().subjectWithNumber() + " " + faker.verb().ingForm();
+            StringBuilder testNameWithNumber = new StringBuilder(faker.educator().subjectWithNumber());
+            StringBuilder testNameWithoutNumber = testNameWithNumber.delete(testNameWithNumber.length() - 4, testNameWithNumber.length());
+
+
+            String testName = testNameWithoutNumber + " " + faker.verb().ingForm();
             Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
             LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
@@ -141,7 +145,7 @@ public class SeedController {
 
         for (int index = 0; index < ASSIGNMENT_AMOUNT; index++) {
             Assignment assignment = Assignment.builder()
-                    .assignmentName(faker.lorem().sentence(1, 4)).build();
+                    .assignmentName(faker.lorem().sentence(1, 3)).build();
 
             assignmentRepository.save(assignment);
         }

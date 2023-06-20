@@ -2,9 +2,11 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +28,7 @@ import java.util.*;
 @RequestMapping("/teacher")
 public class TeacherController {
     private final TeacherRepository teacherRepository;
+    private final SubjectRepository subjectRepository;
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
 
@@ -38,7 +41,10 @@ public class TeacherController {
 
     @GetMapping("/new")
     private String showCreateTeacherForm(Model model) {
+        List<Subject> allSubjects = subjectRepository.findAll();
+
         model.addAttribute("teacher", new Teacher());
+        model.addAttribute("allSubjects", allSubjects);
 
         return "teacher/createTeacherForm";
     }
@@ -48,7 +54,12 @@ public class TeacherController {
         Optional<Teacher> optionalTeacher = teacherRepository.findById(teacherId);
 
         if (optionalTeacher.isPresent()) {
-            model.addAttribute("teacher", optionalTeacher.get());
+            List<Subject> allSubjects = subjectRepository.findAll();
+            Teacher teacher = optionalTeacher.get();
+
+            model.addAttribute("allSubjects", allSubjects);
+            model.addAttribute("teacherSubjects", subjectRepository.findAllByTeachersContains(teacher));
+            model.addAttribute("teacher", teacher);
 
             return "teacher/createTeacherForm";
         }
@@ -57,7 +68,8 @@ public class TeacherController {
     }
 
     @PostMapping("")
-    private String saveOrUpdateTeacher(@ModelAttribute("teacher") Teacher teacherToBeSaved, BindingResult result, Model model) {
+    private String saveOrUpdateTeacher(@ModelAttribute("teacher")
+                                           Teacher teacherToBeSaved, BindingResult result, Model model) {
 
         if (!result.hasErrors()) {
             if (teacherToBeSaved.getUserId() == null) {
@@ -82,11 +94,32 @@ public class TeacherController {
                     teacherToBeSaved.setPassword(storedTeacher.get().getPassword());
                     teacherToBeSaved.setRoles(storedTeacher.get().getRoles());
                     teacherRepository.save(teacherToBeSaved);
+
+                    //Update subjects - first erase from all subjects
+                    //Then add teacher to subjects according to new list
+                    removeTeacherFromAllSubjects(storedTeacher.get());
+                    addTeacherToSubjects(teacherToBeSaved, teacherToBeSaved.getSubjects());
                 }
             }
         }
 
         return "redirect:/teacher/all";
+    }
+
+    private void removeTeacherFromAllSubjects(Teacher teacher) {
+        List<Subject> teacherSubjects = subjectRepository.findAllByTeachersContains(teacher);
+
+        for (Subject subject : teacherSubjects) {
+            subject.removeTeacher(teacher);
+            subjectRepository.save(subject);
+        }
+    }
+
+    private void addTeacherToSubjects(Teacher teacher, List<Subject> subjects) {
+        for (Subject subject : subjects) {
+            subject.addTeacher(teacher);
+            subjectRepository.save(subject);
+        }
     }
 
     @PostMapping(value = "", params = "cancel")

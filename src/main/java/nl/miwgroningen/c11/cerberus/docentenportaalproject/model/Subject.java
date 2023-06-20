@@ -27,4 +27,12 @@ public class Subject {
 
     @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();
+
+    public void removeTeacher(Teacher teacher) {
+        teachers.remove(teacher);
+    }
+
+    public void addTeacher(Teacher teacher) {
+        teachers.add(teacher);
+    }
 }
