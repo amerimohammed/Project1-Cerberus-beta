@@ -16,7 +16,7 @@
             <th scope="col">Subject</th>
             <th>Duration (weeks)</th>
             <th>Teachers</th>
-            <th class="text-end">Actions</th>
+            <th class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -28,9 +28,11 @@
                     <tr th:text="${teacher.fullName}"></tr>
                 </table>
             </td>
-            <td class="text-end">
-                <div th:replace="fragments/buttons :: edit(@{edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
-                <div th:replace="fragments/buttons :: delete(@{delete/{subjectId}(subjectId=${subject.subjectId})})"></div>
+            <td class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">
+                <div th:replace="fragments/buttons :: edit(@{edit/{subjectId}(subjectId=${subject.subjectId})})">
+                </div>
+                <div th:replace="fragments/buttons :: delete(@{delete/{subjectId}(subjectId=${subject.subjectId})})">
+                </div>
             </td>
         </tr>
         </tbody>

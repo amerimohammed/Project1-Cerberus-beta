@@ -19,7 +19,7 @@
                     <p th:text="${programme.shortDescription}"></p>
                     <img th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp' " />
                 </div>
-                <div class="p-2 col-2">
+                <div class="p-2 col-2" sec:authorize="hasAnyAuthority('ADMIN')">
                     <div class="row">
                         <div th:replace="fragments/buttons :: edit(@{programme/edit/{programmeId}(programmeId=${programme.programmeId})})"></div>
                     </div>

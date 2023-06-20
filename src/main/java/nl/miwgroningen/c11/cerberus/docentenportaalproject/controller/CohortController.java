@@ -32,7 +32,7 @@ public class CohortController {
         List<Cohort> allCohorts;
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
         if (!userRoles.contains("ADMIN")) {
-            allCohorts = cohortRepository.findCohortsByUsername(user.getUsername());
+            allCohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
         } else {
             allCohorts = cohortRepository.findAll();
         }

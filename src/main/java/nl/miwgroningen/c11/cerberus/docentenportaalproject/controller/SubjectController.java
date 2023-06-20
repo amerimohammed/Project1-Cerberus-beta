@@ -1,16 +1,20 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.*;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -21,7 +25,22 @@ public class SubjectController {
 
     @GetMapping("/all")
     private String showSubjectOverview(Model model) {
-        model.addAttribute("allSubjects", subjectRepository.findAll());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+        List<Subject> allSubjects;
+
+        if(userRoles.contains("ADMIN")) {
+            allSubjects = subjectRepository.findAll();
+        }
+        else if (userRoles.contains("TEACHER") && user instanceof Teacher) {
+            Teacher teacher = (Teacher) user;
+            allSubjects = subjectRepository.findAllByTeachersContains(teacher);
+        }
+        else {
+            allSubjects = subjectRepository.findSubjectsByStudentUsername(user.getUsername());
+        }
+
+        model.addAttribute("allSubjects", allSubjects);
 
         return "subject/subjectOverview";
     }

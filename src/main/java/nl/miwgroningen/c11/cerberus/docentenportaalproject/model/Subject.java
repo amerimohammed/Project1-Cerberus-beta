@@ -25,6 +25,9 @@ public class Subject {
 
     private int durationWeeks;
 
+    @ManyToMany(mappedBy = "subjects")
+    private List<Programme> programmes = new ArrayList<>();
+
     @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();
 

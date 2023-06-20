@@ -16,8 +16,8 @@
                 <th scope="col">Programme</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">End Date</th>
-                <th scope="col">Aantal Studenten</th>
-                <th scope="col" class="text-end">Actions</th>
+                <th scope="col">Student Amount</th>
+                <th scope="col" class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                 <td th:text="${cohort.displayStartDate()}"></td>
                 <td th:text="${cohort.displayEndDate()}"></td>
                 <td th:text="${cohort.getStudentCount()}"></td>
-                <td class="text-end">
+                <td class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">
                     <div th:replace="fragments/buttons
                     :: edit(@{/cohort/edit/{cohortId}(cohortId=${cohort.cohortId})})"></div>
                     <div th:replace="fragments/buttons
