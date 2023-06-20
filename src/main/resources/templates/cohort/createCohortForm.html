@@ -6,11 +6,13 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
-<div class="container">
+<div class="container  main-content">
+    <h1 class="text-center">Create or edit a Cohort</h1>
+
     <form th:action="@{/cohort/new}" method="post" th:object="${cohort}">
         <input type="hidden" th:field="*{cohortId}">
-        <div class="form-group">
-            <label for="programmeSelect">Programme</label>
+        <div class="mb-3">
+            <label for="programmeSelect">Programme:</label>
             <select id="programmeSelect" class="form-select" th:field="*{programme}">
                 <option th:value="null">None</option>
                 <option th:each="programme : ${allProgrammes}"
@@ -19,8 +21,8 @@
                 </option>
             </select>
         </div>
-        <div class="form-group">
-            <label for="startDate">Starting date</label>
+        <div class="mb-3">
+            <label for="startDate">Starting date:</label>
             <input type="date" th:field="*{startDate}"
                    class="form-control" id="startDate" placeholder="Starting date"
                    onchange="document.getElementById('endDate').min = document.getElementById('startDate').value;">
@@ -28,8 +30,8 @@
                 document.getElementById('startDate').max = [[${cohort.endDate}]];
             </script>
         </div>
-        <div class="form-group">
-            <label for="endDate">Ending date</label>
+        <div class="mb-3">
+            <label for="endDate">Ending date:</label>
             <input type="date" th:field="*{endDate}"
                    class="form-control" id="endDate" placeholder="Ending date"
                    onchange="document.getElementById('startDate').max = document.getElementById('endDate').value;">
@@ -37,9 +39,9 @@
                 document.getElementById('endDate').min = [[${cohort.startDate}]];
             </script>
         </div>
-        <div class="form-group">
+        <div class="mb-3">
             <label for="studentSelect" class="form-label">Students:</label>
-            <select id="studentSelect" class="form-select" th:field="*{students}" multiple>
+            <select id="studentSelect" class="form-select multiple-select" th:field="*{students}" multiple>
                 <option th:value="null" th:text="None"></option>
                 <option th:each="student : ${allStudents}"
                         th:value="${student.userId}"
@@ -47,9 +49,10 @@
                 </option>
             </select>
         </div>
-
-        <div th:replace="fragments/buttons :: save"></div>
-        <div th:replace="fragments/buttons :: cancel"></div>
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
     </form>
 </div>
 
