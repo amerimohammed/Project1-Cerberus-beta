@@ -29,7 +29,8 @@ public class SecurityConfig {
                         .antMatchers("/css/**", "/webjars/**", "/images/**", "/js/**", "/photos/**").permitAll()
                         .antMatchers("/", "/home", "/programme/view/**").permitAll()
                         .antMatchers("/teacher/**", "/seed").hasAuthority("ADMIN")
-                        .anyRequest().hasAnyAuthority("ADMIN", "TEACHER")
+                        .antMatchers("/cohort/**").hasAnyAuthority("ADMIN", "TEACHER")
+                        .anyRequest().hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
                 )
                 .formLogin().and().logout().logoutSuccessUrl("/");
         return httpSecurity.build();

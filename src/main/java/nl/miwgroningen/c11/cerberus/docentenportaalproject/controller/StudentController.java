@@ -1,17 +1,22 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Cohort;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,12 +25,42 @@ public class StudentController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/all")
     private String showStudentOverview(Model model) {
-        model.addAttribute("allStudents", studentRepository.findAll());
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+        List<Student> allStudents = new ArrayList<>();
+
+        if(userRoles.contains("ADMIN")) {
+            allStudents = studentRepository.findAll();
+        }
+        else if(userRoles.contains("TEACHER")) {
+            List<Cohort> cohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
+            for (Cohort cohort : cohorts) {
+                allStudents.addAll(cohort.getStudents());
+            }
+        }
+        else if(userRoles.contains("STUDENT")) {
+            allStudents = getStudentsInCohortOfUser(user);
+        }
+
+        model.addAttribute("allStudents", allStudents);
 
         return "student/studentOverview";
+    }
+
+    private List<Student> getStudentsInCohortOfUser(User user) {
+        List<Student> students = new ArrayList<>();
+
+        Optional<Student> optionalStudent = studentRepository.findById(user.getUserId());
+        if(optionalStudent.isPresent()) {
+            Cohort studentCohort = optionalStudent.get().getCohort();
+            students = studentCohort.getStudents();
+        }
+
+        return students;
     }
 
     @GetMapping("/new")
@@ -57,6 +92,9 @@ public class StudentController {
                 studentToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = studentToBeSaved.getPassword();
                 studentToBeSaved.hashPassword();
+
+                addStudentRole(studentToBeSaved);
+
                 studentRepository.save(studentToBeSaved);
                 model.addAttribute("username", studentToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
@@ -65,14 +103,21 @@ public class StudentController {
             } else {
                 Optional<Student> storedStudent = studentRepository.findById(studentToBeSaved.getUserId());
                 if (storedStudent.isPresent()) {
-                    studentToBeSaved.setUsername(storedStudent.get().getUsername());
-                    studentToBeSaved.setPassword(storedStudent.get().getPassword());
                     studentRepository.save(studentToBeSaved);
                 }
             }
         }
 
         return "redirect:/student/all";
+    }
+
+    private void addStudentRole(Student student) {
+        Optional<Role> studentRole = roleRepository.findRoleByRoleName("STUDENT");
+        if(studentRole.isPresent()){
+            Set<Role> studentRoles = new HashSet<>();
+            studentRoles.add(studentRole.get());
+            student.setRoles(studentRoles);
+        }
     }
 
     @PostMapping(value = "/new", params = "cancel")

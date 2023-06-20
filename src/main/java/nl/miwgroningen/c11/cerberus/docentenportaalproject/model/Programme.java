@@ -24,10 +24,13 @@ public class Programme {
 
     private String programmeName;
 
+    private String shortDescription;
+
     @ManyToMany
     private List<Subject> subjects = new ArrayList<>();
 
-    private String shortDescription;
+    @OneToMany(mappedBy="programme")
+    private List<Cohort> cohorts = new ArrayList<>();
 
     @OneToOne
     private Image image;

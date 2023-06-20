@@ -11,6 +11,9 @@
 
   <form th:action="@{/student/new}" method="post" th:object="${student}">
     <input type="hidden" th:field="*{userId}">
+    <input type="hidden" th:field="*{username}">
+    <input type="hidden" th:field="*{password}">
+    <input type="hidden" th:field="*{roles}">
     <table>
       <tr>
         <th>Name</th>

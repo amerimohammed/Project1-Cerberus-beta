@@ -15,14 +15,14 @@
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Cohort</th>
-      <th></th>
+      <th scope="col" class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="student : ${allStudents}">
       <td th:text="${student.fullName}"></td>
       <td th:text="${student.cohort} ? ${student.cohort.cohortId} : 'unknown' "></td>
-      <td class="text-end">
+      <td class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">
         <div th:replace="fragments/buttons :: edit(@{edit/{studentId}(studentId=${student.userId})})"></div>
         <div th:replace="fragments/buttons :: delete(@{delete/{studentId}(studentId=${student.userId})})"></div>
       </td>

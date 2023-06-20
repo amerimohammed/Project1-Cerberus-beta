@@ -11,6 +11,9 @@
 
     <form th:action="@{/teacher}" method="post" th:object="${teacher}">
         <input type="hidden" th:field="*{userId}">
+        <input type="hidden" th:field="*{username}">
+        <input type="hidden" th:field="*{password}">
+        <input type="hidden" th:field="*{roles}">
         <div class="form-group">
             <label for="teacherName">Teacher Name:</label>
             <input th:field="*{fullName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">

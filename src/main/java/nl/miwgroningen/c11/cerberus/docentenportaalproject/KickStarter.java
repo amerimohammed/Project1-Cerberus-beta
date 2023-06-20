@@ -35,6 +35,10 @@ public class KickStarter implements CommandLineRunner {
             teacherRole.setRoleName("TEACHER");
             roleRepository.save(teacherRole);
 
+            Role studentRole = new Role();
+            studentRole.setRoleName("STUDENT");
+            roleRepository.save(studentRole);
+
             User admin = new User();
             admin.setUsername("admin");
             admin.setPassword(passwordEncoder.encode("admin"));
@@ -45,16 +49,6 @@ public class KickStarter implements CommandLineRunner {
             admin.setRoles(adminRoles);
 
             userRepository.save(admin);
-
-            User teacher = new User();
-            teacher.setUsername("teacher");
-            teacher.setPassword(passwordEncoder.encode("teacher"));
-
-            Set<Role> teacherRoles = new HashSet<>();
-            teacherRoles.add(teacherRole);
-            teacher.setRoles(teacherRoles);
-
-            userRepository.save(teacher);
         }
     }
 }

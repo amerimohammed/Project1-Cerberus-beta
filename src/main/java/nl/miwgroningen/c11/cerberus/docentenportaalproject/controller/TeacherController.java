@@ -58,7 +58,6 @@ public class TeacherController {
             Teacher teacher = optionalTeacher.get();
 
             model.addAttribute("allSubjects", allSubjects);
-            model.addAttribute("teacherSubjects", subjectRepository.findAllByTeachersContains(teacher));
             model.addAttribute("teacher", teacher);
 
             return "teacher/createTeacherForm";
@@ -76,12 +75,9 @@ public class TeacherController {
                 teacherToBeSaved.generateUsernameAndPassword(userRepository);
                 String tempPassword = teacherToBeSaved.getPassword();
                 teacherToBeSaved.hashPassword();
-                Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
-                if(teacherRole.isPresent()){
-                    Set<Role> teacherRoles = new HashSet<>();
-                    teacherRoles.add(teacherRole.get());
-                    teacherToBeSaved.setRoles(teacherRoles);
-                }
+
+                addTeacherRole(teacherToBeSaved);
+
                 teacherRepository.save(teacherToBeSaved);
                 model.addAttribute("username", teacherToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
@@ -90,13 +86,10 @@ public class TeacherController {
             } else {
                 Optional<Teacher> storedTeacher = teacherRepository.findById(teacherToBeSaved.getUserId());
                 if (storedTeacher.isPresent()) {
-                    teacherToBeSaved.setUsername(storedTeacher.get().getUsername());
-                    teacherToBeSaved.setPassword(storedTeacher.get().getPassword());
-                    teacherToBeSaved.setRoles(storedTeacher.get().getRoles());
                     teacherRepository.save(teacherToBeSaved);
 
-                    //Update subjects - first erase from all subjects
-                    //Then add teacher to subjects according to new list
+                    //Update subjects - first erase from all subjects,
+                    //then add teacher to subjects according to the new list
                     removeTeacherFromAllSubjects(storedTeacher.get());
                     addTeacherToSubjects(teacherToBeSaved, teacherToBeSaved.getSubjects());
                 }
@@ -104,6 +97,15 @@ public class TeacherController {
         }
 
         return "redirect:/teacher/all";
+    }
+
+    private void addTeacherRole(Teacher teacher) {
+        Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
+        if(teacherRole.isPresent()){
+            Set<Role> teacherRoles = new HashSet<>();
+            teacherRoles.add(teacherRole.get());
+            teacher.setRoles(teacherRoles);
+        }
     }
 
     private void removeTeacherFromAllSubjects(Teacher teacher) {
