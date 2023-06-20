@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Teacher extends User{
+public class Teacher extends User {
 
-    @ManyToMany(cascade = CascadeType.DETACH)
+    @ManyToMany(mappedBy="teachers")
     private List<Subject> subjects = new ArrayList<>();
 }
