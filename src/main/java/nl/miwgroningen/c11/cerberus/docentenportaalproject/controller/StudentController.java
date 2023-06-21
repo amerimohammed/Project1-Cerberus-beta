@@ -95,6 +95,7 @@ public class StudentController {
 
                 addStudentRole(studentToBeSaved);
 
+                studentToBeSaved.setFirstLogin(true);
                 studentRepository.save(studentToBeSaved);
                 model.addAttribute("username", studentToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);

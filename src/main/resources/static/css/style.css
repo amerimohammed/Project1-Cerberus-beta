@@ -26,3 +26,8 @@
 .bg-with-opacity {
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+.small-form {
+    max-width: 600px;
+    margin: 25px auto;
+}

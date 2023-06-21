@@ -78,6 +78,7 @@ public class TeacherController {
 
                 addTeacherRole(teacherToBeSaved);
 
+                teacherToBeSaved.setFirstLogin(true);
                 teacherRepository.save(teacherToBeSaved);
                 model.addAttribute("username", teacherToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
