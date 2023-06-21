@@ -5,22 +5,18 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
- * An evaluation moment, to evaluate the learned skills of a student in a subject.
+ * A type of assignment that occurs at a set date and serves as an evaluation moment, to evaluate the learned skills of a student in a subject.
  *
  * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */
 
 @Entity
-@Builder
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-public class Test {
-
-    @Id
-    @GeneratedValue
-    private Long testId;
+public class Test extends Assignment {
 
     private String testName;
 
@@ -28,7 +24,13 @@ public class Test {
     private LocalDate testDate;
 
     @ManyToOne
-    private Subject subject;
+    private Test superTest;
+
+    @OneToMany(mappedBy = "superTest")
+    private List<Test> testParts;
+
+    //Entity does not yet exist, placed this comment so i don't forget.
+//    private Attempt testAttempt;
 
     public String displayTestDate() {
         String display;

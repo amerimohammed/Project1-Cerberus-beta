@@ -139,22 +139,51 @@ public class SeedController {
         }
     }
 
+    //Working on changing this entity
+    // TODO: make this shorter and simpler.
     private void createTest() {
         Faker faker = new Faker();
 
-        for (int index = 0; index < TEST_AMOUNT; index++) {
-            StringBuilder testNameWithNumber = new StringBuilder(faker.educator().subjectWithNumber());
-            StringBuilder testNameWithoutNumber = testNameWithNumber.delete(testNameWithNumber.length() - 4, testNameWithNumber.length());
+        Test test = new Test();
+        Test testTwo = new Test();
+        Test testThree = new Test();
+        Test testFour = new Test();
+        Test testFive = new Test();
 
+        //Create the test name
+        StringBuilder testNameWithNumber = new StringBuilder(faker.educator().subjectWithNumber());
+        StringBuilder testNameWithoutNumber = testNameWithNumber.delete(testNameWithNumber.length() - 4, testNameWithNumber.length());
+        String testName = testNameWithoutNumber + " " + faker.verb().ingForm();
+        StringBuilder testNameWithNumberTwo = new StringBuilder(faker.educator().subjectWithNumber());
+        StringBuilder testNameWithoutNumberTwo = testNameWithNumberTwo.delete(testNameWithNumberTwo.length() - 4, testNameWithNumberTwo.length());
+        String testNameTwo = testNameWithoutNumberTwo + " " + faker.verb().ingForm();
+        StringBuilder testNameWithNumberThree = new StringBuilder(faker.educator().subjectWithNumber());
+        StringBuilder testNameWithoutNumberThree = testNameWithNumberThree.delete(testNameWithNumberThree.length() - 4, testNameWithNumberThree.length());
+        String testNameThree = testNameWithoutNumberThree + " " + faker.verb().ingForm();
 
-            String testName = testNameWithoutNumber + " " + faker.verb().ingForm();
-            Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
-            LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        //Assign name to test
+        test.setTestName(testName);
+        testTwo.setTestName(testNameTwo);
+        testThree.setTestName(testNameThree);
+        testFour.setTestName("testing main test");
+        testFive.setTestName("testing sub test part");
 
-            Test test = Test.builder().testName(testName).testDate(futureLocalDate).build();
+        //Set date
+        Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
+        LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        test.setTestDate(futureLocalDate);
+        testFour.setTestDate(LocalDate.now());
 
-            testRepository.save(test);
-        }
+        //Set superTest
+        testTwo.setSuperTest(test);
+        testThree.setSuperTest(test);
+        testFive.setSuperTest(testFour);
+
+        testRepository.save(test);
+        testRepository.save(testTwo);
+        testRepository.save(testThree);
+        testRepository.save(testFour);
+        testRepository.save(testFive);
     }
 
     private void createAssignment() {
@@ -243,7 +272,7 @@ public class SeedController {
 
     private void assignSubjectToTest() {
         List<Subject> subjects = subjectRepository.findAll();
-        List<Test> tests = testRepository.findAll();
+        List<Test> tests = testRepository.findBySuperTestIsNull();
 
         if(subjects.size() < 1) {
             return;
@@ -260,9 +289,17 @@ public class SeedController {
     private void assignSubjectToAssignment() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Assignment> assignments = assignmentRepository.findAll();
+        List<Test> testParts = testRepository.findBySuperTestIsNotNull();
 
         if (subjects.size() < 1) {
             return;
+        }
+
+        //Make sure the test parts do not get a subject assigned
+        for (Test testPart : testParts) {
+            if (assignments.contains(testPart)) {
+                assignments.remove(testPart);
+            }
         }
 
         for (Assignment assignment : assignments) {
