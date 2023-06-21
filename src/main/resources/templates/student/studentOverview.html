@@ -9,7 +9,7 @@
 <div class="container main-content">
   <h1 class="text-center">All students</h1>
 
-  <div th:replace="fragments/buttons :: new(@{new})"></div>
+  <div sec:authorize="hasAnyAuthority('ADMIN')" th:replace="fragments/buttons :: new(@{new})"></div>
   <table class="table table-hover">
     <thead>
     <tr>

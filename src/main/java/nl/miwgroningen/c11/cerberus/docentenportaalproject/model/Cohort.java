@@ -31,10 +31,10 @@ public class Cohort implements Comparable<Cohort> {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "cohort", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "cohort")
     private List<Student> students = new ArrayList<>();
 
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne
     private Programme programme;
 
     public Cohort(LocalDate startDate, LocalDate endDate) {
@@ -63,14 +63,14 @@ public class Cohort implements Comparable<Cohort> {
         if(endDate == null || startDate.isBefore(endDate)) {
             this.startDate = startDate;
         }
-        else throw new IllegalArgumentException("Startdatum kan niet na einddatum zijn.");
+        else throw new IllegalArgumentException("startDate cannot be after endDate");
     }
 
     public void setEndDate(LocalDate endDate) {
         if(startDate == null || endDate.isAfter(startDate)) {
             this.endDate = endDate;
         }
-        else throw new IllegalArgumentException("Einddatum kan niet voor startdatum zijn.");
+        else throw new IllegalArgumentException("endDate cannot be before startDate");
     }
 
     public int getStudentCount() {
