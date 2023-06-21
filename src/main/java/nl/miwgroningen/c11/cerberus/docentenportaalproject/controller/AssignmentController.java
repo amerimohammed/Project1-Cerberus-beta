@@ -2,7 +2,6 @@ package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Assignment;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.AssignmentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import org.springframework.stereotype.Controller;

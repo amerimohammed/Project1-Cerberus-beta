@@ -10,7 +10,7 @@
     <h1>Create or edit a test</h1>
 
     <form th:action="@{/test/new}" method="post" th:object="${test}">
-        <input type="hidden" th:field="*{testId}">
+        <input type="hidden" th:field="*{assignmentId}">
         <table>
             <tr>
                 <th>Test name</th>

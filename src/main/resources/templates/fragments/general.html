@@ -33,7 +33,7 @@
                sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER', 'STUDENT')">Tests</a>
         </div>
         <div class="nav-item">
-            <dr class="nav-link"></dr>
+            <a class="nav-link"></a>
         </div>
         <div class="nav-item">
             <a class="nav-link disabled" sec:authorize="isAuthenticated()">Hi, <span th:text="${#authentication.name}"></span></a>

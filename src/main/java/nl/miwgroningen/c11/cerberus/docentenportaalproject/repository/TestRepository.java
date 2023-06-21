@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface TestRepository extends JpaRepository<Test, Long> {
     List<Test> findByOrderByTestDate();
+
+    List<Test> findBySuperTestIsNull();
+
+    List<Test> findBySuperTestIsNotNull();
 }
