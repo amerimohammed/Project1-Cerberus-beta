@@ -18,7 +18,7 @@
                    placeholder="Example: Software Engineering">
         </div>
         <div class="mb-3">
-            <label for="programmeSubjects">Subjects:</label>
+            <label for="programmeSubjects">Select Subjects:</label>
             <select id="programmeSubjects" class="form-select multiple-select" th:field="*{subjects}" multiple>
                 <option th:each="subject : ${allSubjects}"
                         th:value="${subject.subjectId}"

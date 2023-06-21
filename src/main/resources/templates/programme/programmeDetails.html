@@ -8,17 +8,14 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1 class="text-center" th:text="${programme.programmeName}">Programme Details</h1>
-    <div class="row mt-5 mb-5">
-        <div class="col border">
-            <span>Programme Name:</span>
-            <strong th:text="${programme.programmeName}"></strong>
-        </div>
-        <div class="col">
-        </div>
-        <div class="row">
-            <span>Description:</span>
-            <p th:text="${programme.shortDescription}"></p>
+    <div class="row mt-3 mb-5">
+        <div class="card text-bg-dark">
+            <img th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp'" class="card-img details-img">
+            <div class="card-img-overlay text-center bg-with-opacity">
+                <h1 class="card-title" th:text="${programme.programmeName}"></h1>
+                <p class="card-text" th:text="${programme.shortDescription}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small>There are <span th:text="${programme.subjects.size()}"></span> subjects in this programme</small></p>
+            </div>
         </div>
     </div>
     <table class="table table-hover">
