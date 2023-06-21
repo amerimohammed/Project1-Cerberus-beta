@@ -4,6 +4,25 @@
     padding-top: 50px;
     padding-bottom: 50px;
 }
+
 .multiple-select {
     overflow: hidden;
+}
+
+.programme-card {
+    height: 100%;
+}
+
+.programme-img {
+    max-height: 270px;
+    object-fit: cover;
+}
+
+.details-img {
+    max-height: 370px;
+    object-fit: cover;
+}
+
+.bg-with-opacity {
+    background-color: rgba(0, 0, 0, 0.3);
 }
