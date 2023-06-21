@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
 <head th:replace="fragments/general :: baseheader(~{:: title})">
     <title>programmeDetails</title>
 </head>
@@ -23,13 +23,13 @@
         <thead>
         <tr>
             <th scope="col">Subject Name</th>
-            <th scope="col" class="text-end">Actions</th>
+            <th scope="col" class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">Actions</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="subject : ${programme.subjects}">
             <td th:text="${subject.subjectName}"></td>
-            <td class="text-end">
+            <td class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">
                 <div th:replace="fragments/buttons :: edit(@{/subject/edit/{subjectId}(subjectId=${subject.subjectId})})"></div>
                 <div th:replace="fragments/buttons :: delete(@{/subject/delete/{subjectId}(subjectId=${subject.subjectId})})"></div>
             </td>

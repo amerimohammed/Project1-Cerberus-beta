@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -39,6 +37,7 @@ public class SeedController {
     private final ProgrammeRepository programmeRepository;
     private final UserRepository userRepository;
     private final TestRepository testRepository;
+    private final RoleRepository roleRepository;
     private final AssignmentRepository assignmentRepository;
 
     @GetMapping("/seed")
@@ -78,6 +77,15 @@ public class SeedController {
             Teacher teacher = new Teacher();
             teacher.setFullName(createFakeName());
             teacher.generateUsernameAndPassword(userRepository);
+            teacher.setPassword("teacher");
+
+            Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
+            if(teacherRole.isPresent()){
+                Set<Role> teacherRoles = new HashSet<>();
+                teacherRoles.add(teacherRole.get());
+                teacher.setRoles(teacherRoles);
+            }
+
             teacher.hashPassword();
             teacherRepository.save(teacher);
         }
@@ -117,7 +125,16 @@ public class SeedController {
             Student student = new Student();
             student.setFullName(createFakeName());
             student.generateUsernameAndPassword(userRepository);
+            student.setPassword("student");
             student.hashPassword();
+
+            Optional<Role> studentRole = roleRepository.findRoleByRoleName("STUDENT");
+            if(studentRole.isPresent()){
+                Set<Role> studentRoles = new HashSet<>();
+                studentRoles.add(studentRole.get());
+                student.setRoles(studentRoles);
+            }
+
             studentRepository.save(student);
         }
     }

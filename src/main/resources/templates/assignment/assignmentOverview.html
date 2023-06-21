@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
 <head th:replace="fragments/general :: baseheader(~{:: title})">
-    <title>Test overview</title>
+    <title>Put a title here</title>
 </head>
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1 class="text-center">All tests</h1>
+    <h1 class="text-center">All assignments</h1>
 
     <div th:replace="fragments/buttons :: new(@{new})"></div>
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Test</th>
+            <th scope="col">Assignment</th>
             <th>Subject</th>
-            <th>Date</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="test : ${allTests}">
-            <td><a th:href="@{/test/{testId}(testId=${test.testId})}" th:text="${test.testName}"></a></td>
-            <td th:text="${test.subject.subjectName}"></td>
-            <td th:text="${test.displayTestDate()}"></td>
+        <tr th:each="assignment : ${allAssignments}">
+            <td th:text="${assignment.assignmentName}"></td>
+            <td th:text="${assignment.subject.subjectName}"></td>
             <td class="text-end">
-                <div th:replace="fragments/buttons :: edit(@{edit/{testId}(testId=${test.testId})})"></div>
-                <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${test.testId})})"></div>
+                <div th:replace="fragments/buttons :: edit(@{edit/{assignmentId}(assignmentId=${assignment.assignmentId})})"></div>
+                <div th:replace="fragments/buttons :: delete(@{/assignment/delete/{assignmentId}(assignmentId=${assignment.assignmentId})})"></div>
             </td>
         </tr>
         </tbody>
@@ -34,7 +32,6 @@
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
-<div th:replace="fragments/general :: activeLink('#tests')"></div>
-
+<div th:replace="fragments/general :: activeLink('#assignments')"></div>
 </body>
 </html>

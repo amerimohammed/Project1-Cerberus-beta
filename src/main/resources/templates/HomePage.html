@@ -6,32 +6,6 @@
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
-<!--<div class="container main-content">-->
-<!--    <h3>Programmes</h3>-->
-<!--    <div th:replace="fragments/buttons :: new(@{/programme/new})"></div>-->
-<!--    <div class="row row-cols-3">-->
-<!--        <div class="col" th:each="programme : ${allProgrammes}">-->
-<!--            <div class="p-2 m-2 row">-->
-<!--                <div class="bg-light card p-2 my-2 col-10">-->
-<!--                    <a class="stretched-link"-->
-<!--                       th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"></a>-->
-<!--                    <h5 th:text="${programme.programmeName}"></h5>-->
-<!--                    <p th:text="${programme.shortDescription}"></p>-->
-<!--                    <img th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp' " />-->
-<!--                </div>-->
-<!--                <div class="p-2 col-2">-->
-<!--                    <div class="row">-->
-<!--                        <div th:replace="fragments/buttons :: edit(@{programme/edit/{programmeId}(programmeId=${programme.programmeId})})"></div>-->
-<!--                    </div>-->
-<!--                    <div class="mt-2 row">-->
-<!--                        <div th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}(programmeId=${programme.programmeId})})"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div class="container main-content">
     <div th:replace="fragments/buttons :: new(@{/programme/new})"></div>
     <div class="row row-cols-1 row-cols-md-2 g-4">
@@ -44,7 +18,8 @@
                     <p class="card-text" th:text="${programme.shortDescription}"></p>
                 </div>
                 <div class="m-3 text-end">
-                    <a th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}" class="btn btn-outline-primary">More details >></a>
+                    <a th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"
+                       class="btn btn-outline-primary">More details >></a>
                     <div th:replace="fragments/buttons :: edit(@{programme/edit/{programmeId}(programmeId=${programme.programmeId})})"></div>
                     <div th:replace="fragments/buttons :: delete(@{home/delete/{programmeId}(programmeId=${programme.programmeId})})"></div>
                 </div>
