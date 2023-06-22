@@ -26,7 +26,7 @@ public class Test extends Assignment {
     @ManyToOne
     private Test superTest;
 
-    @OneToMany(mappedBy = "superTest")
+    @OneToMany(mappedBy = "superTest", cascade = CascadeType.ALL)
     private List<Test> testParts;
 
     @OneToMany(mappedBy = "test")

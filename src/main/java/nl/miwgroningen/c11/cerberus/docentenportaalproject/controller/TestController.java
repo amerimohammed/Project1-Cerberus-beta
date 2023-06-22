@@ -26,18 +26,17 @@ public class TestController {
 
     @GetMapping("/all")
     private String showTestOverview(Model model) {
-        model.addAttribute("superTest", testRepository.findBySuperTestIsNull());
+        model.addAttribute("allSuperTest", testRepository.findBySuperTestIsNull());
 
         return "testPages/testOverview";
     }
 
-    //ToDo: check the parts of the controller bellow this comment to make sure it still works with new test entity.
     @GetMapping("/{testId}")
     private String getTestDetails(@PathVariable("testId") Long testId, Model model) {
         Optional<Test> optionalTest = testRepository.findById(testId);
 
         if (optionalTest.isPresent()) {
-            model.addAttribute("test", optionalTest.get());
+            model.addAttribute("superTest", optionalTest.get());
         }
 
         return "/testPages/testDetails";
