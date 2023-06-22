@@ -36,7 +36,7 @@ public class TestController {
         Optional<Test> optionalTest = testRepository.findById(testId);
 
         if (optionalTest.isPresent()) {
-            model.addAttribute("test", optionalTest.get());
+            model.addAttribute("superTest", optionalTest.get());
         }
 
         return "/testPages/testDetails";

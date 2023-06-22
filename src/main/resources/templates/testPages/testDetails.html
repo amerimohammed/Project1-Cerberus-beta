@@ -7,11 +7,17 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1 class="text-center">Details of '<span th:text="${test.testName}"></span>' for subject <span th:text="${test.subject.subjectName}"></span></h1>
+    <h1 class="text-center">Details of '<span th:text="${superTest.testName}"></span>' for subject <span th:text="${superTest.subject.subjectName}"></span></h1>
 
-    <div>
+    <div th:fragment="showTestAndParts">
+        <ul>
+            <li th:each="testPart : ${superTest.testParts}">
+                <span th:text="${testPart.testName}"></span>
+            </li>
+        </ul>
 
     </div>
+
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
