@@ -26,7 +26,7 @@ public class Test extends Assignment {
     @ManyToOne
     private Test superTest;
 
-    @OneToMany(mappedBy = "superTest")
+    @OneToMany(mappedBy = "superTest", cascade = CascadeType.ALL)
     private List<Test> testParts;
 
     //Entity does not yet exist, placed this comment so i don't forget.
