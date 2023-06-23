@@ -28,7 +28,7 @@ public class TestAttempt {
     @ManyToOne
     private Student student;
 
-    @OneToMany(mappedBy="TestAttempt", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="superTestAttempt", cascade = CascadeType.ALL)
     private List<TestAttempt> subTestAttempts;
 
     @ManyToOne
