@@ -7,16 +7,34 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-    <h1 class="text-center">Details of '<span th:text="${superTest.testName}"></span>' for subject <span th:text="${superTest.subject.subjectName}"></span></h1>
+    <h1 class="text-center">Details of <span th:text="${superTest.testName}"></span></h1>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Test name</th>
+            <th>Subject</th>
+            <th>Test date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${superTest.testName}"></td>
+            <td th:text="${superTest.subject.subjectName}"></td>
+            <td th:text="${superTest.testDate}"></td>
+        </tr>
+        </tbody>
+    </table>
 
-    <div th:fragment="showTestAndParts">
-        <ul>
-            <li th:each="testPart : ${superTest.testParts}">
-                <span th:text="${testPart.testName}"></span>
-            </li>
-        </ul>
-
+    <div class="pt-5">
+        <h2>Sections that make up the test.</h2>
+        <div th:fragment="showTestAndParts" class="py-5">
+            <div th:each="testPart : ${superTest.testParts}">
+                <h4>Section: <span th:text="${testPart.testName}"></span></h4>
+                <p th:text="${testPart.description}"></p>
+            </div>
+        </div>
     </div>
+
 
 </div>
 

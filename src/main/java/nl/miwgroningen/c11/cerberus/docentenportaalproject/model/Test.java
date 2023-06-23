@@ -29,6 +29,8 @@ public class Test extends Assignment {
     @OneToMany(mappedBy = "superTest", cascade = CascadeType.ALL)
     private List<Test> testParts;
 
+    private String description;
+
     //Entity does not yet exist, placed this comment so i don't forget.
 //    private Attempt testAttempt;
 

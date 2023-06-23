@@ -174,6 +174,10 @@ public class SeedController {
         test.setTestDate(futureLocalDate);
         testFour.setTestDate(LocalDate.now());
 
+        testTwo.setDescription("This is a description, as a place holder.");
+        testThree.setDescription("Change this to lorum ipsum with the faker.");
+        testFive.setDescription("This is a description, as a place holder. Change this to lorum ipsum with the faker.");
+
         //Set superTest
         testTwo.setSuperTest(test);
         testThree.setSuperTest(test);
