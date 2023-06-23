@@ -83,6 +83,8 @@ public class TeacherController {
                 model.addAttribute("username", teacherToBeSaved.getUsername());
                 model.addAttribute("password", tempPassword);
 
+                addTeacherToSubjects(teacherToBeSaved, teacherToBeSaved.getSubjects());
+
                 return "teacher/teacherAccount";
             } else {
                 Optional<Teacher> storedTeacher = teacherRepository.findById(teacherToBeSaved.getUserId());
