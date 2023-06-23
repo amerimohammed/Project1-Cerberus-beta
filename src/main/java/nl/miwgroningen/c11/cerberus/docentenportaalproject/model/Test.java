@@ -29,7 +29,8 @@ public class Test extends Assignment {
     @OneToMany(mappedBy = "superTest", cascade = CascadeType.ALL)
     private List<Test> testParts;
 
-    private String description;
+    //test contents in this context means the explanation and questions that make up the test.
+    private String testContents;
 
     @OneToMany(mappedBy = "test")
     private List<TestAttempt> testAttempts;
