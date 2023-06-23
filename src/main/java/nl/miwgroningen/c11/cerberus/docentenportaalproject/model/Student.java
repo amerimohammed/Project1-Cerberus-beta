@@ -30,15 +30,8 @@ public class Student extends User implements Comparable<Student> {
 
     @Override
     public int compareTo(Student otherStudent) {
-        int comparedCohort;
         // Latest cohort shown first in the list
-        if (cohort.getCohortId() > otherStudent.cohort.getCohortId()) {
-            comparedCohort = -1;
-        } else if (cohort.getCohortId() < otherStudent.cohort.getCohortId()) {
-            comparedCohort = 1;
-        } else {
-            comparedCohort = 0;
-        }
+        int comparedCohort = otherStudent.cohort.getCohortId().compareTo(cohort.getCohortId());
 
         if (comparedCohort != 0) {
             return comparedCohort;

@@ -15,7 +15,8 @@ import java.util.List;
  */
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class Cohort implements Comparable<Cohort> {
 
@@ -56,21 +57,19 @@ public class Cohort implements Comparable<Cohort> {
 
     @Override
     public int compareTo(Cohort otherCohort) {
-        return cohortId.compareTo(otherCohort.cohortId);
+        return otherCohort.cohortId.compareTo(cohortId);
     }
 
     public void setStartDate(LocalDate startDate) {
-        if(endDate == null || startDate.isBefore(endDate)) {
+        if (endDate == null || startDate.isBefore(endDate)) {
             this.startDate = startDate;
-        }
-        else throw new IllegalArgumentException("startDate cannot be after endDate");
+        } else throw new IllegalArgumentException("startDate cannot be after endDate");
     }
 
     public void setEndDate(LocalDate endDate) {
-        if(startDate == null || endDate.isAfter(startDate)) {
+        if (startDate == null || endDate.isAfter(startDate)) {
             this.endDate = endDate;
-        }
-        else throw new IllegalArgumentException("endDate cannot be before startDate");
+        } else throw new IllegalArgumentException("endDate cannot be before startDate");
     }
 
     public int getStudentCount() {
