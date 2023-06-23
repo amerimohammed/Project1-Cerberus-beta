@@ -46,6 +46,7 @@ public class StudentController {
             allStudents = getStudentsInCohortOfUser(user);
         }
 
+        Collections.sort(allStudents);
         model.addAttribute("allStudents", allStudents);
 
         return "student/studentOverview";

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Student extends User {
+public class Student extends User implements Comparable<Student> {
 
     @ManyToOne
     private Cohort cohort;
@@ -24,5 +24,14 @@ public class Student extends User {
 
     public String displayNameAndId() {
         return String.format("%d: %s", userId, fullName);
+    }
+
+    @Override
+    public int compareTo(Student otherStudent) {
+        int comparedCohort = Long.compare(cohort.getCohortId(), otherStudent.cohort.getCohortId());
+        if(comparedCohort != 0){
+            return comparedCohort;
+        }
+        return fullName.compareToIgnoreCase(otherStudent.fullName);
     }
 }
