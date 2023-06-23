@@ -181,6 +181,7 @@ public class SeedController {
         //Set superTest
         testTwo.setSuperTest(test);
         testThree.setSuperTest(test);
+        testFour.setSuperTest(testThree);
         testFive.setSuperTest(testFour);
 
         testRepository.save(test);

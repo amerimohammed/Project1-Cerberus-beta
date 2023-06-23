@@ -36,7 +36,8 @@
         </tr>
         </tbody>
     </table>
-    <table class="table" th:fragment="showQuestion">
+
+    <table class="table" th:fragment="showTestAttempts">
         <thead>
         <tr>
             <th scope="col">Question</th>
@@ -46,12 +47,15 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="subTestAttempt : ${testAttempt.subTestAttempts}">
-            <td th:text="${subTestAttempt.test.testContents}"></td>
-            <td th:text="${subTestAttempt.answer}"></td>
-            <td th:text="${subTestAttempt.score}"></td>
-            <td th:text="${subTestAttempt.feedback}"></td>
-        </tr>
+            <tr th:each="subTestAttempt : ${subTestAttempts}">
+                <td th:text="${subTestAttempt.test.testContents}"></td>
+                <td th:text="${subTestAttempt.answer}"></td>
+                <td th:text="${subTestAttempt.score}"></td>
+                <td th:text="${subTestAttempt.feedback}">
+                <td><div class="table" th:include=":: showTestAttempts"
+                           th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}">
+                </div></td>
+            </tr>
         </tbody>
     </table>
 </div>

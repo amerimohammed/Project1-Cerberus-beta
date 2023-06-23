@@ -68,6 +68,7 @@ public class TestAttemptController {
         TestAttempt testAttempt = optionalTestAttempt.get();
 
         model.addAttribute("testAttempt", testAttempt);
+        model.addAttribute("subTestAttempts", testAttempt.getSubTestAttempts());
 
         return("testAttempt/testAttemptDetails");
     }
