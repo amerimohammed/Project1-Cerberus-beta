@@ -15,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Subject {
+public class Subject implements Comparable<Subject>{
 
     @Id
     @GeneratedValue
@@ -37,5 +37,10 @@ public class Subject {
 
     public void addTeacher(Teacher teacher) {
         teachers.add(teacher);
+    }
+
+    @Override
+    public int compareTo(Subject otherSubject) {
+        return subjectName.compareTo(otherSubject.subjectName);
     }
 }

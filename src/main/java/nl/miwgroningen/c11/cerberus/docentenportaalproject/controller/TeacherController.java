@@ -34,7 +34,9 @@ public class TeacherController {
 
     @GetMapping({"", "/all"})
     private String showTeacherOverview(Model model) {
-        model.addAttribute("allTeachers", teacherRepository.findAll());
+        List<Teacher> allTeachers = teacherRepository.findAll();
+        Collections.sort(allTeachers);
+        model.addAttribute("allTeachers", allTeachers);
 
         return "teacher/teacherOverview";
     }
