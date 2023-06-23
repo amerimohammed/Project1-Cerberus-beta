@@ -19,7 +19,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="superTest : ${allSuperTest}">
+        <tr th:each="superTest : ${allSuperTest}" class="row-with-link" th:attr="data-link=@{/test/{testId}(testId=${superTest.assignmentId})}">
             <td><a th:href="@{/test/{testId}(testId=${superTest.assignmentId})}"
                    th:text="${superTest.testName}"></a></td>
             <td th:text="${superTest.subject.subjectName}"></td>
