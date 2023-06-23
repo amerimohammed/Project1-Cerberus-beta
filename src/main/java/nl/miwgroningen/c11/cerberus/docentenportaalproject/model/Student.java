@@ -13,13 +13,14 @@ import java.util.List;
  */
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Student extends User implements Comparable<Student> {
 
     @ManyToOne
     private Cohort cohort;
 
-    @OneToMany(mappedBy="student")
+    @OneToMany(mappedBy = "student")
     private List<TestAttempt> testAttempts;
 
     public String displayNameAndId() {
@@ -28,8 +29,17 @@ public class Student extends User implements Comparable<Student> {
 
     @Override
     public int compareTo(Student otherStudent) {
-        int comparedCohort = Long.compare(cohort.getCohortId(), otherStudent.cohort.getCohortId());
-        if(comparedCohort != 0){
+        int comparedCohort;
+        // Latest cohort shown first in the list
+        if (cohort.getCohortId() > otherStudent.cohort.getCohortId()) {
+            comparedCohort = -1;
+        } else if (cohort.getCohortId() < otherStudent.cohort.getCohortId()) {
+            comparedCohort = 1;
+        } else {
+            comparedCohort = 0;
+        }
+
+        if (comparedCohort != 0) {
             return comparedCohort;
         }
         return fullName.compareToIgnoreCase(otherStudent.fullName);
