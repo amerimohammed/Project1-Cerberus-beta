@@ -31,8 +31,8 @@ public class Test extends Assignment {
 
     private String description;
 
-    //Entity does not yet exist, placed this comment so i don't forget.
-//    private Attempt testAttempt;
+    @OneToMany(mappedBy = "test")
+    private List<TestAttempt> testAttempts;
 
     public String displayTestDate() {
         String display;
