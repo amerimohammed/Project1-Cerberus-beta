@@ -22,6 +22,9 @@
             <td th:text="${superTest.subject.subjectName}"></td>
             <td th:text="${superTest.testDate}"></td>
         </tr>
+        <tr th:if="${superTest.getTestAttempts()}">
+            <td><a th:href="@{/test/{testId}/attempt/all(testId=${superTest.assignmentId})}">Go to Attempts</a></td>
+        </tr>
         </tbody>
     </table>
 

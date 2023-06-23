@@ -31,8 +31,10 @@ public class TestAttempt {
     @OneToMany(mappedBy="superTestAttempt", cascade = CascadeType.ALL)
     private List<TestAttempt> subTestAttempts;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private TestAttempt superTestAttempt;
+
+    private String answer;
 
     private int score;
     private String feedback;

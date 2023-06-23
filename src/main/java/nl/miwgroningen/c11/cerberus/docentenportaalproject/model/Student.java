@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,5 +44,17 @@ public class Student extends User implements Comparable<Student> {
             return comparedCohort;
         }
         return fullName.compareToIgnoreCase(otherStudent.fullName);
+    }
+
+    public List<TestAttempt> getTestAttemptsForSpecificTest (Test test) {
+        List<TestAttempt> testAttemptsForSpecificTest = new ArrayList<>();
+
+        for (TestAttempt testAttempt : testAttempts) {
+            if(testAttempt.getTest() == test) {
+                testAttemptsForSpecificTest.add(testAttempt);
+            }
+        }
+
+        return testAttemptsForSpecificTest;
     }
 }
