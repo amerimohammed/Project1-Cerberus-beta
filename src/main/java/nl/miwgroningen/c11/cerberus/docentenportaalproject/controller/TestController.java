@@ -1,6 +1,7 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.dto.subTestDTO;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TestRepository;
@@ -50,6 +51,20 @@ public class TestController {
         return "testPages/createTestForm";
     }
 
+    @GetMapping("/new/contents/{superTestId}")
+    private String showCreateTestPartForm(@PathVariable("superTestId") Long superTestId, Model model) {
+        Optional<Test> optionalTest = testRepository.findById(superTestId);
+
+        if (optionalTest.isPresent()) {
+            model.addAttribute("testPartTest", new Test());
+            model.addAttribute("subTestDto", subTestDTO.builder().superTest(optionalTest.get()).build());
+
+            return "testPages/createTestPartForm";
+        }
+
+        return "redirect:/test/all";
+    }
+
     @GetMapping("/edit/{testId}")
     private String showEditTestForm(@PathVariable("testId") Long testId, Model model) {
         Optional<Test> optionalTest = testRepository.findById(testId);
@@ -75,11 +90,24 @@ public class TestController {
     }
 
     @PostMapping("/new")
-    private String saveOrUpdateTest(@ModelAttribute("test") Test testToBeSaved, BindingResult result) {
+    private String saveOrUpdateTest(@ModelAttribute("test") Test superTestToBeSaved, subTestDTO subTestDto, BindingResult result) {
 
         if (!result.hasErrors()) {
-            testRepository.save(testToBeSaved);
+            subTestDto.setSuperTest(superTestToBeSaved);
+            testRepository.save(superTestToBeSaved);
         }
+
+        return "redirect:/test/new/contents/" + superTestToBeSaved.getAssignmentId();
+    }
+
+    @PostMapping("/new/contents")
+    private String saveOrUpdateTestPart(
+            @ModelAttribute("subTestDto") subTestDTO subTestDto, BindingResult result) {
+            if (!result.hasErrors()) {
+                Test subTest = subTestDto.getSubTest();
+                subTest.setSuperTest(subTestDto.getSuperTest());
+                testRepository.save(subTest);
+            }
 
         return "redirect:/test/all";
     }

@@ -31,7 +31,12 @@
             </tr>
         </table>
 
-        <div th:replace="fragments/buttons :: save"></div>
+        <div class="text-end m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+            <button type="submit" class="btn btn-primary">
+                <span th:replace="fragments/icons :: saveIcon"></span>
+                Save and continue with test contents
+            </button>
+        </div>
         <div th:replace="fragments/buttons :: cancel"></div>
     </form>
 </div>
