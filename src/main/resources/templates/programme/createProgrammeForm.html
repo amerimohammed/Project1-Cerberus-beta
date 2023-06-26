@@ -28,10 +28,11 @@
         </div>
         <div class="mb-3">
             <label for="programmeDescription">Description:</label>
-            <input id="programmeDescription" class="form-control" type="text"
-                   th:field="*{shortDescription}" maxlength="255"
-                   placeholder="Give a short description of the programme"
-            >
+<!--            <input id="programmeDescription" class="form-control" type="text"-->
+<!--                   th:field="*{shortDescription}" maxlength="255"-->
+<!--                   placeholder="Give a short description of the programme"-->
+<!--            >-->
+            <textarea id="programmeDescription" class="richTextContent" type="text" th:field="*{shortDescription}"></textarea>
         </div>
         <div class="mb-3">
             <label for="programmeImage">Programme Photo:</label>
@@ -44,12 +45,11 @@
             <div th:replace="fragments/buttons :: cancel"></div>
             <div th:replace="fragments/buttons :: save"></div>
         </div>
-
     </form>
 </div>
 
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
-
+<th:block th:replace="fragments/general :: richText"></th:block>
 </body>
 </html>
