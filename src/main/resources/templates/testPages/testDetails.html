@@ -32,8 +32,9 @@
         <h2>Sections that make up the test.</h2>
         <div th:fragment="showTestAndParts" class="py-5">
             <div th:each="testPart : ${superTest.testParts}">
-                <h4>Section: <span th:text="${testPart.testName}"></span></h4>
+                <h5><span th:text="${testPart.testName}"></span></h5>
                 <p th:text="${testPart.testContents}"></p>
+                <div th:include=":: showTestAndParts" th:with="superTest = ${testPart}"></div>
             </div>
         </div>
     </div>
