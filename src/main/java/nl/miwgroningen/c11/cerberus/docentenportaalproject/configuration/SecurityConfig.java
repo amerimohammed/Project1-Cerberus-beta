@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .antMatchers("/cohort/**").hasAnyAuthority("ADMIN", "TEACHER")
                         .anyRequest().hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
                 )
-                .formLogin().and().logout().logoutSuccessUrl("/");
+                .formLogin().loginPage("/login").permitAll().and().logout().logoutSuccessUrl("/");
         return httpSecurity.build();
     }
 
