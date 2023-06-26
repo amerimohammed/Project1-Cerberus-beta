@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Test Attempt</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+    <h1 class="text-center">Question <span th:text="${testAttempt.test.displayQuestionNumber()}"></span></h1>
+    <h3 class="text-center">
+        <span th:if="${testAttempt.test.testContents}">
+            <span th:text="${testAttempt.test.testContents}"></span>
+        </span>
+        <span th:unless="${testAttempt.test.testContents}">
+            <span th:text="${testAttempt.test.testName}"></span>
+        </span>
+    </h3>
+
+    <table class="table text-center">
+        <tr th:unless="${testAttempt.hasSubTestAttempts()}">
+            <th>Answer</th>
+            <td th:text="${testAttempt.answer}"></td>
+        </tr>
+        <tr>
+            <th>Score</th>
+            <td th:text="${testAttempt.score}"></td>
+        </tr>
+        <tr>
+            <th>Feedback</th>
+            <td th:text="${testAttempt.feedback}"></td>
+        </tr>
+    </table>
+
+    <form th:action="@{/testAttempt/update}" method="post" th:object="${testAttempt}">
+        <input type="hidden" th:field="*{testAttemptId}">
+        <input type="hidden" th:field="*{test}">
+        <input type="hidden" th:field="*{student}">
+        <input type="hidden" th:field="*{superTestAttempt}">
+        <input type="hidden" th:field="*{subTestAttempts}">
+        <div th:if="${testAttempt.hasSubTestAttempts()}">
+            <input type="hidden" th:field="*{score}">
+            <input type="hidden" th:field="*{answer}">
+        </div>
+
+        <div class="mb-3" th:unless="${testAttempt.hasSubTestAttempts()}">
+            <label for="answer">Answer:</label>
+            <input th:field="*{answer}" type="text" class="form-control" id="answer"
+                   aria-describedby="answer" placeholder="Answer">
+        </div>
+        <div class="mb-3" th:unless="${testAttempt.hasSubTestAttempts()}">
+            <label for="score">Score:</label>
+            <input th:field="*{score}" type="number" class="form-control" id="score"
+                   aria-describedby="score" placeholder="Score">
+        </div>
+        <div class="mb-3">
+            <label for="feedback">Feedback:</label>
+            <input th:field="*{feedback}" type="text" class="form-control" id="feedback"
+                   aria-describedby="feedback" placeholder="Feedback">
+        </div>
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+</body>
+</html>

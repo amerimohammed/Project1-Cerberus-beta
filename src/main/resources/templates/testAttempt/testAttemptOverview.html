@@ -22,8 +22,8 @@
             <td>
                 <table class="table" th:each="testAttemptStudent : ${student.getTestAttemptsForSpecificTest(test)}">
                     <tr>
-                        <a th:href="@{/test/{testId}/attempt/{testAttemptId}
-                        (testId=${test.assignmentId}, testAttemptId=${testAttemptStudent.testAttemptId})}">Attempt</a>
+                        <a th:href="@{/testAttempt/{testAttemptId}
+                        (testAttemptId=${testAttemptStudent.testAttemptId})}">Attempt</a>
                     </tr>
                 </table>
             </td>

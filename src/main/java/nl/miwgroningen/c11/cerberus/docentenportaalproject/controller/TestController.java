@@ -82,14 +82,16 @@ public class TestController {
         return "redirect:/test/all";
     }
 
-    @GetMapping("/{testId}/edit")
+    @GetMapping("/edit/contents/{testId}")
     private String showEditTestPartForm(@PathVariable("testId") Long testId, Model model) {
-        Optional<Test> optionalTest = testRepository.findById(testId);
+        Optional<Test> optionalTestPart = testRepository.findById(testId);
 
-        if (optionalTest.isPresent()) {
-            model.addAttribute("test", optionalTest.get());
-            model.addAttribute("subTestDto", subTestDTO.builder().subTest(optionalTest.get()).build());
+        if (optionalTestPart.isPresent()) {
+            model.addAttribute("subTestDto", subTestDTO.builder()
+                                                            .subTest(optionalTestPart.get())
+                                                            .superTest(optionalTestPart.get().getSuperTest()).build());
 
+            testRepository.delete(optionalTestPart.get());
             return "testPages/createTestPartForm";
         }
 
@@ -106,8 +108,8 @@ public class TestController {
         return "redirect:/test/all";
     }
 
-    @PostMapping("/new")
-    private String saveOrUpdateTest(@ModelAttribute("test") Test superTestToBeSaved, subTestDTO subTestDto, BindingResult result) {
+    @PostMapping(value = "/new", params = "saveAndAdd")
+    private String saveOrUpdateTestAndContinue(@ModelAttribute("test") Test superTestToBeSaved, subTestDTO subTestDto, BindingResult result) {
 
         if (!result.hasErrors()) {
             subTestDto.setSuperTest(superTestToBeSaved);
@@ -115,6 +117,17 @@ public class TestController {
         }
 
         return "redirect:/test/new/contents/" + superTestToBeSaved.getAssignmentId();
+    }
+
+    @PostMapping(value = "/new", params = "done")
+    private String saveOrUpdateTest(@ModelAttribute("test") Test superTestToBeSaved, subTestDTO subTestDto, BindingResult result) {
+
+        if (!result.hasErrors()) {
+            subTestDto.setSuperTest(superTestToBeSaved);
+            testRepository.save(superTestToBeSaved);
+        }
+
+        return "redirect:/test/" + superTestToBeSaved.getAssignmentId();
     }
 
     @PostMapping("/new/contents")
