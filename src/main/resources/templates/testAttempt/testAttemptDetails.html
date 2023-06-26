@@ -31,46 +31,41 @@
             <td th:text="${testAttempt.test.testName}"></td>
             <td th:text="${testAttempt.test.subject.subjectName}"></td>
             <td th:text="${testAttempt.test.testDate}"></td>
-            <td th:text="${testAttempt.score}"></td>
+            <td th:text="${testAttempt.displayScore()}"></td>
             <td th:text="${testAttempt.feedback}"></td>
         </tr>
         </tbody>
     </table>
 
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Nr</th>
                 <th>Question</th>
-                <th>Answer</th>
                 <th>Score</th>
-                <th>Feedback</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody th:fragment="showQuestion">
-            <tr th:each="subTestAttempt : ${subTestAttempts}">
-                <td th:text="${subTestAttempt.test.displayQuestionNumber()}"></td>
-                <td th:text="${subTestAttempt.test.testContents}"></td>
-                <td th:text="${subTestAttempt.answer}"></td>
-                <td th:text="${subTestAttempt.score}"></td>
-                <td th:text="${subTestAttempt.feedback}"></td>
+            <tr class="row-with-link"
+                th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}"
+                th:each="subTestAttempt : ${subTestAttempts}">
+                <td>
+                    <a th:text="${subTestAttempt.test.displayQuestionNumber()}"
+                       th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}">
+                    </a>
+                <td th:if="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testContents}"></td>
+                <td th:unless="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testName}"></td>
+                <td th:text="${subTestAttempt.displayScore()}"></td>
+                <td class="text-end">
+                    <div th:replace="fragments/buttons
+                    :: edit(@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})})"></div>
+                </td>
                 <td th:include=":: showQuestion"
                 th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>
             </tr>
         </tbody>
     </table>
-
-<!--    <section th:fragment="showQuestion">-->
-<!--        <ul class="list-group list-group-numbered">-->
-<!--            <li class="list-group-item" th:each="subAttempt : ${subTestAttempts}">-->
-<!--                <span th:text="${subAttempt.test.testContents}"></span>-->
-<!--                <span class="justify-content-end">Score:</span>-->
-<!--                <div th:include=":: showQuestion"-->
-<!--                    th:with="subTestAttempts = ${subAttempt.getSubTestAttempts()}">-->
-<!--                </div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </section>-->
 
 </div>
 
