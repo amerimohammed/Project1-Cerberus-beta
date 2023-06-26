@@ -17,13 +17,31 @@
         </div>
 
         <div class="form-group">
-<!--            <label for="sectionContents" class="form-label">Contents of this section</label>-->
-<!--            <input id="sectionContents" type="text" class="form-control" th:field="${test.testContents}">-->
+            <label for="sectionContents" class="form-label">Contents of this section</label>
+            <input id="sectionContents" type="text" class="form-control" th:field="${subTestDto.subTest.testContents}">
+        </div>
+
+        <div class="m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+            <button type="submit" name="next" class="btn btn-primary">
+                <span th:replace="fragments/icons :: saveIcon"></span>
+                Save this section and add another one.
+            </button>
+        </div>
+        <div class="m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+            <button type="submit" name="subSection" class="btn btn-primary">
+                <span th:replace="fragments/icons :: saveIcon"></span>
+                Give this section a sub section
+            </button>
         </div>
 
         <div class="d-flex justify-content-end">
             <div th:replace="fragments/buttons :: cancel"></div>
-            <div th:replace="fragments/buttons :: save"></div>
+            <div class="text-end m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+                <button type="submit" class="btn btn-primary">
+                    <span th:replace="fragments/icons :: saveIcon"></span>
+                    Done
+                </button>
+            </div>
         </div>
     </form>
 </div>

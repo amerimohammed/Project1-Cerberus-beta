@@ -25,7 +25,7 @@
             <td th:text="${superTest.subject.subjectName}"></td>
             <td th:text="${superTest.displayTestDate}"></td>
             <td class="text-end">
-            <div th:replace="fragments/buttons :: edit(@{edit/{testId}(testId=${superTest.assignmentId})})"></div>
+<!--            <div th:replace="fragments/buttons :: edit(@{edit/{testId}(testId=${superTest.assignmentId})})"></div>-->
             <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${superTest.assignmentId})})"></div>
             </td>
         </tr>

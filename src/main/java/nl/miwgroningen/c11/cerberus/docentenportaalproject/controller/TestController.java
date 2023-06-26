@@ -116,6 +116,26 @@ public class TestController {
         return "redirect:/test/all";
     }
 
+    @PostMapping(value = "/new/contents", params = "next")
+    private String nextSectionForm(@ModelAttribute("test") subTestDTO test, BindingResult result) {
+        if (!result.hasErrors()) {
+            Test subTest = test.getSubTest();
+            subTest.setSuperTest(test.getSuperTest());
+            testRepository.save(subTest);
+        }
+        return "redirect:/test/new/contents/" + test.getSuperTest().getAssignmentId();
+    }
+
+    @PostMapping(value = "/new/contents", params = "subSection")
+    private String nextLayerForm(@ModelAttribute("test") subTestDTO test, BindingResult result) {
+        if (!result.hasErrors()) {
+            Test subTest = test.getSubTest();
+            subTest.setSuperTest(test.getSuperTest());
+            testRepository.save(subTest);
+        }
+        return "redirect:/test/new/contents/" + test.getSubTest().getAssignmentId();
+    }
+
     @PostMapping(value = "/new", params = "cancel")
     private String cancelForm() {
 
