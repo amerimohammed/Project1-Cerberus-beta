@@ -69,7 +69,6 @@ public class TestController {
         return "redirect:/test/all";
     }
 
-    //wordt niet meer gebruikt voor nu.
     @GetMapping("/edit/{testId}")
     private String showEditTestForm(@PathVariable("testId") Long testId, Model model) {
         Optional<Test> optionalTest = testRepository.findById(testId);
