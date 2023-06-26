@@ -33,13 +33,11 @@ public class Student extends User implements Comparable<Student> {
         int comparedCohort;
 
         // First unknowns in list
-        if(cohort == null) {
+        if (cohort == null) {
             comparedCohort = -1;
-        }
-        else if(otherStudent.cohort == null) {
+        } else if (otherStudent.cohort == null) {
             comparedCohort = 1;
-        }
-        else {
+        } else {
             // Latest cohort shown first in the list
             comparedCohort = otherStudent.cohort.getCohortId().compareTo(cohort.getCohortId());
         }
@@ -50,11 +48,11 @@ public class Student extends User implements Comparable<Student> {
         return fullName.compareToIgnoreCase(otherStudent.fullName);
     }
 
-    public List<TestAttempt> getTestAttemptsForSpecificTest (Test test) {
+    public List<TestAttempt> getTestAttemptsForSpecificTest(Test test) {
         List<TestAttempt> testAttemptsForSpecificTest = new ArrayList<>();
 
         for (TestAttempt testAttempt : testAttempts) {
-            if(testAttempt.getTest() == test) {
+            if (testAttempt.getTest() == test) {
                 testAttemptsForSpecificTest.add(testAttempt);
             }
         }

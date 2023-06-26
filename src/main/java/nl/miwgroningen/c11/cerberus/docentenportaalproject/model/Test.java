@@ -49,16 +49,25 @@ public class Test extends Assignment implements Comparable<Test> {
         return display;
     }
 
-    //TODO: Maybe usefull?
-//    public String displayTestParts() {
-//        StringBuilder fullTestContents = new StringBuilder();
-//
-//        for (Test testPart : testParts) {
-//            fullTestContents.append(testPart.testName).append("\n").append(testPart.testContents).append("\n");
-//        }
-//
-//        return fullTestContents.toString();
-//    }
+    public String displayQuestionNumber() {
+        String questionNumber = "";
+
+        if (superTest != null) {
+            if (!superTest.displayQuestionNumber().equals("")) {
+                questionNumber = superTest.displayQuestionNumber() + ".";
+            }
+
+            int index = 0;
+
+            while (superTest.testParts.get(index) != this) {
+                index++;
+            }
+
+            questionNumber = questionNumber + (index + 1);
+        }
+
+        return questionNumber;
+    }
 
     @Override
     public int compareTo(Test otherTest) {
