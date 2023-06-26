@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-public class Test extends Assignment {
+public class Test extends Assignment implements Comparable<Test> {
 
     private String testName;
 
@@ -44,5 +44,10 @@ public class Test extends Assignment {
         }
 
         return display;
+    }
+
+    @Override
+    public int compareTo(Test otherTest) {
+        return otherTest.testDate.compareTo(testDate);
     }
 }

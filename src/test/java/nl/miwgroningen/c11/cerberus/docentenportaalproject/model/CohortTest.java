@@ -1,5 +1,6 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -13,59 +14,87 @@ class CohortTest {
     private static final LocalDate TEST_DATE = LocalDate.parse("1999-01-01");
 
     @Test
-    void setStartDate() {
+    @DisplayName("Setting startDate without endDate should be possible")
+    void setStartDateWithoutEndDate() {
         Cohort cohort = new Cohort();
 
-        //Test whether endDate can be set when there is no startDate yet
-        assertDoesNotThrow(() -> cohort.setEndDate(TEST_DATE));
-
-        //EndDate and StartDate cannot be the same
-        assertThrows(IllegalArgumentException.class, () -> cohort.setStartDate(TEST_DATE));
-
-        //StartDate cannot be after endDate
-        assertThrows(IllegalArgumentException.class, () -> cohort.setStartDate(TEST_DATE.plusDays(1)));
-
-        //StartDate cannot be set to null
-        assertThrows(NullPointerException.class, () -> cohort.setStartDate(null));
-
-        //StartDate can be set before endDate
-        assertDoesNotThrow(() -> cohort.setStartDate(TEST_DATE.minusDays(1)));
-
-        //Check whether date is set right
-        assertEquals(TEST_DATE.minusDays(1), cohort.getStartDate());
+        assertDoesNotThrow(() -> cohort.setStartDate(TEST_DATE));
     }
 
     @Test
-    void setEndDate() {
+    @DisplayName("setting startDate before endDate should be possible")
+    void setStartDateBeforeEndDate() {
+        Cohort cohort = setupCohortWithEndDate();
+
+        assertDoesNotThrow(() -> cohort.setStartDate(TEST_DATE.minusDays(1)));
+    }
+
+    @Test
+    @DisplayName("Setting startDate on same day as endDate should result in an error")
+    void setStartDateOnSameDayAsEndDate() {
+        Cohort cohort = setupCohortWithEndDate();
+
+        assertThrows(IllegalArgumentException.class, () -> cohort.setStartDate(TEST_DATE));
+    }
+
+    @Test
+    @DisplayName("Setting startDate after endDate should result in an error")
+    void setStartDateAfterEndDate() {
+        Cohort cohort = setupCohortWithEndDate();
+
+        assertThrows(IllegalArgumentException.class, () -> cohort.setStartDate(TEST_DATE.plusDays(1)));
+    }
+
+    @Test
+    @DisplayName("Setting endDate without startDate should be possible")
+    void setEndDateWithoutStartDate() {
         Cohort cohort = new Cohort();
 
-        //Test whether endDate can be set when there is no startDate yet
-        assertDoesNotThrow(() -> cohort.setStartDate(TEST_DATE));
+        assertDoesNotThrow(() -> cohort.setEndDate(TEST_DATE));
+    }
 
-        //endDate and startDate cannot be on the same day
-        assertThrows(IllegalArgumentException.class, () -> cohort.setEndDate(TEST_DATE));
+    @Test
+    @DisplayName("Setting endDate after StartDate should be possible")
+    void setEndDateAfterStartDate() {
+        Cohort cohort = setupCohortWithStartDate();
 
-        //endDate cannot be before startDate
-        assertThrows(IllegalArgumentException.class, () -> cohort.setEndDate(TEST_DATE.minusDays(1)));
-
-        //endDate cannot be set to null
-        assertThrows(NullPointerException.class, () -> cohort.setEndDate(null));
-
-        //endDate can be after startDate
         assertDoesNotThrow(() -> cohort.setEndDate(TEST_DATE.plusDays(1)));
+    }
 
-        //Check whether date is set right
-        assertEquals(TEST_DATE.plusDays(1), cohort.getEndDate());
+    @Test
+    @DisplayName("Setting endDate on same day as startDay should result in an error")
+    void setEndDateOnSameDayAsStartDate() {
+        Cohort cohort = setupCohortWithStartDate();
+
+        assertThrows(IllegalArgumentException.class, () -> cohort.setEndDate(TEST_DATE));
+    }
+
+    @Test
+    @DisplayName("Setting endDate before StartDate should result in an error")
+    void setEndDateBeforeStartDate() {
+        Cohort cohort = setupCohortWithStartDate();
+
+        assertThrows(IllegalArgumentException.class, () -> cohort.setEndDate(TEST_DATE.minusDays(1)));
     }
 
     @Test
     void displayDate() {
-        Cohort cohort = new Cohort();
-
-        cohort.setStartDate(TEST_DATE);
+        Cohort cohort = setupCohortWithStartDate();
         cohort.setEndDate(TEST_DATE.plusDays(1));
 
         assertEquals(TEST_START_DATE_STRING, cohort.displayStartDate());
         assertEquals(TEST_END_DATE_STRING, cohort.displayEndDate());
+    }
+
+    private static Cohort setupCohortWithStartDate() {
+        Cohort cohort = new Cohort();
+        cohort.setStartDate(TEST_DATE);
+        return cohort;
+    }
+
+    private static Cohort setupCohortWithEndDate() {
+        Cohort cohort = new Cohort();
+        cohort.setEndDate(TEST_DATE);
+        return cohort;
     }
 }

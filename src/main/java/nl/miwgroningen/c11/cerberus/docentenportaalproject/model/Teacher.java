@@ -15,8 +15,13 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Teacher extends User {
+public class Teacher extends User implements Comparable<Teacher> {
 
     @ManyToMany(mappedBy="teachers")
     private List<Subject> subjects = new ArrayList<>();
+
+    @Override
+    public int compareTo(Teacher otherTeacher) {
+        return fullName.compareTo(otherTeacher.fullName);
+    }
 }

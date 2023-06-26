@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Test Attempt Details</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+    <h1 class="text-center">
+        Details of
+        <span th:text="${testAttempt.student.fullName}"></span>'s
+        Attempt of
+        <span th:text="${testAttempt.test.testName}"></span>
+    </h1>
+    <p class="text-center">
+        <a th:href="@{/test/{testId}/attempt/all(testId=${testAttempt.test.assignmentId})}">Back to Attempt Overview</a>
+    </p>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Test name</th>
+            <th>Subject</th>
+            <th>Test date</th>
+            <th>Score</th>
+            <th>Feedback</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${testAttempt.test.testName}"></td>
+            <td th:text="${testAttempt.test.subject.subjectName}"></td>
+            <td th:text="${testAttempt.test.testDate}"></td>
+            <td th:text="${testAttempt.score}"></td>
+            <td th:text="${testAttempt.feedback}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table" th:fragment="showTestAttempts">
+        <thead>
+        <tr>
+            <th scope="col">Question</th>
+            <th>Answer</th>
+            <th>Score</th>
+            <th>Feedback</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="subTestAttempt : ${subTestAttempts}">
+                <td th:text="${subTestAttempt.test.testContents}"></td>
+                <td th:text="${subTestAttempt.answer}"></td>
+                <td th:text="${subTestAttempt.score}"></td>
+                <td th:text="${subTestAttempt.feedback}">
+                <td><div class="table" th:include=":: showTestAttempts"
+                           th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}">
+                </div></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+</body>
+</html>

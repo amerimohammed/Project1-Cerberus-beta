@@ -12,14 +12,12 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th scope="col">Teacher id</th>
             <th scope="col">Name</th>
             <th scope="col" class="text-end">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="teacher : ${allTeachers}">
-            <th scope="row" th:text="${teacher.userId}"></th>
+        <tr th:each="teacher : ${allTeachers}" class="row-with-link" th:attr="data-link=@{/teacher/edit/{teacherId}(teacherId=${teacher.userId})}">
             <td th:text="${teacher.fullName}"></td>
             <td class="text-end">
                 <div th:replace="fragments/buttons :: edit(@{/teacher/edit/{teacherId}(teacherId=${teacher.userId})})"></div>
