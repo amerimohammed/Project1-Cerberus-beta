@@ -30,7 +30,8 @@ public class TestController {
     @GetMapping("/all")
     private String showTestOverview(Model model) {
         List<Test> allTests = testRepository.findBySuperTestIsNull();
-        Collections.sort(allTests);
+        //TODO: causes problems in overview, when test does not have a date
+//        Collections.sort(allTests);
         model.addAttribute("allSuperTest", allTests);
 
         return "testPages/testOverview";
