@@ -34,6 +34,8 @@
             <div th:each="testPart : ${superTest.testParts}">
                 <h5><span th:text="${testPart.testName}"></span></h5>
                 <p th:text="${testPart.testContents}"></p>
+                <div th:replace="fragments/buttons :: edit(@{{testId}/edit(testId=${testPart.assignmentId})})"></div>
+                <div th:replace="fragments/buttons :: delete(@{delete/{testId}(testId=${testPart.assignmentId})})"></div>
                 <div th:include=":: showTestAndParts" th:with="superTest = ${testPart}"></div>
             </div>
         </div>

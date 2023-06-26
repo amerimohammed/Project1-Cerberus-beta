@@ -82,6 +82,19 @@ public class TestController {
         return "redirect:/test/all";
     }
 
+    @GetMapping("/{testId}/edit")
+    private String showEditTestPartForm(@PathVariable("testId") Long testId, Model model) {
+        Optional<Test> optionalTest = testRepository.findById(testId);
+
+        if (optionalTest.isPresent()) {
+            model.addAttribute("test", optionalTest.get());
+            model.addAttribute("subTestDto", subTestDTO.builder().subTest(optionalTest.get()).build());
+
+            return "testPages/createTestPartForm";
+        }
+
+        return "redirect:/test/" + testId;
+    }
     @GetMapping("/delete/{testId}")
     private String deleteTest(@PathVariable("testId") Long testId) {
         Optional<Test> optionalTest = testRepository.findById(testId);

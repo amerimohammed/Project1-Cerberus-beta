@@ -24,6 +24,7 @@ public class Programme {
 
     private String programmeName;
 
+    @Lob
     private String shortDescription;
 
     @ManyToMany
