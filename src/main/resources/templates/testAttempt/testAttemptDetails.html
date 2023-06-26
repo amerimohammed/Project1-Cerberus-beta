@@ -37,27 +37,41 @@
         </tbody>
     </table>
 
-    <table class="table" th:fragment="showTestAttempts">
+    <table class="table">
         <thead>
-        <tr>
-            <th scope="col">Question</th>
-            <th>Answer</th>
-            <th>Score</th>
-            <th>Feedback</th>
-        </tr>
+            <tr>
+                <th scope="col">Nr</th>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Score</th>
+                <th>Feedback</th>
+            </tr>
         </thead>
-        <tbody>
+        <tbody th:fragment="showQuestion">
             <tr th:each="subTestAttempt : ${subTestAttempts}">
+                <td th:text="${subTestAttempt.test.displayQuestionNumber()}"></td>
                 <td th:text="${subTestAttempt.test.testContents}"></td>
                 <td th:text="${subTestAttempt.answer}"></td>
                 <td th:text="${subTestAttempt.score}"></td>
-                <td th:text="${subTestAttempt.feedback}">
-                <td><div class="table" th:include=":: showTestAttempts"
-                           th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}">
-                </div></td>
+                <td th:text="${subTestAttempt.feedback}"></td>
+                <td th:include=":: showQuestion"
+                th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>
             </tr>
         </tbody>
     </table>
+
+<!--    <section th:fragment="showQuestion">-->
+<!--        <ul class="list-group list-group-numbered">-->
+<!--            <li class="list-group-item" th:each="subAttempt : ${subTestAttempts}">-->
+<!--                <span th:text="${subAttempt.test.testContents}"></span>-->
+<!--                <span class="justify-content-end">Score:</span>-->
+<!--                <div th:include=":: showQuestion"-->
+<!--                    th:with="subTestAttempts = ${subAttempt.getSubTestAttempts()}">-->
+<!--                </div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </section>-->
+
 </div>
 
 <div th:replace="fragments/general :: footer"></div>

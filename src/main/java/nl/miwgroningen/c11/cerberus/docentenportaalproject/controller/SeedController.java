@@ -174,9 +174,10 @@ public class SeedController {
         test.setTestDate(futureLocalDate);
         testFour.setTestDate(LocalDate.now());
 
-        testTwo.setTestContents("This is a description, as a place holder.");
-        testThree.setTestContents("Change this to lorum ipsum with the faker.");
-        testFive.setTestContents("This is a description, as a place holder. Change this to lorum ipsum with the faker.");
+        testTwo.setTestContents("This is the first question.");
+        testThree.setTestContents("This is the second question.");
+        testFour.setTestContents("This is the sub-question of question 2.");
+        testFive.setTestContents("This is the sub-sub-question of question 2.");
 
         //Set superTest
         testTwo.setSuperTest(test);

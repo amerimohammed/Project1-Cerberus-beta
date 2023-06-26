@@ -46,6 +46,26 @@ public class Test extends Assignment implements Comparable<Test> {
         return display;
     }
 
+    public String displayQuestionNumber() {
+        String questionNumber = "";
+
+        if (superTest != null) {
+            if (!superTest.displayQuestionNumber().equals("")) {
+                questionNumber = superTest.displayQuestionNumber() + ".";
+            }
+
+            int index = 0;
+
+            while (superTest.testParts.get(index) != this) {
+                index++;
+            }
+
+            questionNumber = questionNumber + (index + 1);
+        }
+
+        return questionNumber;
+    }
+
     @Override
     public int compareTo(Test otherTest) {
         return otherTest.testDate.compareTo(testDate);
