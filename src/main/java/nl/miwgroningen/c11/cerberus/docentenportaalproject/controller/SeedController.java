@@ -163,11 +163,6 @@ public class SeedController {
                     .testContents(faker.lorem().sentence(5, 15))
                     .superTest(allRandomSuperTests.get(randomSuper)).build();
 
-//        testTwo.setTestContents("This is the first question.");
-//        testThree.setTestContents("This is the second question.");
-//        testFour.setTestContents("This is the sub-question of question 2.");
-//        testFive.setTestContents("This is the sub-sub-question of question 2.");
-
             testRepository.save(randomTestParts);
         }
     }
@@ -176,7 +171,6 @@ public class SeedController {
         Test oopOefenTentamenMilieuzone = Test.builder().testName("Controle Milieuzone").testDate(LocalDate.parse("2023-05-25")).build();
 
         Test milieuZoneDeel1 = Test.builder().testName("Bouw klassenstructuur")
-                                            .testContents("Run de applicatie. De output moet er als volgt uit zien.\n'Welkom bij ...'")
                                             .superTest(oopOefenTentamenMilieuzone).build();
         Test milieuZoneStap0 = Test.builder().testName("Verander de welkomstboodschap")
                                             .testContents("Verander de boodschap zodat je eigen naam verschijnt.")
