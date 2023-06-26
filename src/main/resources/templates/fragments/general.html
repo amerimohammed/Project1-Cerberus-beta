@@ -69,5 +69,16 @@
     </script>
 </div>
 
+<!-- CSS and Scripts needed for richText -->
+<th:block th:fragment="richText">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/richText/richtext.min.css}">
+    <script th:src="@{/richText/jquery.richtext.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.richTextContent').richText();
+        })
+    </script>
+</th:block>
 </body>
 </html>
