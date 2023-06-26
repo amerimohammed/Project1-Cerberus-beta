@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * An attempt of a student on (part of a) test, including a grade and feedback
@@ -31,12 +32,12 @@ public class TestAttempt {
     @OneToMany(mappedBy="superTestAttempt", cascade = CascadeType.ALL)
     private List<TestAttempt> subTestAttempts;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private TestAttempt superTestAttempt;
 
     private String answer;
 
-    private int score;
+    private int score = -1;
     private String feedback;
 
     public TestAttempt(Test test, Student student) {
@@ -44,40 +45,38 @@ public class TestAttempt {
         this.student = student;
     }
 
-    public int getDepth() {
-        if (superTestAttempt == null) {
-            return 0;
+    public long getSuperTestId() {
+        TestAttempt testAttempt = this;
+
+        while(testAttempt.superTestAttempt != null) {
+            testAttempt = testAttempt.superTestAttempt;
         }
-        return 1 + superTestAttempt.getDepth();
+
+        return testAttempt.testAttemptId;
     }
 
-    //Lowest level -> set score to value
-    //Then, it will call updateScoreRecursively() to sum up everything for each level until the top level
-    //So, scores can only be set for the lowest level
-    public void setScore(int score) {
-        if(subTestAttempts != null) {
-            return;
-        }
-
-        this.score = score;
-
-        if(superTestAttempt != null) {
-            updateScoresRecursively(superTestAttempt);
-        }
-
+    public boolean hasSubTestAttempts() {
+        return subTestAttempts.size() > 0;
     }
 
-    public void updateScoresRecursively(TestAttempt testAttempt) {
-        int sumScore = 0;
-
-        for (TestAttempt subTestAttempt : testAttempt.subTestAttempts) {
-            sumScore += subTestAttempt.score;
+    //Displays a warning if a part of a test has not been graded yet
+    public String displayScore() {
+        if(score == -1) {
+            return "TO BE GRADED";
         }
+        else return Integer.toString(score);
+    }
 
-        testAttempt.score = sumScore;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestAttempt that = (TestAttempt) o;
+        return testAttemptId == that.testAttemptId;
+    }
 
-        if(testAttempt.superTestAttempt != null) {
-            updateScoresRecursively(testAttempt.superTestAttempt);
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(testAttemptId);
     }
 }

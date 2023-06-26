@@ -7,8 +7,11 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TestAttemp
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TestRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +60,7 @@ public class TestAttemptController {
         return allStudentsTakingTest;
     }
 
-    @GetMapping("/test/{testId}/attempt/{testAttemptId}")
+    @GetMapping("/testAttempt/{testAttemptId}")
     private String showTestAttemptDetails(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
         Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
 
@@ -83,7 +86,7 @@ public class TestAttemptController {
 
             createRecursiveTestAttempts(testAttempt, null);
 
-            return "redirect:/test/{testId}/attempt/" + testAttempt.getTestAttemptId();
+            return "redirect:/testAttempt/" + testAttempt.getTestAttemptId();
         }
 
         return("redirect:/test/all");
@@ -105,6 +108,7 @@ public class TestAttemptController {
             for (Test subTest : subTests) {
                 TestAttempt subTestAttempt = new TestAttempt(subTest, testAttempt.getStudent());
                 subTestAttempts.add(subTestAttempt);
+                testAttemptRepository.save(testAttempt);
                 createRecursiveTestAttempts(subTestAttempt, testAttempt);
             }
 
@@ -112,5 +116,59 @@ public class TestAttemptController {
         }
 
         testAttemptRepository.save(testAttempt);
+    }
+
+    @GetMapping("testAttempt/edit/{testAttemptId}")
+    private String showTestAttemptEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
+        Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
+
+        if(optionalTestAttempt.isEmpty()) {
+            return "redirect:/test/all";
+        }
+
+        model.addAttribute("testAttempt", optionalTestAttempt.get());
+
+        return "/testAttempt/editTestAttempt";
+    }
+
+    @PostMapping("/testAttempt/update")
+    private String updateTestAttempt(@ModelAttribute("testAttempt") TestAttempt testAttemptToBeSaved,
+                                     BindingResult result) {
+
+        if(!result.hasErrors()) {
+            testAttemptRepository.save(testAttemptToBeSaved);
+            updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
+        }
+
+        return "redirect:/testAttempt/" + testAttemptToBeSaved.getSuperTestId();
+    }
+
+    //Sums scores per level up to and including the whole test
+    public void updateScoresRecursively(TestAttempt testAttempt) {
+        int sumScore = 0;
+
+        for (TestAttempt subTestAttempt : testAttempt.getSubTestAttempts()) {
+            int score = subTestAttempt.getScore();
+
+            if(score == -1) {
+                sumScore = -1;
+            }
+            else {
+                sumScore += subTestAttempt.getScore();
+            }
+        }
+
+        testAttempt.setScore(sumScore);
+
+        if(testAttempt.getSuperTestAttempt() != null) {
+            updateScoresRecursively(testAttempt.getSuperTestAttempt());
+        }
+
+        testAttemptRepository.save(testAttempt);
+    }
+
+    @PostMapping(value = "/testAttempt/update", params = "cancel")
+    private String cancelForm(@ModelAttribute("testAttempt") TestAttempt testAttemptToBeCanceled) {
+        return "redirect:/testAttempt/" + testAttemptToBeCanceled.getSuperTestId();
     }
 }
