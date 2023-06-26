@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
  */
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class User implements UserDetails {
 
     @Id
@@ -78,8 +79,8 @@ public class User implements UserDetails {
 
         String[] firstNameLastName = fullName.split(" ");
         username = String.valueOf(firstNameLastName[0].charAt(0));
-        if(firstNameLastName.length > 1){
-            username = username + "." + firstNameLastName[1];
+        if (firstNameLastName.length > 1) {
+            username = username + "." + firstNameLastName[firstNameLastName.length - 1];
         }
         username = username.toLowerCase();
 
