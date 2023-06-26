@@ -1,6 +1,7 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +15,7 @@ import javax.persistence.ManyToOne;
  */
 
 @Entity
-@Builder
+@SuperBuilder
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 public class Assignment {

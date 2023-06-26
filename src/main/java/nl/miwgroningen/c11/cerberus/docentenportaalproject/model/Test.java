@@ -1,6 +1,7 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 
 @Entity
+@SuperBuilder
 @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
 public class Test extends Assignment implements Comparable<Test> {
@@ -30,6 +32,7 @@ public class Test extends Assignment implements Comparable<Test> {
     private List<Test> testParts;
 
     //test contents in this context means the explanation and questions that make up the test.
+    @Lob
     private String testContents;
 
     @OneToMany(mappedBy = "test")
@@ -44,6 +47,26 @@ public class Test extends Assignment implements Comparable<Test> {
         }
 
         return display;
+    }
+
+    public String displayQuestionNumber() {
+        String questionNumber = "";
+
+        if (superTest != null) {
+            if (!superTest.displayQuestionNumber().equals("")) {
+                questionNumber = superTest.displayQuestionNumber() + ".";
+            }
+
+            int index = 0;
+
+            while (superTest.testParts.get(index) != this) {
+                index++;
+            }
+
+            questionNumber = questionNumber + (index + 1);
+        }
+
+        return questionNumber;
     }
 
     @Override

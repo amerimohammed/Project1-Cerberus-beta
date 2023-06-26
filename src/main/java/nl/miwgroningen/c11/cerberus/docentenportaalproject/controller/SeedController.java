@@ -24,8 +24,9 @@ public class SeedController {
     private static final int PROGRAMME_AMOUNT = 5;
     private static final int COHORT_AMOUNT = 10;
     private static final int STUDENT_AMOUNT = 50;
-    private static final int TEST_AMOUNT = 10;
-    private static final int ASSIGNMENT_AMOUNT = 15;
+    private static final int TEST_AMOUNT = 3;
+    private static final int TEST_PARTS_AMOUNT = 7;
+    private static final int ASSIGNMENT_AMOUNT = 10;
     private static final int SUBJECTS_IN_PROGRAMME_AMOUNT = 5;
     private static final int SUBJECT_MAX_DURATION = 10;
     private static final int SUBJECT_MIN_DURATION = 1;
@@ -47,7 +48,8 @@ public class SeedController {
         createProgramme();
         createCohort();
         createStudent();
-        createTest();
+        createRandomTest();
+        createRealisticTest();
         createAssignment();
 
         assignSubjectsToProgrammes();
@@ -139,56 +141,86 @@ public class SeedController {
         }
     }
 
-    //Working on changing this entity
-    // TODO: make this shorter and simpler.
-    private void createTest() {
+    private void createRandomTest() {
         Faker faker = new Faker();
+        List<Test> allRandomSuperTests = new ArrayList<>();
 
-        Test test = new Test();
-        Test testTwo = new Test();
-        Test testThree = new Test();
-        Test testFour = new Test();
-        Test testFive = new Test();
+        for (int index = 0; index < TEST_AMOUNT; index++) {
+            Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
+            LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        //Create the test name
-        StringBuilder testNameWithNumber = new StringBuilder(faker.educator().subjectWithNumber());
-        StringBuilder testNameWithoutNumber = testNameWithNumber.delete(testNameWithNumber.length() - 4, testNameWithNumber.length());
-        String testName = testNameWithoutNumber + " " + faker.verb().ingForm();
-        StringBuilder testNameWithNumberTwo = new StringBuilder(faker.educator().subjectWithNumber());
-        StringBuilder testNameWithoutNumberTwo = testNameWithNumberTwo.delete(testNameWithNumberTwo.length() - 4, testNameWithNumberTwo.length());
-        String testNameTwo = testNameWithoutNumberTwo + " " + faker.verb().ingForm();
-        StringBuilder testNameWithNumberThree = new StringBuilder(faker.educator().subjectWithNumber());
-        StringBuilder testNameWithoutNumberThree = testNameWithNumberThree.delete(testNameWithNumberThree.length() - 4, testNameWithNumberThree.length());
-        String testNameThree = testNameWithoutNumberThree + " " + faker.verb().ingForm();
+            Test randomTest = Test.builder().testName(createTestNameWithoutNumber(faker))
+                    .testDate(futureLocalDate).build();
 
-        //Assign name to test
-        test.setTestName(testName);
-        testTwo.setTestName(testNameTwo);
-        testThree.setTestName(testNameThree);
-        testFour.setTestName("testing main test");
-        testFive.setTestName("testing sub test part");
+            allRandomSuperTests.add(randomTest);
+            testRepository.save(randomTest);
+        }
 
-        //Set date
-        Date futureDate = faker.date().future(1000, TimeUnit.DAYS);
-        LocalDate futureLocalDate = futureDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        test.setTestDate(futureLocalDate);
-        testFour.setTestDate(LocalDate.now());
+        for (int index = 0; index < TEST_PARTS_AMOUNT; index++) {
+            int randomSuper = (int) (Math.random() * allRandomSuperTests.size());
 
-        testTwo.setTestContents("This is a description, as a place holder.");
-        testThree.setTestContents("Change this to lorum ipsum with the faker.");
-        testFive.setTestContents("This is a description, as a place holder. Change this to lorum ipsum with the faker.");
+            Test randomTestParts = Test.builder().testName(createTestNameWithoutNumber(faker))
+                    .testContents(faker.lorem().sentence(5, 15))
+                    .superTest(allRandomSuperTests.get(randomSuper)).build();
 
-        //Set superTest
-        testTwo.setSuperTest(test);
-        testThree.setSuperTest(test);
-        testFour.setSuperTest(testThree);
-        testFive.setSuperTest(testFour);
+            testRepository.save(randomTestParts);
+        }
+    }
 
-        testRepository.save(test);
-        testRepository.save(testTwo);
-        testRepository.save(testThree);
-        testRepository.save(testFour);
-        testRepository.save(testFive);
+    private void createRealisticTest() {
+        Test oopOefenTentamenMilieuzone = Test.builder().testName("Controle Milieuzone").testDate(LocalDate.parse("2023-05-25")).build();
+
+        Test milieuZoneDeel1 = Test.builder().testName("Bouw klassenstructuur")
+                                            .superTest(oopOefenTentamenMilieuzone).build();
+        Test milieuZoneStap0 = Test.builder().testName("Verander de welkomstboodschap")
+                                            .testContents("Verander de boodschap zodat je eigen naam verschijnt.")
+                                            .superTest(milieuZoneDeel1).build();
+        Test milieuZoneStap1 = Test.builder().testName("Klasse Auto")
+                                            .testContents("Maak de klasse Auto. Houd hierbij rekening met de volgende eisen:" +
+                                                    "\n- De methode isSchoon() geeft aan of een auto milieutechnisch schoon is. Voor de klasse Auto geldt: deze is nooit schoon. Deze methode wordt goed (beter) geïmplementeerd in de subklassen")
+                                            .superTest(milieuZoneDeel1).build();
+        Test milieuZoneStap2 = Test.builder().testName("Subklasse ElectrischeAuto")
+                                            .testContents("Codeer de subklasse ElectrischeAuto. Houd hierbij rekening met de volgende eisen:" +
+                                                    "\n- Override de methode isSchoon(). Elke elektrische auto is per definitie schoon." +
+                                                    "\n- De methode toString() moet dezelfde output geven als hieronder wordt aangegeven." +
+                                                    "\n- Test je code door in de Launcher class de betreffende testcode te 'uncommenten'.")
+                                            .superTest(milieuZoneDeel1).build();
+        Test milieuZoneStap3 = Test.builder().testName("Subklasse BrandstofAuto")
+                                            .testContents("Codeer de subklasse BrandstofAuto. Houd hierbij rekening met de volgende eisen:" +
+                                                    "\n- Override de methode isSchoon(). Een brandstofauto is schoon als het bouwjaar 1995 of nieuwer is, en het gewicht lichter is dan 2500 en de uitstoot schoon is. Het hangt af van het soort brandstof hoeveel uitstoot “schoon” is: een diesel is schoon bij een uitstoot van maximaal 280, en een schone benzine auto heeft maximaal een uitstoot van 320. Een auto met brandstof gas kan nooit schoon zijn." +
+                                                    "\n- De methode toString() moet dezelfde output geven als hieronder wordt aangegeven." +
+                                                    "\n- Test je code door in de Launcher class de betreffende testcode te “uncommenten”.")
+                                            .superTest(milieuZoneDeel1).build();
+        Test milieuZoneStap4 = Test.builder().testName("Klasse MilieuControle")
+                                            .testContents("Maak de klasse MilieuControle volgens het class diagram, zodat je auto’s aan een controlelijst kunt toevoegen.")
+                                            .superTest(milieuZoneDeel1).build();
+        Test milieuZoneDeel2 = Test.builder().testName("Gebruik klassen, bestand en database")
+                                            .superTest(oopOefenTentamenMilieuzone).build();
+        Test milieuZoneStap5 = Test.builder().testName("Print alle auto’s die de milieuzone in mogen")
+                                            .testContents("Breidt de MilieuZone klasse uit met een methode die alle auto’s afdrukt die de milieuzone in mogen. Een auto mag de milieuzone in wanneer deze schoon is." +
+                                                    "\nDe signatuur van deze methode is als volgt: public void printSchoneAutos()")
+                                            .superTest(milieuZoneDeel2).build();
+        Test milieuZoneStap6 = Test.builder().testName("Print bedrijfsauto’s met een bepaald type brandstof naar een bestand")
+                                            .testContents("Implementeer de methode printBedrijfsautosMetType(String brandstof)in klasse MilieuControle. De methode print alle bedrijfsauto’s met een bepaald brandstoftype naar een bestand. " +
+                                                    "Zorg dat in de methode een tekstbestand gemaakt wordt met de naam bedrijfsautos.txt, waarin de juiste bedrijfsauto’s worden weggeschreven. Sla dit bestand op in de folder ‘resources’ van je project (met pad ‘src/main/resources/’). " +
+                                                    "\nLet wel: Als de eigenaar een bedrijf is, dan is sprake van een bedrijfsauto.")
+                                            .superTest(milieuZoneDeel2).build();
+        Test milieuZoneStap7 = Test.builder().testName("Haal een lijst met auto’s uit de database")
+                                            .testContents("Er is een begin gemaakt met een database genaamd ‘Milieuzone’. Daarin staat een tabel ‘Auto’ met een aantal auto’s. " +
+                                                    "Maak een AutoDAO klasse die het mogelijk maakt om alle auto’s met een bepaald bouwjaar uit de database te halen.")
+                                            .superTest(milieuZoneDeel2).build();
+
+        testRepository.save(oopOefenTentamenMilieuzone);
+        testRepository.save(milieuZoneDeel1);
+        testRepository.save(milieuZoneStap0);
+        testRepository.save(milieuZoneStap1);
+        testRepository.save(milieuZoneStap2);
+        testRepository.save(milieuZoneStap3);
+        testRepository.save(milieuZoneStap4);
+        testRepository.save(milieuZoneDeel2);
+        testRepository.save(milieuZoneStap5);
+        testRepository.save(milieuZoneStap6);
+        testRepository.save(milieuZoneStap7);
     }
 
     private void createAssignment() {
@@ -319,5 +351,12 @@ public class SeedController {
         Faker faker = new Faker();
 
         return faker.name().firstName() + " " + faker.name().lastName();
+    }
+
+    private String createTestNameWithoutNumber(Faker faker) {
+        StringBuilder testNameWithNumber = new StringBuilder(faker.educator().subjectWithNumber());
+        StringBuilder testNameWithoutNumber = testNameWithNumber.delete(testNameWithNumber.length() - 4, testNameWithNumber.length())
+                .append(" ").append(faker.verb().ingForm());
+        return testNameWithoutNumber.toString();
     }
 }
