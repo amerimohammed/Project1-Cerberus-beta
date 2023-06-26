@@ -31,7 +31,8 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    private String changePassword(HttpServletRequest request, Model model) throws ServletException {
+    private String changePassword(HttpServletRequest request, Model model,
+                                  RedirectAttributes redirectAttributes) throws ServletException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String oldPassword = request.getParameter("oldPassword");
@@ -52,7 +53,10 @@ public class UserController {
             userRepository.save(user);
             request.logout();
 
-            return "redirect:/subject/all";
+            redirectAttributes.addFlashAttribute("message",
+                    "Password changed successfully. Please log again with the new password.");
+
+            return "redirect:/login";
         }
     }
 }
