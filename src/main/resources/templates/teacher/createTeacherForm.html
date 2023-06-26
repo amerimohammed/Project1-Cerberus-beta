@@ -16,7 +16,8 @@
         <input type="hidden" th:field="*{roles}">
         <div class="mb-3">
             <label for="teacherName">Teacher Name:</label>
-            <input th:field="*{fullName}" type="text" class="form-control" id="teacherName" aria-describedby="teacher name" placeholder="example: John Doe">
+            <input th:field="*{fullName}" type="text" class="form-control" id="teacherName"
+                   aria-describedby="teacher name" placeholder="example: John Doe" minlength="2" required>
         </div>
         <div class="mb-3">
             <label for="subjectSelect">Subjects:</label>
