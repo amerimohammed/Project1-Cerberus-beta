@@ -15,7 +15,8 @@ import java.util.Objects;
  */
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 public class TestAttempt {
 
@@ -29,7 +30,7 @@ public class TestAttempt {
     @ManyToOne
     private Student student;
 
-    @OneToMany(mappedBy="superTestAttempt", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "superTestAttempt", cascade = CascadeType.ALL)
     private List<TestAttempt> subTestAttempts;
 
     @ManyToOne
@@ -48,7 +49,7 @@ public class TestAttempt {
     public long getSuperTestId() {
         TestAttempt testAttempt = this;
 
-        while(testAttempt.superTestAttempt != null) {
+        while (testAttempt.superTestAttempt != null) {
             testAttempt = testAttempt.superTestAttempt;
         }
 
@@ -61,10 +62,11 @@ public class TestAttempt {
 
     //Displays a warning if a part of a test has not been graded yet
     public String displayScore() {
-        if(score == -1) {
+        if (score == -1 && !hasSubTestAttempts()) {
             return "TO BE GRADED";
-        }
-        else return Integer.toString(score);
+        } else if (score == -1) {
+            return "";
+        } else return Integer.toString(score);
     }
 
     @Override

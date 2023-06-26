@@ -56,7 +56,8 @@
                     </a>
                 <td th:if="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testContents}"></td>
                 <td th:unless="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testName}"></td>
-                <td th:text="${subTestAttempt.displayScore()}"></td>
+                <td class=text-center th:style="${subTestAttempt.score == -1 ? 'font-weight: bold; color: red;' : ''}"
+                    th:text="${subTestAttempt.displayScore()}"></td>
                 <td class="text-end">
                     <div th:replace="fragments/buttons
                     :: edit(@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})})"></div>
