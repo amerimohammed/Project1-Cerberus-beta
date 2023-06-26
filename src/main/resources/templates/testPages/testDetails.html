@@ -21,6 +21,10 @@
             <td th:text="${superTest.testName}"></td>
             <td th:text="${superTest.subject.subjectName}"></td>
             <td th:text="${superTest.testDate}"></td>
+            <td class="text-end">
+                <div th:replace="fragments/buttons :: edit(@{/test/edit/{testId}(testId=${superTest.assignmentId})})"></div>
+            </td>
+
         </tr>
         <tr th:if="${superTest.getTestAttempts()}">
             <td><a th:href="@{/test/{testId}/attempt/all(testId=${superTest.assignmentId})}">Go to Attempts</a></td>
@@ -34,8 +38,10 @@
             <div th:each="testPart : ${superTest.testParts}">
                 <h5><span th:text="${testPart.testName}"></span></h5>
                 <p th:text="${testPart.testContents}"></p>
-                <div th:replace="fragments/buttons :: edit(@{{testId}/edit(testId=${testPart.assignmentId})})"></div>
-                <div th:replace="fragments/buttons :: delete(@{delete/{testId}(testId=${testPart.assignmentId})})"></div>
+                <div class="mb-4">
+                    <div th:replace="fragments/buttons :: edit(@{/test/edit/contents/{testId}(testId=${testPart.assignmentId})})"></div>
+                    <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${testPart.assignmentId})})"></div>
+                </div>
                 <div th:include=":: showTestAndParts" th:with="superTest = ${testPart}"></div>
             </div>
         </div>
