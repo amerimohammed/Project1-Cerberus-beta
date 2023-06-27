@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 @Setter
 public class User implements UserDetails {
 
+    public static final int PASSWORD_LENGTH = 10;
+    public static final int ASCII_RANGE_MIN = 33;
+    public static final int ASCII_RANGE_MAX = 122;
     @Id
     @GeneratedValue
     protected Long userId;
@@ -53,6 +56,14 @@ public class User implements UserDetails {
         return authorityList;
     }
 
+    public void setFullName(String fullName) {
+        fullName = fullName.trim();
+        if (fullName.length() < 2) {
+            throw new IllegalArgumentException("Name must be at least 2 characters.");
+        }
+        this.fullName = fullName;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -74,30 +85,43 @@ public class User implements UserDetails {
     }
 
     public void generateUsernameAndPassword(UserRepository userRepository) {
-        password = new Random().ints(10, 33, 122)
+        username = generateUsername(userRepository);
+        password = generateRandomPassword();
+    }
+
+    public void hashPassword() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        password = encoder.encode(password);
+    }
+
+    private String generateRandomPassword() {
+        return new Random().ints(PASSWORD_LENGTH, ASCII_RANGE_MIN, ASCII_RANGE_MAX)
                 .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
+    }
 
+    private String generateUsername(UserRepository userRepository) {
+        StringBuilder usernameBuilder = new StringBuilder();
         String[] firstNameLastName = fullName.split(" ");
-        username = String.valueOf(firstNameLastName[0].charAt(0));
-        if (firstNameLastName.length > 1) {
-            username = username + "." + firstNameLastName[firstNameLastName.length - 1];
-        }
-        username = username.toLowerCase();
 
+        if (firstNameLastName.length > 1) {
+            usernameBuilder.append(firstNameLastName[0].charAt(0))
+                    .append(".").append(firstNameLastName[firstNameLastName.length - 1]);
+        } else {
+            usernameBuilder.append(fullName);
+        }
+
+        String username = usernameBuilder.toString().toLowerCase();
         Optional<User> optionalUser = userRepository.findByUsername(username);
 
         Integer counter = 2;
-        StringBuilder usernameBuilder = new StringBuilder(username + "." + counter);
+        usernameBuilder.append(".").append(counter);
+
         while (optionalUser.isPresent()) {
             username = usernameBuilder.toString();
             optionalUser = userRepository.findByUsername(username);
             counter++;
             usernameBuilder.deleteCharAt(usernameBuilder.length() - 1).append(counter);
         }
-    }
-
-    public void hashPassword() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        password = encoder.encode(password);
+        return username;
     }
 }
