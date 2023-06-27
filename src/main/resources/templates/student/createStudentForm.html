@@ -16,7 +16,7 @@
     <input type="hidden" th:field="*{roles}">
     <div class="m-3">
       <label for="studentName">Student name:</label>
-      <input id="studentName" class="form-control" type="text" th:field="*{fullName}">
+      <input id="studentName" class="form-control" type="text" th:field="*{fullName}" minlength="2" required>
     </div>
     <div class="m-3">
       <label for="cohortNumber">Cohort number:</label>

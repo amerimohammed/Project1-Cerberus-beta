@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head th:replace="fragments/general :: baseheader(~{:: title})">
+    <title>Test Attempt</title>
+</head>
+<body>
+<div th:replace="fragments/general :: navbar"></div>
+
+<div class="container main-content">
+
+    <div th:replace="fragments/testAttempt :: testAttemptContent"></div>
+
+    <form th:action="@{/testAttempt/update}" method="post" th:object="${testAttempt}">
+        <input type="hidden" th:field="*{testAttemptId}">
+        <input type="hidden" th:field="*{test}">
+        <input type="hidden" th:field="*{student}">
+        <input type="hidden" th:field="*{superTestAttempt}">
+        <input type="hidden" th:field="*{subTestAttempts}">
+        <input type="hidden" th:field="*{feedback}">
+        <input type="hidden" th:field="*{score}">
+        <div th:if="${testAttempt.hasSubTestAttempts()}">
+            <input type="hidden" th:field="*{answer}">
+        </div>
+
+        <div class="mb-3" th:unless="${testAttempt.hasSubTestAttempts()}">
+            <label for="answer">Answer:</label>
+            <textarea id="answer" class="richTextContent" type="text" th:field="*{answer}"></textarea>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
+    </form>
+</div>
+
+<div th:replace="fragments/general :: footer"></div>
+<div th:replace="fragments/general :: bottomScripts"></div>
+<th:block th:replace="fragments/general :: richText"></th:block>
+</body>
+</html>
