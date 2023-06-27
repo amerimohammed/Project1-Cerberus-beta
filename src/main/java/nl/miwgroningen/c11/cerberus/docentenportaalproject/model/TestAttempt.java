@@ -20,6 +20,8 @@ import java.util.Objects;
 @NoArgsConstructor
 public class TestAttempt {
 
+    private static final int NOT_GRADED_NUMBER = -1;
+
     @Id
     @GeneratedValue
     private long testAttemptId;
@@ -36,9 +38,12 @@ public class TestAttempt {
     @ManyToOne
     private TestAttempt superTestAttempt;
 
+    private int score = NOT_GRADED_NUMBER;
+
+    @Lob
     private String answer;
 
-    private int score = -1;
+    @Lob
     private String feedback;
 
     public TestAttempt(Test test, Student student) {

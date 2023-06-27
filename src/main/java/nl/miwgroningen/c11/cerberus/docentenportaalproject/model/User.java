@@ -85,8 +85,10 @@ public class User implements UserDetails {
     }
 
     public void generateUsernameAndPassword(UserRepository userRepository) {
-        username = generateUsername(userRepository);
-        password = generateRandomPassword();
+        if(fullName != null){
+            username = generateUsername(userRepository);
+            password = generateRandomPassword();
+        }
     }
 
     public void hashPassword() {
