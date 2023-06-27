@@ -28,9 +28,11 @@ public class CohortController {
 
     @GetMapping("/all")
     private String showAllCohorts(Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Cohort> allCohorts;
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+
         if (!userRoles.contains("ADMIN")) {
             allCohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
         } else {

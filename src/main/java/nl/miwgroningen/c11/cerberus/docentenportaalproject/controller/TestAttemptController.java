@@ -5,6 +5,7 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.*;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TestAttemptRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TestRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -118,8 +121,8 @@ public class TestAttemptController {
         testAttemptRepository.save(testAttempt);
     }
 
-    @GetMapping("testAttempt/edit/{testAttemptId}")
-    private String showTestAttemptEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
+    @GetMapping("testAttempt/edit/student/{testAttemptId}")
+    private String showTestAttemptStudentEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
         Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
 
         if(optionalTestAttempt.isEmpty()) {
@@ -128,7 +131,37 @@ public class TestAttemptController {
 
         model.addAttribute("testAttempt", optionalTestAttempt.get());
 
-        return "/testAttempt/editTestAttempt";
+        return "/testAttempt/editTestAttemptStudent";
+    }
+
+    @GetMapping("testAttempt/edit/teacher/{testAttemptId}")
+    private String showTestAttemptTeacherEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
+        Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
+
+        if(optionalTestAttempt.isEmpty()) {
+            return "redirect:/test/all";
+        }
+
+        model.addAttribute("testAttempt", optionalTestAttempt.get());
+
+        return "/testAttempt/editTestAttemptTeacher";
+    }
+
+    //For hovers in testAttemptDetails - provides the right redirection dependent on role
+    @GetMapping("testAttempt/edit/{testAttemptId}")
+    private String redirectToTestAttemptEditForm(@PathVariable("testAttemptId") Long testAttemptId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+
+            if(userRoles.contains("ADMIN") || userRoles.contains("TEACHER")) {
+            return "redirect:/testAttempt/edit/teacher/" + testAttemptId;
+        }
+        else if(userRoles.contains("STUDENT")) {
+            return "redirect:/testAttempt/edit/student/" + testAttemptId;
+        }
+        else {
+            return "redirect:/test/all";
+        }
     }
 
     @PostMapping("/testAttempt/update")
@@ -137,7 +170,9 @@ public class TestAttemptController {
 
         if(!result.hasErrors()) {
             testAttemptRepository.save(testAttemptToBeSaved);
-            updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
+            if(testAttemptToBeSaved.getSuperTestAttempt() != null) {
+                updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
+            }
         }
 
         return "redirect:/testAttempt/" + testAttemptToBeSaved.getSuperTestId();
