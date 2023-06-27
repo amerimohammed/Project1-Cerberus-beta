@@ -13,8 +13,11 @@
         Attempt of
         <span th:text="${testAttempt.test.testName}"></span>
     </h1>
-    <p class="text-center">
+    <p class="text-center" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
         <a th:href="@{/test/{testId}/attempt/all(testId=${testAttempt.test.assignmentId})}">Back to Attempt Overview</a>
+    </p>
+    <p class="text-center" sec:authorize="hasAnyAuthority('STUDENT')">
+        <a th:href="@{/testAttempt/all}">Back to Attempt Overview</a>
     </p>
     <table class="table table-hover">
         <thead>

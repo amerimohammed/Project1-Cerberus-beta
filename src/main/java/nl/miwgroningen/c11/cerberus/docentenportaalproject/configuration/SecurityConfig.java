@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .antMatchers("/", "/home", "/programme/view/**").permitAll()
 
                         //TestAttempt Permissions
+                        .antMatchers("/test/**/attempt/**/add").hasAnyAuthority("ADMIN", "STUDENT")
                         .antMatchers("/testAttempt/edit/student/**").hasAnyAuthority("ADMIN", "STUDENT")
                         .antMatchers("/testAttempt/edit/teacher/**").hasAnyAuthority("ADMIN", "TEACHER")
                         .antMatchers("/testAttempt/**")

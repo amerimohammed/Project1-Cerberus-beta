@@ -14,10 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -28,12 +25,48 @@ public class TestAttemptController {
     private final StudentRepository studentRepository;
     private final TestAttemptRepository testAttemptRepository;
 
+    @GetMapping("/testAttempt/all")
+    private String showStudentTestAttemptOverview(Model model) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Optional<Student> optionalStudent = studentRepository.findById(user.getUserId());
+
+        if (optionalStudent.isEmpty()) {
+            return "redirect:/test/all";
+        }
+
+        Student student = optionalStudent.get();
+
+        List<Test> studentTestList = new ArrayList<>(getAllTestsOfStudent(student));
+
+        Collections.sort(studentTestList);
+
+        model.addAttribute("allTest", studentTestList);
+        model.addAttribute("student", student);
+
+        return "testAttempt/studentTestAttemptOverview";
+    }
+
+    private Set<Test> getAllTestsOfStudent(Student student) {
+        List<TestAttempt> testAttempts = student.getTestAttempts();
+        Set<Test> testSet = new HashSet<>();
+
+        for (TestAttempt testAttempt : testAttempts) {
+            if (testAttempt.getSuperTestAttempt() == null) {
+                testSet.add(testAttempt.getTest());
+            }
+        }
+
+        return testSet;
+    }
+
     @GetMapping("/test/{testId}/attempt/all")
-    private String showTestAttemptOverview(@PathVariable("testId") Long testId, Model model) {
+    private String showAllTestAttemptsForTest(@PathVariable("testId") Long testId, Model model) {
         Optional<Test> optionalTest = testRepository.findById(testId);
 
-        if(optionalTest.isEmpty()) {
-            return("redirect:/test/all");
+        if (optionalTest.isEmpty()) {
+            return ("redirect:/test/all");
         }
 
         Test test = optionalTest.get();
@@ -42,7 +75,7 @@ public class TestAttemptController {
         model.addAttribute("test", test);
         model.addAttribute("allStudents", allStudents);
 
-        return("testAttempt/testAttemptOverview");
+        return ("testAttempt/testAttemptOverview");
     }
 
     //Gets all the students that are eligible for a test
@@ -67,8 +100,8 @@ public class TestAttemptController {
     private String showTestAttemptDetails(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
         Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
 
-        if(optionalTestAttempt.isEmpty()) {
-            return("redirect:/test/all");
+        if (optionalTestAttempt.isEmpty()) {
+            return ("redirect:/test/all");
         }
 
         TestAttempt testAttempt = optionalTestAttempt.get();
@@ -76,7 +109,7 @@ public class TestAttemptController {
         model.addAttribute("testAttempt", testAttempt);
         model.addAttribute("subTestAttempts", testAttempt.getSubTestAttempts());
 
-        return("testAttempt/testAttemptDetails");
+        return ("testAttempt/testAttemptDetails");
     }
 
     @GetMapping("/test/{testId}/attempt/{studentId}/add")
@@ -84,7 +117,7 @@ public class TestAttemptController {
         Optional<Test> optionalTest = testRepository.findById(testId);
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
-        if(optionalTest.isPresent() && optionalStudent.isPresent()) {
+        if (optionalTest.isPresent() && optionalStudent.isPresent()) {
             TestAttempt testAttempt = new TestAttempt(optionalTest.get(), optionalStudent.get());
 
             createRecursiveTestAttempts(testAttempt, null);
@@ -92,20 +125,20 @@ public class TestAttemptController {
             return "redirect:/testAttempt/" + testAttempt.getTestAttemptId();
         }
 
-        return("redirect:/test/all");
+        return ("redirect:/test/all");
     }
 
-//    Create a testAttempt for each part of the test
+    //    Create a testAttempt for each part of the test
     private void createRecursiveTestAttempts(TestAttempt testAttempt, TestAttempt superTestAttempt) {
 
-        if(superTestAttempt != null) {
+        if (superTestAttempt != null) {
             testAttempt.setSuperTestAttempt(superTestAttempt);
         }
 
         List<Test> subTests = testAttempt.getTest().getTestParts();
 
         //If there are any subtests, make a testAttempt for each of them by using the same method
-        if(subTests != null) {
+        if (subTests != null) {
             List<TestAttempt> subTestAttempts = new ArrayList<>();
 
             for (Test subTest : subTests) {
@@ -125,7 +158,7 @@ public class TestAttemptController {
     private String showTestAttemptStudentEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
         Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
 
-        if(optionalTestAttempt.isEmpty()) {
+        if (optionalTestAttempt.isEmpty()) {
             return "redirect:/test/all";
         }
 
@@ -138,7 +171,7 @@ public class TestAttemptController {
     private String showTestAttemptTeacherEditForm(@PathVariable("testAttemptId") Long testAttemptId, Model model) {
         Optional<TestAttempt> optionalTestAttempt = testAttemptRepository.findById(testAttemptId);
 
-        if(optionalTestAttempt.isEmpty()) {
+        if (optionalTestAttempt.isEmpty()) {
             return "redirect:/test/all";
         }
 
@@ -153,13 +186,11 @@ public class TestAttemptController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
-            if(userRoles.contains("ADMIN") || userRoles.contains("TEACHER")) {
+        if (userRoles.contains("ADMIN") || userRoles.contains("TEACHER")) {
             return "redirect:/testAttempt/edit/teacher/" + testAttemptId;
-        }
-        else if(userRoles.contains("STUDENT")) {
+        } else if (userRoles.contains("STUDENT")) {
             return "redirect:/testAttempt/edit/student/" + testAttemptId;
-        }
-        else {
+        } else {
             return "redirect:/test/all";
         }
     }
@@ -168,9 +199,9 @@ public class TestAttemptController {
     private String updateTestAttempt(@ModelAttribute("testAttempt") TestAttempt testAttemptToBeSaved,
                                      BindingResult result) {
 
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             testAttemptRepository.save(testAttemptToBeSaved);
-            if(testAttemptToBeSaved.getSuperTestAttempt() != null) {
+            if (testAttemptToBeSaved.getSuperTestAttempt() != null) {
                 updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
             }
         }
@@ -185,17 +216,16 @@ public class TestAttemptController {
         for (TestAttempt subTestAttempt : testAttempt.getSubTestAttempts()) {
             int score = subTestAttempt.getScore();
 
-            if(score == -1) {
+            if (score == -1) {
                 sumScore = -1;
-            }
-            else {
+            } else {
                 sumScore += subTestAttempt.getScore();
             }
         }
 
         testAttempt.setScore(sumScore);
 
-        if(testAttempt.getSuperTestAttempt() != null) {
+        if (testAttempt.getSuperTestAttempt() != null) {
             updateScoresRecursively(testAttempt.getSuperTestAttempt());
         }
 

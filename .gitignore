@@ -324,3 +324,6 @@ mvnw.cmd
 
 #to exclude the photos
 uploads/**
+
+#exclude other IntelliJ Settings
+.idea/inspectionProfiles/**

@@ -78,5 +78,15 @@
         <span th:replace="fragments/icons :: editIcon"></span> Edit Score
     </a>
 </span>
+
+<!-- New TestAttempt button fragment-->
+<div th:fragment="newAttempt(link)" class="d-flex mb-3 justify-content-end"
+     sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')">
+    <a type="button" class="btn btn-outline-success"
+       th:href="${link}"
+    >
+        New Attempt +
+    </a>
+</div>
 </body>
 </html>

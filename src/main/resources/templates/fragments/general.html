@@ -30,7 +30,9 @@
         </div>
         <div class="nav-item">
             <a class="nav-link" id="tests" th:href="@{/test/all}"
-               sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER', 'STUDENT')">Tests</a>
+               sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">Tests</a>
+            <a class="nav-link" id="testAttempts" th:href="@{/testAttempt/all}"
+               sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')">Tests</a>
         </div>
         <div class="nav-item">
             <a class="nav-link"></a>

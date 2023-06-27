@@ -31,6 +31,9 @@ public class Subject implements Comparable<Subject>{
     @ManyToMany
     private List<Teacher> teachers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "subject")
+    private List<Assignment> assignments = new ArrayList<>();
+
     public void removeTeacher(Teacher teacher) {
         teachers.remove(teacher);
     }
