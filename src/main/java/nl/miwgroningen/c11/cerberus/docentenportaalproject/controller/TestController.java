@@ -33,6 +33,13 @@ public class TestController {
         Collections.sort(allTests);
         model.addAttribute("allSuperTest", allTests);
 
+        for (Test test : allTests) {
+            if (test.getTestParts() != null) {
+                test.inheritFromSuper(test);
+                testRepository.save(test);
+            }
+        }
+
         return "testPages/testOverview";
     }
 
