@@ -69,6 +69,25 @@ public class Test extends Assignment implements Comparable<Test> {
         return questionNumber;
     }
 
+    public void inheritFromSuper(Test superTest) {
+        for (Test testPart : superTest.testParts) {
+            //Inherit date
+            if (testPart.testDate == null) {
+                testPart.setTestDate(superTest.testDate);
+            }
+
+            //InheritSubject
+            if (testPart.getSubject() == null) {
+                testPart.setSubject(superTest.getSubject());
+            }
+
+            //Do the same for all testParts of testParts
+            if (testPart.testParts != null) {
+                inheritFromSuper(testPart);
+            }
+        }
+    }
+
     @Override
     public int compareTo(Test otherTest) {
         return otherTest.testDate.compareTo(testDate);
