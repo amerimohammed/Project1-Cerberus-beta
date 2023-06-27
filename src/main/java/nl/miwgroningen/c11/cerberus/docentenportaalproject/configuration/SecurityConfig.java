@@ -30,6 +30,13 @@ public class SecurityConfig {
                         .antMatchers("/css/**", "/webjars/**",
                                 "/images/**", "/js/**", "/photos/**").permitAll()
                         .antMatchers("/", "/home", "/programme/view/**").permitAll()
+
+                        //TestAttempt Permissions
+                        .antMatchers("/testAttempt/edit/student/**").hasAnyAuthority("ADMIN", "STUDENT")
+                        .antMatchers("/testAttempt/edit/teacher/**").hasAnyAuthority("ADMIN", "TEACHER")
+                        .antMatchers("/testAttempt/**")
+                            .hasAnyAuthority("ADMIN", "TEACHER", "STUDENT")
+
                         .antMatchers("/test/**", "/assignment/**").hasAnyAuthority("ADMIN", "TEACHER")
                         .antMatchers("/teacher/**", "/seed", "home/delete/**",
                                 "/**/edit/**", "/**/new", "/**/delete/**", "/**/add/**").hasAuthority("ADMIN")

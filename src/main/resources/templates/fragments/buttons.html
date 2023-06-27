@@ -58,5 +58,25 @@
         <span th:replace="fragments/icons :: homeIcon"></span>
     </a>
 </div>
+
+<!-- Edit button fragment for student TestAttempts-->
+<span th:fragment="editStudent(link)">
+    <a type="button" class="btn btn-outline-success"
+       th:href="${link}"
+       sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')"
+    >
+        <span th:replace="fragments/icons :: editIcon"></span> Edit Answer
+    </a>
+</span>
+
+<!-- Edit button fragment for teacher TestAttempts-->
+<span th:fragment="editTeacher(link)">
+    <a type="button" class="btn btn-outline-success"
+       th:href="${link}"
+       sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
+    >
+        <span th:replace="fragments/icons :: editIcon"></span> Edit Score
+    </a>
+</span>
 </body>
 </html>

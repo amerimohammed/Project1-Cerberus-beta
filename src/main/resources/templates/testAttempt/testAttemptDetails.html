@@ -16,7 +16,7 @@
     <p class="text-center">
         <a th:href="@{/test/{testId}/attempt/all(testId=${testAttempt.test.assignmentId})}">Back to Attempt Overview</a>
     </p>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
         <tr>
             <th scope="col">Test name</th>
@@ -27,12 +27,16 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td th:text="${testAttempt.test.testName}"></td>
+        <tr  class="row-with-link"
+             th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}">
+            <td>
+                <a th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}"
+                   th:text="${testAttempt.test.testName}"></a>
+            </td>
             <td th:text="${testAttempt.test.subject.subjectName}"></td>
             <td th:text="${testAttempt.test.testDate}"></td>
             <td th:text="${testAttempt.displayScore()}"></td>
-            <td th:text="${testAttempt.feedback}"></td>
+            <td th:utext="${testAttempt.feedback}"></td>
         </tr>
         </tbody>
     </table>
@@ -42,28 +46,44 @@
             <tr>
                 <th scope="col">Nr</th>
                 <th>Question</th>
-                <th>Score</th>
-                <th scope="col">Actions</th>
+                <th class="text-center">Score</th>
+                <th scope="col" class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody th:fragment="showQuestion">
-            <tr class="row-with-link"
+            <tr th:class="${subTestAttempt.hasSubTestAttempts() ? '' : 'row-with-link'}"
                 th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}"
                 th:each="subTestAttempt : ${subTestAttempts}">
-                <td>
+                <td th:unless="${subTestAttempt.hasSubTestAttempts()}">
                     <a th:text="${subTestAttempt.test.displayQuestionNumber()}"
                        th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}">
                     </a>
-                <td th:if="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testContents}"></td>
-                <td th:unless="${subTestAttempt.test.testContents}" th:text="${subTestAttempt.test.testName}"></td>
-                <td class=text-center th:style="${subTestAttempt.score == -1 ? 'font-weight: bold; color: red;' : ''}"
-                    th:text="${subTestAttempt.displayScore()}"></td>
-                <td class="text-end">
-                    <div th:replace="fragments/buttons
-                    :: edit(@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})})"></div>
                 </td>
-                <td th:include=":: showQuestion"
-                th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>
+                <td th:if="${subTestAttempt.hasSubTestAttempts()}"
+                    th:text="${subTestAttempt.test.displayQuestionNumber()}"
+                    th:class="'no-hover'" th:style="'font-weight: bold;'">
+                </td>
+                <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
+                    th:text="${subTestAttempt.test.testName}"></td>
+                <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-center no-hover' : 'text-center'}"
+                    th:style="${subTestAttempt.score == -1 ? 'font-weight: bold; color: red;' : ''}"
+                    th:text="${subTestAttempt.displayScore()}"></td>
+                <td th:unless="${subTestAttempt.hasSubTestAttempts()}"
+                    th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-end no-hover' : 'text-end'}">
+                    <div sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')"
+                         th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
+                         th:replace="fragments/buttons :: editStudent(link)(@{/testAttempt/edit/student/{testAttemptId}
+                        (testAttemptId=${subTestAttempt.testAttemptId})})">
+                    </div>
+                    <div sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
+                         th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
+                         th:replace="fragments/buttons :: editTeacher(link)(@{/testAttempt/edit/teacher/{testAttemptId}
+                        (testAttemptId=${subTestAttempt.testAttemptId})})">
+                    </div>
+                </td>
+                <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
+                    th:include=":: showQuestion"
+                    th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>
             </tr>
         </tbody>
     </table>

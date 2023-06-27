@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Buttons</title>
+</head>
+<body>
+<div th:fragment="testAttemptContent">
+  <h1 class="text-center">Question <span th:text="${testAttempt.test.displayQuestionNumber()}"></span></h1>
+  <h3 class="text-center">
+        <span th:if="${testAttempt.test.testContents}">
+            <span th:text="${testAttempt.test.testContents}"></span>
+        </span>
+    <span th:unless="${testAttempt.test.testContents}">
+            <span th:text="${testAttempt.test.testName}"></span>
+        </span>
+  </h3>
+  <br>
+  <table class="table text-center">
+    <tr th:unless="${testAttempt.hasSubTestAttempts()}">
+      <th>Answer</th>
+      <td th:utext="${testAttempt.answer}"></td>
+    </tr>
+    <tr th:unless="${testAttempt.score == -1}">
+      <th>Score</th>
+      <td th:text="${testAttempt.score}"></td>
+    </tr>
+    <tr th:unless="${testAttempt.feedback == ''}">
+      <th>Feedback</th>
+      <td th:utext="${testAttempt.feedback}"></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

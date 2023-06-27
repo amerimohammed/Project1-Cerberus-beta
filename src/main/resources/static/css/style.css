@@ -31,3 +31,7 @@
     max-width: 600px;
     margin: 25px auto;
 }
+
+.table-hover>tbody>tr>td.no-hover {
+    box-shadow:none;
+}
