@@ -26,7 +26,9 @@
             </td>
 
         </tr>
-        <tr th:if="${superTest.getTestAttempts()}">
+        <tr th:if="${superTest.getTestAttempts()}"
+            class="row-with-link"
+            th:attr="data-link=@{/test/{testId}/attempt/all(testId=${superTest.assignmentId})}">
             <td><a th:href="@{/test/{testId}/attempt/all(testId=${superTest.assignmentId})}">Go to Attempts</a></td>
         </tr>
         </tbody>
