@@ -37,7 +37,7 @@ class TestModelTest {
     }
 
     @Test
-    @DisplayName("If test date of test part is null then inherit from super test")
+    @DisplayName("When test part is null it inherts date of super test")
     void testDateTestPartIsNullInheritFromSuperTest() {
         nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
 
@@ -49,7 +49,7 @@ class TestModelTest {
     }
 
     @Test
-    @DisplayName("If test date of test part is not null, then do not inherit from super test")
+    @DisplayName("Test part does not inhert from super test if date is not null")
     void testDateOfTestPartIsNotNullDoNotInheritFromSuperTest() {
         nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
 
@@ -59,6 +59,32 @@ class TestModelTest {
         test.inheritFromSuper(test);
 
         assertNotEquals(test.getTestDate(), testParts.get(0).getTestDate());
+    }
+
+    @Test
+    @DisplayName("Test date does not inherit from super test if super test date is null")
+    void testDateOfTestPartDoesNotInheritNull() {
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPartAndTestPartDates();
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> testParts = test.getTestParts();
+        testParts.get(0).setTestDate(DATE_ONE);
+
+        test.inheritFromSuper(test);
+
+        assertNotEquals(test.getTestDate(), testParts.get(0).getTestDate());
+    }
+
+    @Test
+    @DisplayName("Test date sub tests(all levels) are inherited from direct parent even when super test is null")
+    void testDateSubTestsAreInheritFromDirectParent() {
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPartAndTestPartDates();
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> subLevelOne = test.getTestParts();
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> subLevelTwo = subLevelOne.get(0).getTestParts();
+
+        test.inheritFromSuper(test);
+
+        assertEquals(subLevelOne.get(0).getTestDate(), subLevelTwo.get(0).getTestDate());
     }
 
     @Test
@@ -104,6 +130,26 @@ class TestModelTest {
         TEST.setTestDate(DATE_ONE);
         TEST.setSubject(subject);
         TEST.setTestParts(parts);
+
+        return TEST;
+    }
+
+    private static nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test setUpTestWithTestPartAndTestPartDates() {
+        setTestToAllNull();
+
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test subTest = new nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test();
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test subSubTest = new nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test();
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> partsLevelOne = new ArrayList<>();
+        partsLevelOne.add(subTest);
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> partsLevelTwo = new ArrayList<>();
+        partsLevelTwo.add(subSubTest);
+
+        subTest.setTestDate(DATE_ONE);
+        subTest.setTestParts(partsLevelTwo);
+
+        TEST.setTestParts(partsLevelOne);
 
         return TEST;
     }

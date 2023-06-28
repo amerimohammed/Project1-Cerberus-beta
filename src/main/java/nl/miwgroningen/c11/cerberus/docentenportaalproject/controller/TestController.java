@@ -40,11 +40,9 @@ public class TestController {
 
         model.addAttribute("allSuperTest", allSuperTests);
 
-        for (Test test : allTests) {
-            if (test.getTestParts() != null) {
+        for (Test test : allSuperTests) {
                 test.inheritFromSuper(test);
                 testRepository.save(test);
-            }
         }
 
         return "testPages/testOverview";

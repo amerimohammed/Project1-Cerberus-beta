@@ -73,7 +73,7 @@ public class Test extends Assignment implements Comparable<Test> {
     public void inheritFromSuper(Test superTest) {
         for (Test testPart : superTest.testParts) {
             //Inherit date
-            if (testPart.testDate == null) {
+            if (testPart.testDate == null && superTest.testDate != null) {
                 testPart.setTestDate(superTest.testDate);
             }
 
