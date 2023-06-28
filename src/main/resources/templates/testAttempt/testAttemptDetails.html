@@ -74,7 +74,9 @@
         </tbody>
     </table>
 
+    <!--    Show all parts of testAttempt recursively-->
     <table class="table table-hover">
+
         <thead>
             <tr>
                 <th scope="col">Nr</th>
@@ -83,10 +85,13 @@
                 <th scope="col" class="text-end">Actions</th>
             </tr>
         </thead>
+
         <tbody th:fragment="showQuestion">
+
             <tr th:class="${subTestAttempt.hasSubTestAttempts() ? '' : 'row-with-link'}"
                 th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}"
                 th:each="subTestAttempt : ${subTestAttempts}">
+
                 <td th:unless="${subTestAttempt.hasSubTestAttempts()}">
                     <a th:text="${subTestAttempt.test.displayQuestionNumber()}"
                        th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${subTestAttempt.testAttemptId})}">
@@ -96,11 +101,14 @@
                     th:text="${subTestAttempt.test.displayQuestionNumber()}"
                     th:class="'no-hover'" th:style="'font-weight: bold;'">
                 </td>
+
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
                     th:text="${subTestAttempt.test.testName}"></td>
+
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-center no-hover' : 'text-center'}"
                     th:style="${subTestAttempt.isGraded ? '' : 'font-weight: bold; color: red;'}"
                     th:text="${subTestAttempt.displayScore()}"></td>
+
                 <td th:unless="${subTestAttempt.hasSubTestAttempts()}"
                     th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-end no-hover' : 'text-end'}">
                     <div sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')"
@@ -114,6 +122,7 @@
                         (testAttemptId=${subTestAttempt.testAttemptId})})">
                     </div>
                 </td>
+
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
                     th:include=":: showQuestion"
                     th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>

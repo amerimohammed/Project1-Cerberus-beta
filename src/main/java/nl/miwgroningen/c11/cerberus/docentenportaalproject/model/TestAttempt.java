@@ -15,8 +15,7 @@ import java.util.Objects;
  */
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 public class TestAttempt {
 
@@ -50,6 +49,25 @@ public class TestAttempt {
         this.student = student;
     }
 
+    public boolean hasSubTestAttempts() {
+        return (subTestAttempts != null && subTestAttempts.size() > 0);
+    }
+
+    private boolean checkAllSubTestsGraded() {
+        boolean allGraded = true;
+        int index = 0;
+
+        while(allGraded && subTestAttempts.size() > index) {
+            if(!subTestAttempts.get(index).isGraded) {
+                allGraded = false;
+            }
+
+            index++;
+        }
+
+        return allGraded;
+    }
+
     public long getSuperTestId() {
         TestAttempt testAttempt = this;
 
@@ -60,16 +78,10 @@ public class TestAttempt {
         return testAttempt.testAttemptId;
     }
 
-    public boolean hasSubTestAttempts() {
-        return subTestAttempts.size() > 0;
-    }
-
     public int sumUpSubTestAttemptScores() {
         int sumScore = 0;
 
         for (TestAttempt subTestAttempt : subTestAttempts) {
-
-
             sumScore += subTestAttempt.score;
         }
 
@@ -98,7 +110,6 @@ public class TestAttempt {
         return Objects.hash(testAttemptId);
     }
 
-    //TODO: testen van deze methode
     public void setScore(int score) {
         if(score < 0) {
             throw new IllegalArgumentException("Score mag niet negatief zijn.");
@@ -115,20 +126,5 @@ public class TestAttempt {
         else {
             this.isGraded = checkAllSubTestsGraded();
         }
-    }
-
-    private boolean checkAllSubTestsGraded() {
-        boolean allGraded = true;
-        int index = 0;
-
-        while(allGraded && subTestAttempts.size() > index) {
-            if(!subTestAttempts.get(index).isGraded) {
-                allGraded = false;
-            }
-
-            index++;
-        }
-
-        return allGraded;
     }
 }

@@ -99,44 +99,6 @@ public class CohortController {
         return "/cohort/createCohortForm";
     }
 
-    @PostMapping("/new")
-    private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
-
-        if (!result.hasErrors()) {
-            removeAllStudentsFromOldCohort(cohortToBeSaved);
-
-            cohortRepository.save(cohortToBeSaved);
-
-            List<Student> students = cohortToBeSaved.getStudents();
-
-            for (Student student : students) {
-                student.setCohort(cohortToBeSaved);
-            }
-        }
-
-        Long cohortId = cohortToBeSaved.getCohortId();
-
-        return "redirect:/cohort/" + cohortId;
-    }
-
-    //Checks whether there is a cohort with the same id, empties the cohort attribute of all students in there
-    private void removeAllStudentsFromOldCohort(Cohort cohortToBeSaved) {
-        if (cohortToBeSaved.getCohortId() != null) {
-            Optional<Cohort> optionalOldCohort = cohortRepository.findById(cohortToBeSaved.getCohortId());
-
-            if (optionalOldCohort.isPresent()) {
-                Cohort cohort = optionalOldCohort.get();
-                cohort.removeAllStudentsFromCohort();
-            }
-        }
-    }
-
-    @PostMapping(value = "/new", params = "cancel")
-    private String cancelForm() {
-
-        return "redirect:/cohort/all";
-    }
-
     @GetMapping("/{cohortId}/add/{studentId}")
     private String addStudentToCohort(@PathVariable("studentId") Long studentId,
                                       @PathVariable("cohortId") Long cohortId) {
@@ -157,6 +119,39 @@ public class CohortController {
         return "redirect:/cohort/" + cohortId;
     }
 
+    @PostMapping("/new")
+    private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
+
+        if (!result.hasErrors()) {
+            removeAllStudentsFromOldCohort(cohortToBeSaved);
+
+            cohortRepository.save(cohortToBeSaved);
+
+            List<Student> students = cohortToBeSaved.getStudents();
+
+            for (Student student : students) {
+                student.setCohort(cohortToBeSaved);
+                studentRepository.save(student);
+            }
+        }
+
+        Long cohortId = cohortToBeSaved.getCohortId();
+
+        return "redirect:/cohort/" + cohortId;
+    }
+
+    //Checks whether there is a cohort with the same id, empties the cohort attribute of all students in there
+    private void removeAllStudentsFromOldCohort(Cohort cohortToBeSaved) {
+        if (cohortToBeSaved.getCohortId() != null) {
+            Optional<Cohort> optionalOldCohort = cohortRepository.findById(cohortToBeSaved.getCohortId());
+
+            if (optionalOldCohort.isPresent()) {
+                Cohort cohort = optionalOldCohort.get();
+                cohort.removeAllStudentsFromCohort();
+            }
+        }
+    }
+
     @GetMapping("/delete/{cohortId}")
     private String deleteCohort(@PathVariable("cohortId") Long cohortId) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
@@ -170,5 +165,11 @@ public class CohortController {
         }
 
         return "redirect:/cohort/" + cohortId;
+    }
+
+    @PostMapping(value = "/new", params = "cancel")
+    private String cancelForm() {
+
+        return "redirect:/cohort/all";
     }
 }

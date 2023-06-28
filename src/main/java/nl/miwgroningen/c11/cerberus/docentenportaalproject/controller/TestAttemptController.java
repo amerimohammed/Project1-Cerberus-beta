@@ -49,7 +49,7 @@ public class TestAttemptController {
     }
 
     @GetMapping("/test/{testId}/attempt/all")
-    private String showAllTestAttemptsForTest(@PathVariable("testId") Long testId, Model model) {
+    private String showStudentOverviewForTest(@PathVariable("testId") Long testId, Model model) {
         Optional<Test> optionalTest = testRepository.findById(testId);
 
         if (optionalTest.isEmpty()) {

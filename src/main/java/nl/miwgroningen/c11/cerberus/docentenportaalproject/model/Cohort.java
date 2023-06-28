@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * A group of students following the same programme at the same time.
@@ -16,8 +15,7 @@ import java.util.Optional;
  */
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 public class Cohort implements Comparable<Cohort> {
 
@@ -44,10 +42,6 @@ public class Cohort implements Comparable<Cohort> {
         setEndDate(endDate);
     }
 
-    public void addStudentToCohort(Student student) {
-        students.add(student);
-    }
-
     public String displayStartDate() {
         return String.format("%02d - %02d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }
@@ -60,6 +54,10 @@ public class Cohort implements Comparable<Cohort> {
         for (Student student : students) {
             student.setCohort(null);
         }
+    }
+
+    public int getStudentCount() {
+        return students.size();
     }
 
     @Override
@@ -77,9 +75,5 @@ public class Cohort implements Comparable<Cohort> {
         if (startDate == null || endDate.isAfter(startDate)) {
             this.endDate = endDate;
         } else throw new IllegalArgumentException("endDate cannot be before startDate");
-    }
-
-    public int getStudentCount() {
-        return students.size();
     }
 }

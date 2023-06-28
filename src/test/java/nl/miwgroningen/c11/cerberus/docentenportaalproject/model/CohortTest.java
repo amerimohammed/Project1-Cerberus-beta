@@ -77,15 +77,6 @@ class CohortTest {
         assertThrows(IllegalArgumentException.class, () -> cohort.setEndDate(TEST_DATE.minusDays(1)));
     }
 
-    @Test
-    void displayDate() {
-        Cohort cohort = setupCohortWithStartDate();
-        cohort.setEndDate(TEST_DATE.plusDays(1));
-
-        assertEquals(TEST_START_DATE_STRING, cohort.displayStartDate());
-        assertEquals(TEST_END_DATE_STRING, cohort.displayEndDate());
-    }
-
     private static Cohort setupCohortWithStartDate() {
         Cohort cohort = new Cohort();
         cohort.setStartDate(TEST_DATE);
@@ -96,5 +87,15 @@ class CohortTest {
         Cohort cohort = new Cohort();
         cohort.setEndDate(TEST_DATE);
         return cohort;
+    }
+
+    @Test
+    @DisplayName("Dates are displayed correctly")
+    void displayDate() {
+        Cohort cohort = setupCohortWithStartDate();
+        cohort.setEndDate(TEST_DATE.plusDays(1));
+
+        assertEquals(TEST_START_DATE_STRING, cohort.displayStartDate());
+        assertEquals(TEST_END_DATE_STRING, cohort.displayEndDate());
     }
 }

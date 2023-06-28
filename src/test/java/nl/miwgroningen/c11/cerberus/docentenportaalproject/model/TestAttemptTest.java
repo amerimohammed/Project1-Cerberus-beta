@@ -1,63 +1,84 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.model;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * DOEL VAN PROGRAMMA HIER!!!!
- *
- * @author Joost Schreuder
- */
 class TestAttemptTest {
 
-    @Test
-    void SetScore() {
-        TestAttempt superTestAttempt = new TestAttempt();
-
+    @ParameterizedTest
+    @ValueSource(ints = {1, 4, 10, 15, 1234, Integer.MAX_VALUE})
+    @DisplayName("Setting scores to positive values should be possible")
+    void setScorePositive(int score) {
         TestAttempt testAttempt = new TestAttempt();
-        TestAttempt testAttemptTwo = new TestAttempt();
 
-        testAttempt.setSuperTestAttempt(superTestAttempt);
-        testAttemptTwo.setSuperTestAttempt(superTestAttempt);
+        assertDoesNotThrow(() -> testAttempt.setScore(score));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, -4, -10, -15, -1234, Integer.MIN_VALUE})
+    @DisplayName("Setting scores to negative values should not be possible")
+    void setScoreNegative() {
+        TestAttempt testAttempt = new TestAttempt();
+
+        assertThrows(IllegalArgumentException.class, () -> testAttempt.setScore(-1));
+    }
+
+    @Test
+    @DisplayName("Setting score to zero should be possible")
+    void setScoreZero() {
+        TestAttempt testAttempt = new TestAttempt();
+
+        assertDoesNotThrow(() -> testAttempt.setScore(0));
+    }
+
+    @Test
+    @DisplayName("superTestAttempt should be set to graded if all subTestAttempts are graded")
+    void setIsGradedSuperTestWhenSubTestsAreGraded() {
+        TestAttempt testAttempt = new TestAttempt();
 
         TestAttempt testAttemptPartOne = new TestAttempt();
         TestAttempt testAttemptPartTwo = new TestAttempt();
-        TestAttempt testAttemptPartThree = new TestAttempt();
-
-
         testAttemptPartOne.setSuperTestAttempt(testAttempt);
         testAttemptPartTwo.setSuperTestAttempt(testAttempt);
-
-        testAttemptPartThree.setSuperTestAttempt(testAttemptTwo);
-
         List<TestAttempt> subTestAttempts = new ArrayList<>();
         subTestAttempts.add(testAttemptPartOne);
         subTestAttempts.add(testAttemptPartTwo);
-
-        List<TestAttempt> subTestAttemptsTwo = new ArrayList<>();
-        subTestAttemptsTwo.add(testAttemptPartThree);
-
         testAttempt.setSubTestAttempts(subTestAttempts);
-        testAttemptTwo.setSubTestAttempts(subTestAttemptsTwo);
 
-        List<TestAttempt> subTestAttemptForSuperAttempt = new ArrayList<>();
+        testAttemptPartOne.setIsGraded(true);
+        testAttemptPartTwo.setIsGraded(true);
 
-        subTestAttemptForSuperAttempt.add(testAttempt);
-        subTestAttemptForSuperAttempt.add(testAttemptTwo);
+        testAttempt.setIsGraded(false);
 
-        superTestAttempt.setSubTestAttempts(subTestAttemptForSuperAttempt);
+        assertTrue(testAttempt.isGraded());
+    }
 
-        testAttemptPartOne.setScore(20);
-        testAttemptPartTwo.setScore(20);
+    @Test
+    @DisplayName("superTestAttempt should not be set to graded if not all subTestAttempts are graded yet")
+    void setIsGradedSuperTestWhenNotAllSubTestsAreGraded() {
+        TestAttempt testAttempt = new TestAttempt();
 
-        assertEquals(40, testAttempt.getScore());
+        TestAttempt testAttemptPartOne = new TestAttempt();
+        TestAttempt testAttemptPartTwo = new TestAttempt();
+        testAttemptPartOne.setSuperTestAttempt(testAttempt);
+        testAttemptPartTwo.setSuperTestAttempt(testAttempt);
+        List<TestAttempt> subTestAttempts = new ArrayList<>();
+        subTestAttempts.add(testAttemptPartOne);
+        subTestAttempts.add(testAttemptPartTwo);
+        testAttempt.setSubTestAttempts(subTestAttempts);
 
-        testAttemptPartThree.setScore(20);
+        testAttemptPartOne.setIsGraded(true);
+        testAttemptPartTwo.setIsGraded(false);
 
-        assertEquals(60, superTestAttempt.getScore());
+        testAttempt.setIsGraded(true);
+
+        assertFalse(testAttempt.isGraded());
     }
 }
