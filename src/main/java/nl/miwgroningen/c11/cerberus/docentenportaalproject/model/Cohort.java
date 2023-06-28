@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * A group of students following the same programme at the same time.
@@ -53,6 +54,12 @@ public class Cohort implements Comparable<Cohort> {
 
     public String displayEndDate() {
         return String.format("%02d - %02d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
+    }
+
+    public void removeAllStudentsFromCohort() {
+        for (Student student : students) {
+            student.setCohort(null);
+        }
     }
 
     @Override

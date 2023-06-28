@@ -23,7 +23,7 @@
         <div class="mb-3" th:unless="${testAttempt.hasSubTestAttempts()}">
             <label for="score">Score:</label>
             <input th:field="*{score}" type="number" class="form-control" id="score"
-                   aria-describedby="score" placeholder="Score">
+                   aria-describedby="score" placeholder="Score" min="0" oninput="validity.valid||(value='');">
         </div>
         <div class="mb-3">
             <label for="feedback">Feedback:</label>

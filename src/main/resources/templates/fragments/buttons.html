@@ -46,7 +46,7 @@
 </div>
 
 <!-- Cancel button fragment -->
-<div th:fragment="cancel" class="text-end mt-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
+<div th:fragment="cancel" class="text-end mt-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER', 'STUDENT')">
     <button type="submit" name="cancel" class="btn btn-secondary">
         Cancel
     </button>
@@ -87,6 +87,14 @@
     >
         New Attempt +
     </a>
+</div>
+
+<!-- Save button fragment for student -->
+<div th:fragment="saveStudent" class="text-end m-3" sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')">
+    <button type="submit" class="btn btn-primary">
+        <span th:replace="fragments/icons :: saveIcon"></span>
+        Save
+    </button>
 </div>
 </body>
 </html>

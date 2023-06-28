@@ -26,7 +26,7 @@ public class TestAttemptController {
     private final TestAttemptRepository testAttemptRepository;
 
     @GetMapping("/testAttempt/all")
-    private String showStudentTestAttemptOverview(Model model) {
+    private String showAllTestAttemptsOfStudentUser(Model model) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -45,7 +45,7 @@ public class TestAttemptController {
         model.addAttribute("allTest", studentTestList);
         model.addAttribute("student", student);
 
-        return "testAttempt/studentTestAttemptOverview";
+        return "testAttempt/testAttemptOverviewStudent";
     }
 
     @GetMapping("/test/{testId}/attempt/all")
@@ -57,30 +57,12 @@ public class TestAttemptController {
         }
 
         Test test = optionalTest.get();
-        List<Student> allStudents = getAllStudentsTakingTest(test);
+        List<Student> allStudents = test.getAllStudentsTakingTest();
 
         model.addAttribute("test", test);
         model.addAttribute("allStudents", allStudents);
 
-        return ("testAttempt/testAttemptOverview");
-    }
-
-    //Gets all the students that are eligible for a test
-    //by taking a test -> subject -> programmes -> cohorts -> students route
-    private List<Student> getAllStudentsTakingTest(Test test) {
-        List<Programme> testProgrammes = test.getSubject().getProgrammes();
-        List<Cohort> testCohorts = new ArrayList<>();
-
-        for (Programme testProgramme : testProgrammes) {
-            testCohorts.addAll(testProgramme.getCohorts());
-        }
-
-        List<Student> allStudentsTakingTest = new ArrayList<>();
-        for (Cohort testCohort : testCohorts) {
-            allStudentsTakingTest.addAll(testCohort.getStudents());
-        }
-
-        return allStudentsTakingTest;
+        return ("testAttempt/testAttemptOverviewTeacher");
     }
 
     @GetMapping("/testAttempt/{testAttemptId}")
@@ -115,7 +97,7 @@ public class TestAttemptController {
         return ("redirect:/test/all");
     }
 
-    //    Create a testAttempt for each part of the test
+    //Create a testAttempt for each part of the test
     private void createRecursiveTestAttempts(TestAttempt testAttempt, TestAttempt superTestAttempt) {
 
         if (superTestAttempt != null) {
@@ -187,33 +169,33 @@ public class TestAttemptController {
                                      BindingResult result) {
 
         if (!result.hasErrors()) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+
+            //If teacher saves, testAttempt is considered to be graded
+            if(userRoles.contains("TEACHER")) {
+                testAttemptToBeSaved.setIsGraded(true);
+            }
+
             testAttemptRepository.save(testAttemptToBeSaved);
+
             if (testAttemptToBeSaved.getSuperTestAttempt() != null) {
-                updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
+                updateTestAttemptsRecursively(testAttemptToBeSaved.getSuperTestAttempt());
             }
         }
 
         return "redirect:/testAttempt/" + testAttemptToBeSaved.getSuperTestId();
     }
 
-    //Sums scores per level up to and including the whole test
-    public void updateScoresRecursively(TestAttempt testAttempt) {
-        int sumScore = 0;
-
-        for (TestAttempt subTestAttempt : testAttempt.getSubTestAttempts()) {
-            int score = subTestAttempt.getScore();
-
-            if (score == -1) {
-                sumScore = -1;
-            } else {
-                sumScore += subTestAttempt.getScore();
-            }
-        }
+    //Updates the scores and grading status of higher levels of the test
+    public void updateTestAttemptsRecursively(TestAttempt testAttempt) {
+        int sumScore = testAttempt.sumUpSubTestAttemptScores();
 
         testAttempt.setScore(sumScore);
+        testAttempt.setIsGraded(false);
 
         if (testAttempt.getSuperTestAttempt() != null) {
-            updateScoresRecursively(testAttempt.getSuperTestAttempt());
+            updateTestAttemptsRecursively(testAttempt.getSuperTestAttempt());
         }
 
         testAttemptRepository.save(testAttempt);

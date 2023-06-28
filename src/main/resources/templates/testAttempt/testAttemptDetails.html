@@ -19,28 +19,58 @@
     <p class="text-center" sec:authorize="hasAnyAuthority('STUDENT')">
         <a th:href="@{/testAttempt/all}">Back to Attempt Overview</a>
     </p>
-    <table class="table table-hover">
+
+<!--    Main Test Table for admins and Teachers-->
+    <table sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')" class="table table-hover">
         <thead>
         <tr>
             <th scope="col">Test name</th>
             <th>Subject</th>
             <th>Test date</th>
             <th>Score</th>
-            <th>Feedback</th>
         </tr>
         </thead>
         <tbody>
-        <tr  class="row-with-link"
-             th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}">
+        <tr class="row-with-link"
+            th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}">
             <td>
-                <a th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}"
+                <a sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
+                   th:href="@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}"
                    th:text="${testAttempt.test.testName}"></a>
             </td>
             <td th:text="${testAttempt.test.subject.subjectName}"></td>
             <td th:text="${testAttempt.test.testDate}"></td>
             <td th:text="${testAttempt.displayScore()}"></td>
-            <td th:utext="${testAttempt.feedback}"></td>
         </tr>
+        </tbody>
+    </table>
+
+<!--    Main Test Table for Students-->
+    <table sec:authorize="hasAnyAuthority('STUDENT')" class="table">
+        <thead>
+        <tr>
+            <th scope="col">Test name</th>
+            <th>Subject</th>
+            <th>Test date</th>
+            <th>Score</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${testAttempt.test.testName}"></td>
+            <td th:text="${testAttempt.test.subject.subjectName}"></td>
+            <td th:text="${testAttempt.test.testDate}"></td>
+            <td th:text="${testAttempt.displayScore()}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table" th:if="${testAttempt.feedback}">
+        <thead>
+            <tr><th scope="col">Feedback</th></tr>
+        </thead>
+        <tbody>
+            <tr><td th:utext="${testAttempt.feedback}"></td></tr>
         </tbody>
     </table>
 
@@ -69,18 +99,18 @@
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
                     th:text="${subTestAttempt.test.testName}"></td>
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-center no-hover' : 'text-center'}"
-                    th:style="${subTestAttempt.score == -1 ? 'font-weight: bold; color: red;' : ''}"
+                    th:style="${subTestAttempt.isGraded ? '' : 'font-weight: bold; color: red;'}"
                     th:text="${subTestAttempt.displayScore()}"></td>
                 <td th:unless="${subTestAttempt.hasSubTestAttempts()}"
                     th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-end no-hover' : 'text-end'}">
                     <div sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')"
                          th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
-                         th:replace="fragments/buttons :: editStudent(link)(@{/testAttempt/edit/student/{testAttemptId}
+                         th:replace="fragments/buttons :: editStudent(@{/testAttempt/edit/student/{testAttemptId}
                         (testAttemptId=${subTestAttempt.testAttemptId})})">
                     </div>
                     <div sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')"
                          th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
-                         th:replace="fragments/buttons :: editTeacher(link)(@{/testAttempt/edit/teacher/{testAttemptId}
+                         th:replace="fragments/buttons :: editTeacher(@{/testAttempt/edit/teacher/{testAttemptId}
                         (testAttemptId=${subTestAttempt.testAttemptId})})">
                     </div>
                 </td>
