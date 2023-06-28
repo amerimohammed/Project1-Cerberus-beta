@@ -44,9 +44,8 @@ class TestModelTest {
         test.inheritFromSuper(test);
 
         List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> testParts = test.getTestParts();
-        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test part = testParts.get(0);
 
-        assertEquals(test.getTestDate(), part.getTestDate());
+        assertEquals(test.getTestDate(), testParts.get(0).getTestDate());
     }
 
     @Test
@@ -57,7 +56,33 @@ class TestModelTest {
         List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> testParts = test.getTestParts();
         testParts.get(0).setTestDate(DATE_TWO);
 
+        test.inheritFromSuper(test);
+
         assertNotEquals(test.getTestDate(), testParts.get(0).getTestDate());
+    }
+
+    @Test
+    @DisplayName("If subject of test part is null, then inherit from super test")
+    void subjectTestPartIsNullThenInheritFromSuperTest() {
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
+
+        test.inheritFromSuper(test);
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> testParts = test.getTestParts();
+
+        assertEquals(test.getSubject(), testParts.get(0).getSubject());
+    }
+
+    @Test
+    @DisplayName("If subject of test part is not null, then do not inherit form super test")
+    void subjectOfTestPartIsNotNullThenDoNotInheritFormSuperTest() {
+        nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
+        Subject differentSubject = new Subject();
+
+        List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> testParts = test.getTestParts();
+        testParts.get(0).setSubject(differentSubject);
+
+        assertNotEquals(test.getSubject(), testParts.get(0).getSubject());
     }
 
     //Method to be able to reuse the same constant
@@ -69,12 +94,15 @@ class TestModelTest {
 
     private static nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test setUpTestWithTestPart() {
         setTestToAllNull();
+        Subject subject = new Subject();
+
         nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test subTest = new nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test();
 
         List<nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test> parts = new ArrayList<>();
         parts.add(subTest);
 
         TEST.setTestDate(DATE_ONE);
+        TEST.setSubject(subject);
         TEST.setTestParts(parts);
 
         return TEST;
