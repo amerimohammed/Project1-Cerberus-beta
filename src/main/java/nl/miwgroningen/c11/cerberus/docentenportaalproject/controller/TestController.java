@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -29,9 +30,15 @@ public class TestController {
 
     @GetMapping("/all")
     private String showTestOverview(Model model) {
-        List<Test> allTests = testRepository.findBySuperTestIsNull();
-        Collections.sort(allTests);
-        model.addAttribute("allSuperTest", allTests);
+        List<Test> allTests = testRepository.findByOrderByTestDate();
+        List<Test> allSuperTests = new ArrayList<>();
+        for (Test test : allTests) {
+            if (test.getSuperTest() == null) {
+                allSuperTests.add(test);
+            }
+        }
+
+        model.addAttribute("allSuperTest", allSuperTests);
 
         for (Test test : allTests) {
             if (test.getTestParts() != null) {
