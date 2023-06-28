@@ -75,10 +75,10 @@ public class TestAttempt {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TestAttempt that = (TestAttempt) o;
+    public boolean equals(Object comparisonObject) {
+        if (this == comparisonObject) return true;
+        if (comparisonObject == null || getClass() != comparisonObject.getClass()) return false;
+        TestAttempt that = (TestAttempt) comparisonObject;
         return testAttemptId == that.testAttemptId;
     }
 

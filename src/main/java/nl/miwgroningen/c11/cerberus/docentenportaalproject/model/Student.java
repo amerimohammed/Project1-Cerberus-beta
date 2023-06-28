@@ -5,7 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A person in a cohort.
@@ -58,5 +60,17 @@ public class Student extends User implements Comparable<Student> {
         }
 
         return testAttemptsForSpecificTest;
+    }
+
+    public Set<Test> getAllSuperTestAttempts() {
+        Set<Test> testSet = new HashSet<>();
+
+        for (TestAttempt testAttempt : testAttempts) {
+            if (testAttempt.getSuperTestAttempt() == null) {
+                testSet.add(testAttempt.getTest());
+            }
+        }
+
+        return testSet;
     }
 }
