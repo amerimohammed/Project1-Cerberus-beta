@@ -38,7 +38,7 @@ public class TestAttemptController {
 
         Student student = optionalStudent.get();
 
-        List<Test> studentTestList = new ArrayList<>(getAllTestsOfStudent(student));
+        List<Test> studentTestList = new ArrayList<>(student.getAllSuperTestAttempts());
 
         Collections.sort(studentTestList);
 
@@ -46,19 +46,6 @@ public class TestAttemptController {
         model.addAttribute("student", student);
 
         return "testAttempt/studentTestAttemptOverview";
-    }
-
-    private Set<Test> getAllTestsOfStudent(Student student) {
-        List<TestAttempt> testAttempts = student.getTestAttempts();
-        Set<Test> testSet = new HashSet<>();
-
-        for (TestAttempt testAttempt : testAttempts) {
-            if (testAttempt.getSuperTestAttempt() == null) {
-                testSet.add(testAttempt.getTest());
-            }
-        }
-
-        return testSet;
     }
 
     @GetMapping("/test/{testId}/attempt/all")
