@@ -169,8 +169,16 @@ public class TestAttemptController {
                                      BindingResult result) {
 
         if (!result.hasErrors()) {
-            testAttemptToBeSaved.setIsGraded(true);
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
+
+            //If teacher saves, testAttempt is considered to be graded
+            if(userRoles.contains("TEACHER")) {
+                testAttemptToBeSaved.setIsGraded(true);
+            }
+
             testAttemptRepository.save(testAttemptToBeSaved);
+
             if (testAttemptToBeSaved.getSuperTestAttempt() != null) {
                 updateTestAttemptsRecursively(testAttemptToBeSaved.getSuperTestAttempt());
             }
