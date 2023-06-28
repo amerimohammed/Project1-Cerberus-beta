@@ -17,15 +17,15 @@
   </h3>
   <br>
   <table class="table text-center">
-    <tr th:unless="${testAttempt.hasSubTestAttempts()}">
+    <tr th:unless="${testAttempt.hasSubTestAttempts() || testAttempt.answer == null}">
       <th>Answer</th>
       <td th:utext="${testAttempt.answer}"></td>
     </tr>
-    <tr th:unless="${testAttempt.score == -1}">
+    <tr th:if="${testAttempt.isGraded()}">
       <th>Score</th>
       <td th:text="${testAttempt.score}"></td>
     </tr>
-    <tr th:unless="${testAttempt.feedback == ''}">
+    <tr th:if="${testAttempt.isGraded()}">
       <th>Feedback</th>
       <td th:utext="${testAttempt.feedback}"></td>
     </tr>
