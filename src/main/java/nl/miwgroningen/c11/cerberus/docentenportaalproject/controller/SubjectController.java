@@ -70,7 +70,7 @@ public class SubjectController {
     }
 
     @PostMapping("/new")
-    private String saveOrUpdateStudent(@ModelAttribute("subject") Subject subjectToBeSaved, BindingResult result) {
+    private String saveOrUpdateSubject(@ModelAttribute("subject") Subject subjectToBeSaved, BindingResult result) {
 
         if (!result.hasErrors()) {
             subjectRepository.save(subjectToBeSaved);
