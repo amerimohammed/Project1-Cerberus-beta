@@ -169,23 +169,25 @@ public class TestAttemptController {
                                      BindingResult result) {
 
         if (!result.hasErrors()) {
+            testAttemptToBeSaved.setIsGraded(true);
             testAttemptRepository.save(testAttemptToBeSaved);
             if (testAttemptToBeSaved.getSuperTestAttempt() != null) {
-                updateScoresRecursively(testAttemptToBeSaved.getSuperTestAttempt());
+                updateTestAttemptsRecursively(testAttemptToBeSaved.getSuperTestAttempt());
             }
         }
 
         return "redirect:/testAttempt/" + testAttemptToBeSaved.getSuperTestId();
     }
 
-    //Sums subTestAttempt scores per level up to and including that of the whole test
-    public void updateScoresRecursively(TestAttempt testAttempt) {
+    //Updates the scores and grading status of higher levels of the test
+    public void updateTestAttemptsRecursively(TestAttempt testAttempt) {
         int sumScore = testAttempt.sumUpSubTestAttemptScores();
 
         testAttempt.setScore(sumScore);
+        testAttempt.setIsGraded(false);
 
         if (testAttempt.getSuperTestAttempt() != null) {
-            updateScoresRecursively(testAttempt.getSuperTestAttempt());
+            updateTestAttemptsRecursively(testAttempt.getSuperTestAttempt());
         }
 
         testAttemptRepository.save(testAttempt);

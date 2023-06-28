@@ -20,8 +20,6 @@ import java.util.Objects;
 @NoArgsConstructor
 public class TestAttempt {
 
-    private static final int NOT_GRADED_NUMBER = -1;
-
     @Id
     @GeneratedValue
     private long testAttemptId;
@@ -38,7 +36,8 @@ public class TestAttempt {
     @ManyToOne
     private TestAttempt superTestAttempt;
 
-    private int score = NOT_GRADED_NUMBER;
+    private int score;
+    private boolean isGraded = false;
 
     @Lob
     private String answer;
@@ -69,14 +68,9 @@ public class TestAttempt {
         int sumScore = 0;
 
         for (TestAttempt subTestAttempt : subTestAttempts) {
-            int subTestScore = subTestAttempt.score;
 
-            //Returns NOT_GRADED_NUMBER if one of the subTests has not been graded yet
-            if (subTestScore == NOT_GRADED_NUMBER) {
-                return NOT_GRADED_NUMBER;
-            } else {
-                sumScore += subTestAttempt.score;
-            }
+
+            sumScore += subTestAttempt.score;
         }
 
         return sumScore;
@@ -84,9 +78,9 @@ public class TestAttempt {
 
     //Displays a warning if a part of a test has not been graded yet
     public String displayScore() {
-        if (score == NOT_GRADED_NUMBER && !hasSubTestAttempts()) {
+        if (!isGraded && !hasSubTestAttempts()) {
             return "TO BE GRADED";
-        } else if (score == NOT_GRADED_NUMBER) {
+        } else if (!isGraded) {
             return "";
         } else return Integer.toString(score);
     }
@@ -102,5 +96,39 @@ public class TestAttempt {
     @Override
     public int hashCode() {
         return Objects.hash(testAttemptId);
+    }
+
+    //TODO: testen van deze methode
+    public void setScore(int score) {
+        if(score < 0) {
+            throw new IllegalArgumentException("Score mag niet negatief zijn.");
+        }
+        else {
+            this.score = score;
+        }
+    }
+
+    public void setIsGraded(boolean isGraded) {
+        if(!hasSubTestAttempts()) {
+            this.isGraded = isGraded;
+        }
+        else {
+            this.isGraded = checkAllSubTestsGraded();
+        }
+    }
+
+    private boolean checkAllSubTestsGraded() {
+        boolean allGraded = true;
+        int index = 0;
+
+        while(allGraded && subTestAttempts.size() > index) {
+            if(!subTestAttempts.get(index).isGraded) {
+                allGraded = false;
+            }
+
+            index++;
+        }
+
+        return allGraded;
     }
 }

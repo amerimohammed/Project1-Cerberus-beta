@@ -99,7 +99,7 @@
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'no-hover' : ''}"
                     th:text="${subTestAttempt.test.testName}"></td>
                 <td th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-center no-hover' : 'text-center'}"
-                    th:style="${subTestAttempt.score == -1 ? 'font-weight: bold; color: red;' : ''}"
+                    th:style="${subTestAttempt.isGraded ? '' : 'font-weight: bold; color: red;'}"
                     th:text="${subTestAttempt.displayScore()}"></td>
                 <td th:unless="${subTestAttempt.hasSubTestAttempts()}"
                     th:class="${subTestAttempt.hasSubTestAttempts() ? 'text-end no-hover' : 'text-end'}">
