@@ -65,11 +65,28 @@ public class TestAttempt {
         return subTestAttempts.size() > 0;
     }
 
+    public int sumUpSubTestAttemptScores() {
+        int sumScore = 0;
+
+        for (TestAttempt subTestAttempt : subTestAttempts) {
+            int subTestScore = subTestAttempt.score;
+
+            //Returns NOT_GRADED_NUMBER if one of the subTests has not been graded yet
+            if (subTestScore == NOT_GRADED_NUMBER) {
+                return NOT_GRADED_NUMBER;
+            } else {
+                sumScore += subTestAttempt.score;
+            }
+        }
+
+        return sumScore;
+    }
+
     //Displays a warning if a part of a test has not been graded yet
     public String displayScore() {
-        if (score == -1 && !hasSubTestAttempts()) {
+        if (score == NOT_GRADED_NUMBER && !hasSubTestAttempts()) {
             return "TO BE GRADED";
-        } else if (score == -1) {
+        } else if (score == NOT_GRADED_NUMBER) {
             return "";
         } else return Integer.toString(score);
     }

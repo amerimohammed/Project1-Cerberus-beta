@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,6 +87,24 @@ public class Test extends Assignment implements Comparable<Test> {
                 inheritFromSuper(testPart);
             }
         }
+    }
+
+    //Gets all the students that are eligible for a test
+    //by taking a test -> subject -> programmes -> cohorts -> students route
+    public List<Student> getAllStudentsTakingTest() {
+        List<Programme> testProgrammes = getSubject().getProgrammes();
+        List<Cohort> testCohorts = new ArrayList<>();
+
+        for (Programme testProgramme : testProgrammes) {
+            testCohorts.addAll(testProgramme.getCohorts());
+        }
+
+        List<Student> allStudentsTakingTest = new ArrayList<>();
+        for (Cohort testCohort : testCohorts) {
+            allStudentsTakingTest.addAll(testCohort.getStudents());
+        }
+
+        return allStudentsTakingTest;
     }
 
     @Override

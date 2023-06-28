@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/cohort")
 public class CohortController {
+    private static final LocalDate DEFAULT_DATE = LocalDate.now();
+
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final ProgrammeRepository programmeRepository;
@@ -45,10 +47,15 @@ public class CohortController {
 
     @GetMapping("/{cohortId}")
     private String getCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
-        Cohort cohort = getCohortWithId(cohortId);
-        if (cohort == null) return "redirect:/cohort/all";
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
 
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        if (optionalCohort.isEmpty()) {
+            return "redirect:/cohort/all";
+        }
+
+        Cohort cohort = optionalCohort.get();
+
+        List<Student> allStudents = studentRepository.findStudentsByCohortIsNull();
         model.addAttribute("allStudents", allStudents);
         model.addAttribute("cohort", cohort);
 
@@ -57,13 +64,12 @@ public class CohortController {
 
     @GetMapping("/new")
     private String showCreateCohortForm(Model model) {
-        //New cohort, but with both dates set to avoid a NullPointerException
         Cohort newCohort = new Cohort();
-        newCohort.setStartDate(LocalDate.now());
-        newCohort.setEndDate(LocalDate.now().plusDays(1));
+        newCohort.setStartDate(DEFAULT_DATE);
+        newCohort.setEndDate(DEFAULT_DATE.plusDays(1));
         model.addAttribute("cohort", newCohort);
 
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        List<Student> allStudents = studentRepository.findStudentsByCohortIsNull();
 
         model.addAttribute("allStudents", allStudents);
         model.addAttribute("allProgrammes", programmeRepository.findAll());
@@ -73,11 +79,16 @@ public class CohortController {
 
     @GetMapping("/edit/{cohortId}")
     private String showEditCohortForm(@PathVariable("cohortId") Long cohortId, Model model) {
-        Cohort cohort = getCohortWithId(cohortId);
-        if (cohort == null) return "redirect:/cohort/all";
+        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
+
+        if (optionalCohort.isEmpty()) {
+            return "redirect:/cohort/all";
+        }
+
+        Cohort cohort = optionalCohort.get();
 
         //In the edit form, show a list of students that either have no cohort or are in the current cohort
-        List<Student> allStudents = getListOfStudentsWithoutCohort();
+        List<Student> allStudents = studentRepository.findStudentsByCohortIsNull();
         List<Student> studentsCurrentCohort = cohort.getStudents();
         allStudents.addAll(studentsCurrentCohort);
 
@@ -88,43 +99,18 @@ public class CohortController {
         return "/cohort/createCohortForm";
     }
 
-    private Cohort getCohortWithId(Long cohortId) {
-        Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
-
-        return optionalCohort.orElse(null);
-    }
-
-    private List<Student> getListOfStudentsWithoutCohort() {
-        List<Student> allStudents = studentRepository.findAll();
-        List<Student> studentsToBeRemoved = new ArrayList<>();
-
-        //Done this way to not edit list during iteration
-        for (Student student : allStudents) {
-            if(student.getCohort() != null) {
-                studentsToBeRemoved.add(student);
-            }
-        }
-
-        allStudents.removeAll(studentsToBeRemoved);
-
-        return allStudents;
-    }
-
     @PostMapping("/new")
     private String saveOrUpdateCohort(@ModelAttribute("cohort") Cohort cohortToBeSaved, BindingResult result) {
 
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             removeAllStudentsFromOldCohort(cohortToBeSaved);
 
-            //Save cohort
             cohortRepository.save(cohortToBeSaved);
 
             List<Student> students = cohortToBeSaved.getStudents();
 
-            //Set all selected students to that cohort
             for (Student student : students) {
                 student.setCohort(cohortToBeSaved);
-                studentRepository.save(student);
             }
         }
 
@@ -133,19 +119,14 @@ public class CohortController {
         return "redirect:/cohort/" + cohortId;
     }
 
-    //Finds if there is a cohort with the same id, empties the cohort attribute of all students in there
+    //Checks whether there is a cohort with the same id, empties the cohort attribute of all students in there
     private void removeAllStudentsFromOldCohort(Cohort cohortToBeSaved) {
-        //See if there is a cohort with the same id
-        if(cohortToBeSaved.getCohortId() != null) {
+        if (cohortToBeSaved.getCohortId() != null) {
             Optional<Cohort> optionalOldCohort = cohortRepository.findById(cohortToBeSaved.getCohortId());
 
-            //If so, set the cohort of all students in that cohort to null
-            if(optionalOldCohort.isPresent()) {
+            if (optionalOldCohort.isPresent()) {
                 Cohort cohort = optionalOldCohort.get();
-
-                for (Student student : cohort.getStudents()) {
-                    student.setCohort(null);
-                }
+                cohort.removeAllStudentsFromCohort();
             }
         }
     }
@@ -163,15 +144,12 @@ public class CohortController {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
-        if(optionalCohort.isEmpty() || optionalStudent.isEmpty()) {
+        if (optionalCohort.isEmpty() || optionalStudent.isEmpty()) {
             return "redirect:/cohort/all";
         }
 
         Cohort cohort = optionalCohort.get();
         Student student = optionalStudent.get();
-
-        cohort.addStudentToCohort(student);
-        cohortRepository.save(cohort);
 
         student.setCohort(cohort);
         studentRepository.save(student);
@@ -183,16 +161,11 @@ public class CohortController {
     private String deleteCohort(@PathVariable("cohortId") Long cohortId) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
 
-        if(optionalCohort.isPresent()) {
+        if (optionalCohort.isPresent()) {
             Cohort cohort = optionalCohort.get();
 
-            //First, remove the cohort in question from all students
-            for (Student student : cohort.getStudents()) {
-                student.setCohort(null);
-                studentRepository.save(student);
-            }
+            cohort.removeAllStudentsFromCohort();
 
-            //Then, remove cohort
             cohortRepository.delete(optionalCohort.get());
         }
 

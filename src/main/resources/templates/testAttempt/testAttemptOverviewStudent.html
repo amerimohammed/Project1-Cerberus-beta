@@ -35,7 +35,7 @@
                 </table>
             </td>
             <td class="text-end" sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')">
-                <div th:replace="fragments/buttons :: newAttempt(link)(@{/test/{testId}/attempt/{studentId}/add
+                <div th:replace="fragments/buttons :: newAttempt(@{/test/{testId}/attempt/{studentId}/add
                 (testId=${test.assignmentId}, studentId=${student.userId})})"></div>
             </td>
         </tr>
