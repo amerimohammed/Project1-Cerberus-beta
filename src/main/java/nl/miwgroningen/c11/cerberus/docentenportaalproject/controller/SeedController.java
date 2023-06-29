@@ -30,8 +30,10 @@ public class SeedController {
     private static final int TEST_PARTS_AMOUNT = 7;
     private static final int ASSIGNMENT_AMOUNT = 10;
     private static final int SUBJECTS_IN_PROGRAMME_AMOUNT = 5;
+
     private static final int SUBJECT_MAX_DURATION = 10;
     private static final int SUBJECT_MIN_DURATION = 1;
+    private static final int DAYS_RANGE = 1000;
 
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
@@ -45,6 +47,13 @@ public class SeedController {
 
     @GetMapping("/seed")
     private String seedDatabase() {
+        createEntities();
+        connectEntities();
+
+        return "redirect:/";
+    }
+
+    private void createEntities() {
         createSubject();
         createTeacher();
         createProgramme();
@@ -53,15 +62,15 @@ public class SeedController {
         createRandomTest();
         createRealisticTest();
         createAssignment();
+    }
 
+    private void connectEntities() {
         assignSubjectsToProgrammes();
         assignProgrammesToCohorts();
         assignTeachersToSubjects();
         assignCohortsToStudents();
         assignSubjectToTest();
         assignSubjectToAssignment();
-
-        return "redirect:/";
     }
 
     private void createSubject() {
@@ -112,8 +121,8 @@ public class SeedController {
         Faker faker = new Faker();
 
         for (int index = 0; index < SeedController.COHORT_AMOUNT; index++) {
-            Date startDate = faker.date().past(1000, TimeUnit.DAYS);
-            Date endDate = faker.date().future(1000, TimeUnit.DAYS);
+            Date startDate = faker.date().past(DAYS_RANGE, TimeUnit.DAYS);
+            Date endDate = faker.date().future(DAYS_RANGE, TimeUnit.DAYS);
 
             LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

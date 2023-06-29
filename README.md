@@ -4,7 +4,11 @@
 
 ## **How to use this demo**
 
-First, clone this repository and run it using an IDE of your choice. Then go to 'localhost:8080' 
+First, use a SQL workbench application to create user 'docentuser' with password 'docentuserPW' and grant this user 
+all schema privileges (we are not liable for any damages). Also, create a schema called 'docentenportaal'.
+
+
+Second, clone this repository and run it using an IDE of your choice. Then go to 'localhost:8080' 
 using your favorite browser. You will be met with a mostly empty page.
 
 ## **Generating test data**
