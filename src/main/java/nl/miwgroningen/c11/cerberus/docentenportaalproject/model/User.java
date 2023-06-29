@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class User implements UserDetails {
-
     public static final int PASSWORD_LENGTH = 10;
     public static final int ASCII_RANGE_MIN = 33;
     public static final int ASCII_RANGE_MAX = 122;
@@ -36,6 +35,7 @@ public class User implements UserDetails {
     private String username;
 
     private String password;
+
     private boolean enabled = true;
 
     protected String fullName;
@@ -44,6 +44,49 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
 
     protected boolean firstLogin = false;
+
+    public void generateUsernameAndPassword(UserRepository userRepository) {
+        if (fullName != null) {
+            username = generateUsername(userRepository);
+            password = generateRandomPassword();
+        }
+    }
+
+    private String generateUsername(UserRepository userRepository) {
+        StringBuilder usernameBuilder = new StringBuilder();
+        String[] firstNameLastName = fullName.split(" ");
+
+        if (firstNameLastName.length > 1) {
+            usernameBuilder.append(firstNameLastName[0].charAt(0))
+                    .append(".").append(firstNameLastName[firstNameLastName.length - 1]);
+        } else {
+            usernameBuilder.append(fullName);
+        }
+
+        String username = usernameBuilder.toString().toLowerCase();
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+
+        Integer counter = 2;
+        usernameBuilder.append(".").append(counter);
+
+        while (optionalUser.isPresent()) {
+            username = usernameBuilder.toString();
+            optionalUser = userRepository.findByUsername(username);
+            counter++;
+            usernameBuilder.deleteCharAt(usernameBuilder.length() - 1).append(counter);
+        }
+        return username;
+    }
+
+    private String generateRandomPassword() {
+        return new Random().ints(PASSWORD_LENGTH, ASCII_RANGE_MIN, ASCII_RANGE_MAX)
+                .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
+    }
+
+    public void hashPassword() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        password = encoder.encode(password);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -83,48 +126,5 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public void generateUsernameAndPassword(UserRepository userRepository) {
-        if(fullName != null){
-            username = generateUsername(userRepository);
-            password = generateRandomPassword();
-        }
-    }
-
-    public void hashPassword() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        password = encoder.encode(password);
-    }
-
-    private String generateRandomPassword() {
-        return new Random().ints(PASSWORD_LENGTH, ASCII_RANGE_MIN, ASCII_RANGE_MAX)
-                .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
-    }
-
-    private String generateUsername(UserRepository userRepository) {
-        StringBuilder usernameBuilder = new StringBuilder();
-        String[] firstNameLastName = fullName.split(" ");
-
-        if (firstNameLastName.length > 1) {
-            usernameBuilder.append(firstNameLastName[0].charAt(0))
-                    .append(".").append(firstNameLastName[firstNameLastName.length - 1]);
-        } else {
-            usernameBuilder.append(fullName);
-        }
-
-        String username = usernameBuilder.toString().toLowerCase();
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-
-        Integer counter = 2;
-        usernameBuilder.append(".").append(counter);
-
-        while (optionalUser.isPresent()) {
-            username = usernameBuilder.toString();
-            optionalUser = userRepository.findByUsername(username);
-            counter++;
-            usernameBuilder.deleteCharAt(usernameBuilder.length() - 1).append(counter);
-        }
-        return username;
     }
 }

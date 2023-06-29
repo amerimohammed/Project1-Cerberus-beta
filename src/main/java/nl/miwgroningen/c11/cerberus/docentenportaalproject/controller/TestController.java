@@ -11,7 +11,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,6 +108,7 @@ public class TestController {
 
         return "redirect:/test/" + testId;
     }
+
     @GetMapping("/delete/{testId}")
     private String deleteTest(@PathVariable("testId") Long testId) {
         Optional<Test> optionalTest = testRepository.findById(testId);

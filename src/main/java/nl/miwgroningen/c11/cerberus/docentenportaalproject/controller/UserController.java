@@ -51,9 +51,7 @@ public class UserController {
             return "user/changePassword";
 
         } else {
-            user.setPassword(passwordEncoder.encode(newPassword));
-            user.setFirstLogin(false);
-            userRepository.save(user);
+            updateUserPassword(user, newPassword);
             request.logout();
 
             redirectAttributes.addFlashAttribute("message",
@@ -61,5 +59,11 @@ public class UserController {
 
             return "redirect:/login";
         }
+    }
+
+    private void updateUserPassword(User user, String newPassword) {
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setFirstLogin(false);
+        userRepository.save(user);
     }
 }

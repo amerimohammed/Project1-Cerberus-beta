@@ -37,7 +37,7 @@ class TestModelTest {
     }
 
     @Test
-    @DisplayName("When test part is null it inherts date of super test")
+    @DisplayName("When test part is null it inherits date of super test")
     void testDateTestPartIsNullInheritFromSuperTest() {
         nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
 
@@ -49,7 +49,7 @@ class TestModelTest {
     }
 
     @Test
-    @DisplayName("Test part does not inhert from super test if date is not null")
+    @DisplayName("Test part does not inherit from super test if date is not null")
     void testDateOfTestPartIsNotNullDoNotInheritFromSuperTest() {
         nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test test = setUpTestWithTestPart();
 
