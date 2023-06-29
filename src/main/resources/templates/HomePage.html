@@ -16,7 +16,7 @@
                      class="card-img-top programme-img">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${programme.programmeName}"></h5>
-                    <p class="card-text" th:utext="${programme.shortDescription}"></p>
+                    <p class="card-text" th:text="${programme.shortDescription}"></p>
                 </div>
                 <div class="m-3 text-end">
                     <a th:href="@{programme/view/{programmeId}(programmeId=${programme.programmeId})}"
