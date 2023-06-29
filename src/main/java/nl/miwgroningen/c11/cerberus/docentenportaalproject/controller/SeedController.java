@@ -153,6 +153,11 @@ public class SeedController {
     }
 
     private void createRandomTest() {
+        List<Test> allRandomSuperTests = createTestsWithList();
+        createTestParts(allRandomSuperTests);
+    }
+
+    private List<Test> createTestsWithList() {
         Faker faker = new Faker();
         List<Test> allRandomSuperTests = new ArrayList<>();
 
@@ -166,6 +171,11 @@ public class SeedController {
             allRandomSuperTests.add(randomTest);
             testRepository.save(randomTest);
         }
+        return allRandomSuperTests;
+    }
+
+    private void createTestParts(List<Test> allRandomSuperTests) {
+        Faker faker = new Faker();
 
         for (int index = 0; index < TEST_PARTS_AMOUNT; index++) {
             int randomSuper = (int) (Math.random() * allRandomSuperTests.size());

@@ -35,13 +35,13 @@ public class CohortController {
     private final ProgrammeRepository programmeRepository;
 
     @GetMapping("/all")
-    private String showAllCohorts(Model model) {
+    private String showCohortOverview(Model model) {
         List<Cohort> allCohorts;
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
-        if (!userRoles.contains("ADMIN")) {
+        if (!userRoles.contains("ADMIN") && userRoles.contains("TEACHER")) {
             allCohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
         } else {
             allCohorts = cohortRepository.findAll();
@@ -53,7 +53,7 @@ public class CohortController {
     }
 
     @GetMapping("/{cohortId}")
-    private String getCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
+    private String showCohortDetails(@PathVariable("cohortId") Long cohortId, Model model) {
         Optional<Cohort> optionalCohort = cohortRepository.findById(cohortId);
 
         if (optionalCohort.isEmpty()) {
