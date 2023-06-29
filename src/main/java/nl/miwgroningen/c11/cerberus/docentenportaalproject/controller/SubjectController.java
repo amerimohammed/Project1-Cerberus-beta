@@ -17,6 +17,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Handles all actions concerning tests.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/subject")

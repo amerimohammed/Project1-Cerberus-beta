@@ -10,7 +10,9 @@
     <h1 class="text-center">Create or edit a Cohort</h1>
 
     <form th:action="@{/cohort/new}" method="post" th:object="${cohort}">
+
         <input type="hidden" th:field="*{cohortId}">
+
         <div class="mb-3">
             <label for="programmeSelect">Programme:</label>
             <select id="programmeSelect" class="form-select" th:field="*{programme}">
@@ -21,6 +23,7 @@
                 </option>
             </select>
         </div>
+
         <div class="row">
             <div class="mb-3 col">
                 <label for="startDate">Starting date:</label>
@@ -31,6 +34,7 @@
                     document.getElementById('startDate').max = [[${cohort.endDate}]];
                 </script>
             </div>
+
             <div class="mb-3 col">
                 <label for="endDate">Ending date:</label>
                 <input type="date" th:field="*{endDate}"
@@ -41,6 +45,7 @@
                 </script>
             </div>
         </div>
+
         <div class="mb-3">
             <label for="studentSelect" class="form-label">Students:</label>
             <select id="studentSelect" class="form-select multiple-select" th:field="*{students}" multiple>
@@ -51,10 +56,12 @@
                 </option>
             </select>
         </div>
+
         <div class="d-flex justify-content-end">
             <div th:replace="fragments/buttons :: cancel"></div>
             <div th:replace="fragments/buttons :: save"></div>
         </div>
+
     </form>
 </div>
 

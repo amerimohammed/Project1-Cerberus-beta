@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A type of assignment that occurs at a set date and serves as an evaluation moment, to evaluate the learned skills of a student in a subject.
+ * A type of assignment that occurs at a set date and serves as an evaluation moment,
+ * to evaluate the learned skills of a student in a subject.
  *
  * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */

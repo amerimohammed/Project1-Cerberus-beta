@@ -27,6 +27,7 @@ public class User implements UserDetails {
     public static final int PASSWORD_LENGTH = 10;
     public static final int ASCII_RANGE_MIN = 33;
     public static final int ASCII_RANGE_MAX = 122;
+
     @Id
     @GeneratedValue
     protected Long userId;

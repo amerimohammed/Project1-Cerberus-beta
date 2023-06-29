@@ -7,12 +7,14 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
+
     <h1 class="text-center">
         Details of
         <span th:text="${testAttempt.student.fullName}"></span>'s
         Attempt of
         <span th:text="${testAttempt.test.testName}"></span>
     </h1>
+
     <p class="text-center" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
         <a th:href="@{/test/{testId}/attempt/all(testId=${testAttempt.test.assignmentId})}">Back to Attempt Overview</a>
     </p>
@@ -22,6 +24,7 @@
 
 <!--    Main Test Table for admins and Teachers-->
     <table sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')" class="table table-hover">
+
         <thead>
         <tr>
             <th scope="col">Test name</th>
@@ -30,6 +33,7 @@
             <th>Score</th>
         </tr>
         </thead>
+
         <tbody>
         <tr class="row-with-link"
             th:attr="data-link=@{/testAttempt/edit/{testAttemptId}(testAttemptId=${testAttempt.testAttemptId})}">
@@ -43,10 +47,12 @@
             <td th:text="${testAttempt.displayScore()}"></td>
         </tr>
         </tbody>
+
     </table>
 
 <!--    Main Test Table for Students-->
     <table sec:authorize="hasAnyAuthority('STUDENT')" class="table">
+
         <thead>
         <tr>
             <th scope="col">Test name</th>
@@ -55,6 +61,7 @@
             <th>Score</th>
         </tr>
         </thead>
+
         <tbody>
         <tr>
             <td th:text="${testAttempt.test.testName}"></td>
@@ -63,6 +70,7 @@
             <td th:text="${testAttempt.displayScore()}"></td>
         </tr>
         </tbody>
+
     </table>
 
     <table class="table" th:if="${testAttempt.feedback}">
@@ -127,7 +135,9 @@
                     th:include=":: showQuestion"
                     th:with="subTestAttempts = ${subTestAttempt.getSubTestAttempts()}"></td>
             </tr>
+
         </tbody>
+
     </table>
 
 </div>

@@ -7,8 +7,11 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
+
     <h1 class="text-center">Test Attempt Overview for <span th:text="${test.testName}"></span></h1>
+
     <table class="table table-hover">
+
         <thead>
         <tr>
             <th scope="col">Student</th>
@@ -16,6 +19,7 @@
             <th scope="col" class="text-end" sec:authorize="hasAnyAuthority('ADMIN', 'STUDENT')">Actions</th>
         </tr>
         </thead>
+
         <tbody>
         <tr th:each="student : ${allStudents}">
             <td th:text="${student.fullName}"></td>
@@ -35,7 +39,9 @@
             </td>
         </tr>
         </tbody>
+
     </table>
+
 </div>
 
 <div th:replace="fragments/general :: footer"></div>

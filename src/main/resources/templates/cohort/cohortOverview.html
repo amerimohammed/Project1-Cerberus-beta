@@ -9,7 +9,9 @@
 <div class="container main-content">
     <h1 class="text-center">Cohort Overview</h1>
     <div sec:authorize="hasAnyAuthority('ADMIN')" th:replace="fragments/buttons :: new(@{/cohort/new})"></div>
+
         <table class="table table-hover">
+
             <thead>
             <tr>
                 <th scope="col">Cohort</th>
@@ -20,6 +22,7 @@
                 <th scope="col" class="text-end" sec:authorize="hasAnyAuthority('ADMIN')">Actions</th>
             </tr>
             </thead>
+
             <tbody>
             <tr class="row-with-link" th:each="cohort : ${allCohorts}" th:attr="data-link=@{/cohort/{cohortId}(cohortId=${cohort.cohortId})}">
                 <td><a th:href="@{/cohort/{cohortId}(cohortId=${cohort.cohortId})}"
@@ -36,7 +39,9 @@
                 </td>
             </tr>
             </tbody>
+
         </table>
+
 </div>
 
 <div th:replace="fragments/general :: footer"></div>

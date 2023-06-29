@@ -15,6 +15,10 @@ import javax.transaction.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for User.
+ */
+
 @ExtendWith(SpringExtension.class)
 @Transactional
 @SpringBootTest(classes = DocentenportaalProjectApplication.class)

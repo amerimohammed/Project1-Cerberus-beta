@@ -4,7 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A field of study, consisting of a number of subjects
@@ -28,7 +30,7 @@ public class Programme {
     private String shortDescription;
 
     @ManyToMany
-    private List<Subject> subjects = new ArrayList<>();
+    private Set<Subject> subjects = new HashSet<>();
 
     @OneToMany(mappedBy="programme")
     private List<Cohort> cohorts = new ArrayList<>();

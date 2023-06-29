@@ -40,7 +40,6 @@ public class Student extends User implements Comparable<Student> {
         } else if (otherStudent.cohort == null) {
             comparedCohort = 1;
         } else {
-            // Latest cohort shown first in the list
             comparedCohort = otherStudent.cohort.getCohortId().compareTo(cohort.getCohortId());
         }
 

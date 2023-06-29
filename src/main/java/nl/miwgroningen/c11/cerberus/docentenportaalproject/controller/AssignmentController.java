@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+/**
+ * Handles all actions concerning assignments.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/assignment")

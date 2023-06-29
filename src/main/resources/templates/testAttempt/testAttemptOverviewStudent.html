@@ -7,9 +7,11 @@
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
+
     <h1 class="text-center">All tests</h1>
 
     <table class="table">
+
         <thead>
         <tr>
             <th scope="col">Test</th>
@@ -19,6 +21,7 @@
             <th class="text-end">Actions</th>
         </tr>
         </thead>
+
         <tbody>
         <tr th:each="test : ${allTest}">
             <td th:text="${test.testName}"></td>
@@ -40,6 +43,7 @@
             </td>
         </tr>
         </tbody>
+
     </table>
 </div>
 

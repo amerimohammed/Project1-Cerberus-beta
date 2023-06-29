@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,7 +31,7 @@ public class TestAttempt {
     private Student student;
 
     @OneToMany(mappedBy = "superTestAttempt", cascade = CascadeType.ALL)
-    private List<TestAttempt> subTestAttempts;
+    private List<TestAttempt> subTestAttempts = new ArrayList<>();
 
     @ManyToOne
     private TestAttempt superTestAttempt;
@@ -50,7 +51,7 @@ public class TestAttempt {
     }
 
     public boolean hasSubTestAttempts() {
-        return (subTestAttempts != null && subTestAttempts.size() > 0);
+        return subTestAttempts.size() > 0;
     }
 
     private boolean checkAllSubTestsGraded() {
@@ -68,7 +69,7 @@ public class TestAttempt {
         return allGraded;
     }
 
-    public long getSuperTestId() {
+    public long getWholeTestAttemptId() {
         TestAttempt testAttempt = this;
 
         while (testAttempt.superTestAttempt != null) {

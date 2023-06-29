@@ -18,6 +18,12 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Handles all actions concerning cohorts.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/cohort")
@@ -42,6 +48,7 @@ public class CohortController {
         }
         Collections.sort(allCohorts);
         model.addAttribute("allCohorts", allCohorts);
+
         return "/cohort/cohortOverview";
     }
 

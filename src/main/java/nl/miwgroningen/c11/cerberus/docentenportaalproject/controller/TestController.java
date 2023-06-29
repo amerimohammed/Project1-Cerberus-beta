@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Handels all actions concerning tests.
+ * Handles all actions concerning tests.
  *
  * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */

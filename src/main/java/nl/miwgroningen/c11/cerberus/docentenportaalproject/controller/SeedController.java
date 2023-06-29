@@ -13,7 +13,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Seed the database with some initial data
+ * Seeds the database with some initial data.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */
 
 @Controller
@@ -244,7 +246,7 @@ public class SeedController {
         }
 
         for (Programme programme : programmes) {
-            List<Subject> programmeSubjects = new ArrayList<>();
+            Set<Subject> programmeSubjects = new HashSet<>();
 
             for (int subject = 0; subject < SeedController.SUBJECTS_IN_PROGRAMME_AMOUNT; subject++) {
                 int randomSubject = (int) (Math.random() * subjects.size());
@@ -334,9 +336,7 @@ public class SeedController {
 
         //Make sure the test parts do not get a subject assigned
         for (Test testPart : testParts) {
-            if (assignments.contains(testPart)) {
-                assignments.remove(testPart);
-            }
+            assignments.remove(testPart);
         }
 
         for (Assignment assignment : assignments) {

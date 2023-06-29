@@ -7,6 +7,10 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for Cohort methods.
+ */
+
 class CohortTest {
 
     private static final String TEST_START_DATE_STRING = "01 - 01 - 1999";
