@@ -68,7 +68,7 @@ public class TeacherController {
 
     @PostMapping("")
     private String saveOrUpdateTeacher(@ModelAttribute("teacher")
-                                           Teacher teacherToBeSaved, BindingResult result, Model model) {
+                                       Teacher teacherToBeSaved, BindingResult result, Model model) {
 
         if (!result.hasErrors()) {
             if (teacherToBeSaved.getUserId() == null) {
@@ -122,8 +122,8 @@ public class TeacherController {
 
         if (optionalTeacher.isPresent() && optionalUser.isPresent()) {
             try {
-            userRepository.delete(optionalUser.get());
-            teacherRepository.delete(optionalTeacher.get());
+                userRepository.delete(optionalUser.get());
+                teacherRepository.delete(optionalTeacher.get());
             } catch (DataIntegrityViolationException dataIntegrityViolationException) {
                 System.out.println(dataIntegrityViolationException.getMessage());
                 model.addAttribute("errorMessage",

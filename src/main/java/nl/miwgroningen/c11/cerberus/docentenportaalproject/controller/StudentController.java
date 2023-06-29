@@ -48,14 +48,12 @@ public class StudentController {
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
         List<Student> allStudents = new ArrayList<>();
 
-        if(userRoles.contains("ADMIN")) {
+        if (userRoles.contains("ADMIN")) {
             allStudents = studentRepository.findAll();
-        }
-        else if(userRoles.contains("TEACHER")) {
+        } else if (userRoles.contains("TEACHER")) {
             List<Cohort> cohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
             allStudents = getAllStudentsInCohorts(cohorts);
-        }
-        else if(userRoles.contains("STUDENT")) {
+        } else if (userRoles.contains("STUDENT")) {
             allStudents = getStudentsInCohortOfUser(user);
         }
         return allStudents;
@@ -75,7 +73,7 @@ public class StudentController {
         List<Student> students = new ArrayList<>();
 
         Optional<Student> optionalStudent = studentRepository.findById(user.getUserId());
-        if(optionalStudent.isPresent()) {
+        if (optionalStudent.isPresent()) {
             Cohort studentCohort = optionalStudent.get().getCohort();
             students = studentCohort.getStudents();
         }

@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    private String changePassword(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
+    private String changePassword(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String oldPassword = request.getParameter("oldPassword");
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     private String logoutUserAndRedirect(HttpServletRequest request, Model model,
-                                         RedirectAttributes redirectAttributes){
+                                         RedirectAttributes redirectAttributes) {
         try {
             request.logout();
             redirectAttributes.addFlashAttribute("message",
@@ -87,14 +87,14 @@ public class UserController {
         }
     }
 
-    protected void createUser(User user, Model model){
+    protected void createUser(User user, Model model) {
         user.generateUsernameAndPassword(userRepository);
         String tempPassword = user.getPassword();
         user.hashPassword();
-        if(user instanceof Teacher){
+        if (user instanceof Teacher) {
 
             addRole(user, "TEACHER");
-        } else if (user instanceof Student){
+        } else if (user instanceof Student) {
             addRole(user, "STUDENT");
         }
 
@@ -106,7 +106,7 @@ public class UserController {
 
     private void addRole(User user, String roleName) {
         Optional<Role> role = roleRepository.findRoleByRoleName(roleName);
-        if(role.isPresent()){
+        if (role.isPresent()) {
             Set<Role> userRoles = new HashSet<>();
             userRoles.add(role.get());
             user.setRoles(userRoles);
