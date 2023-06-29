@@ -34,8 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/changePassword")
-    private String changePassword(HttpServletRequest request, Model model,
-                                  RedirectAttributes redirectAttributes) throws ServletException {
+    private String changePassword(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         String oldPassword = request.getParameter("oldPassword");
@@ -48,16 +47,13 @@ public class UserController {
         }
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             model.addAttribute("message", "Your old password is incorrect.");
+
             return "user/changePassword";
 
         } else {
             updateUserPassword(user, newPassword);
-            request.logout();
 
-            redirectAttributes.addFlashAttribute("message",
-                    "Password changed successfully. Please log again with the new password.");
-
-            return "redirect:/login";
+            return logoutUserAndRedirect(request, model, redirectAttributes);
         }
     }
 
@@ -65,5 +61,21 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setFirstLogin(false);
         userRepository.save(user);
+    }
+
+    private String logoutUserAndRedirect(HttpServletRequest request, Model model,
+                                         RedirectAttributes redirectAttributes){
+        try {
+            request.logout();
+            redirectAttributes.addFlashAttribute("message",
+                    "Password changed successfully. Please log again with the new password.");
+
+            return "redirect:/login";
+        } catch (ServletException servletException) {
+            servletException.printStackTrace();
+            model.addAttribute("message", "Your old password is incorrect.");
+
+            return "user/changePassword";
+        }
     }
 }
