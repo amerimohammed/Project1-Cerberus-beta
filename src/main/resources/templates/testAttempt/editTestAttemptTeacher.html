@@ -10,6 +10,7 @@
     <div th:replace="fragments/testAttempt"></div>
 
     <form th:action="@{/testAttempt/update}" method="post" th:object="${testAttempt}">
+
         <input type="hidden" th:field="*{testAttemptId}">
         <input type="hidden" th:field="*{test}">
         <input type="hidden" th:field="*{student}">
@@ -25,14 +26,17 @@
             <input th:field="*{score}" type="number" class="form-control" id="score"
                    aria-describedby="score" placeholder="Score" min="0" oninput="validity.valid||(value='');">
         </div>
+
         <div class="mb-3">
             <label for="feedback">Feedback:</label>
             <textarea id="feedback" class="richTextContent" type="text" th:field="*{feedback}"></textarea>
         </div>
+
         <div class="d-flex justify-content-end">
             <div th:replace="fragments/buttons :: cancel"></div>
             <div th:replace="fragments/buttons :: save"></div>
         </div>
+
     </form>
 </div>
 

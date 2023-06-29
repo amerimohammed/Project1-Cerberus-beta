@@ -15,6 +15,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Handles all actions concerning users.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")

@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Handles all actions concerning students.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/student")
@@ -30,6 +36,16 @@ public class StudentController {
     @GetMapping("/all")
     private String showStudentOverview(Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Student> allStudents = getStudentListForUser(user);
+
+        Collections.sort(allStudents);
+        model.addAttribute("allStudents", allStudents);
+
+        return "student/studentOverview";
+    }
+
+    private List<Student> getStudentListForUser(User user) {
         Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
         List<Student> allStudents = new ArrayList<>();
 
@@ -38,18 +54,22 @@ public class StudentController {
         }
         else if(userRoles.contains("TEACHER")) {
             List<Cohort> cohorts = cohortRepository.findCohortsByTeacherUsername(user.getUsername());
-            for (Cohort cohort : cohorts) {
-                allStudents.addAll(cohort.getStudents());
-            }
+            allStudents = getAllStudentsInCohorts(cohorts);
         }
         else if(userRoles.contains("STUDENT")) {
             allStudents = getStudentsInCohortOfUser(user);
         }
+        return allStudents;
+    }
 
-        Collections.sort(allStudents);
-        model.addAttribute("allStudents", allStudents);
+    private List<Student> getAllStudentsInCohorts(List<Cohort> cohorts) {
+        List<Student> allStudents = new ArrayList<>();
 
-        return "student/studentOverview";
+        for (Cohort cohort : cohorts) {
+            allStudents.addAll(cohort.getStudents());
+        }
+
+        return allStudents;
     }
 
     private List<Student> getStudentsInCohortOfUser(User user) {

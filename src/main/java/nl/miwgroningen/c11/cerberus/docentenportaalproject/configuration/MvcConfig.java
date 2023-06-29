@@ -5,6 +5,11 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Handles photo uploads and login page.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {

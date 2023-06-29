@@ -17,6 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Handles all actions concerning testAttempts.
+ *
+ * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
+ */
+
 @Controller
 @RequiredArgsConstructor
 public class TestAttemptController {
@@ -184,7 +190,7 @@ public class TestAttemptController {
             }
         }
 
-        return "redirect:/testAttempt/" + testAttemptToBeSaved.getSuperTestId();
+        return "redirect:/testAttempt/" + testAttemptToBeSaved.getWholeTestAttemptId();
     }
 
     //Updates the scores and grading status of higher levels of the test
@@ -203,6 +209,6 @@ public class TestAttemptController {
 
     @PostMapping(value = "/testAttempt/update", params = "cancel")
     private String cancelForm(@ModelAttribute("testAttempt") TestAttempt testAttemptToBeCanceled) {
-        return "redirect:/testAttempt/" + testAttemptToBeCanceled.getSuperTestId();
+        return "redirect:/testAttempt/" + testAttemptToBeCanceled.getWholeTestAttemptId();
     }
 }

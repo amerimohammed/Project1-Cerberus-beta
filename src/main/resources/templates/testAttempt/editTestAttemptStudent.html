@@ -11,6 +11,7 @@
     <div th:replace="fragments/testAttempt :: testAttemptContent"></div>
 
     <form th:action="@{/testAttempt/update}" method="post" th:object="${testAttempt}">
+
         <input type="hidden" th:field="*{testAttemptId}">
         <input type="hidden" th:field="*{test}">
         <input type="hidden" th:field="*{student}">
@@ -26,10 +27,12 @@
             <label for="answer">Answer:</label>
             <textarea id="answer" class="richTextContent" type="text" th:field="*{answer}"></textarea>
         </div>
+
         <div class="d-flex justify-content-end">
             <div th:replace="fragments/buttons :: cancel"></div>
             <div th:replace="fragments/buttons :: saveStudent"></div>
         </div>
+
     </form>
 </div>
 

@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Handels all actions concerning programme.
+ * Handles all actions concerning programme.
  *
  * @author Marianne Kooistra, Mohammed Almameri, Joost Schreuder
  */

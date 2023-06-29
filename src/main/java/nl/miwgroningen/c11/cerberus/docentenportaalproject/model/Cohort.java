@@ -43,7 +43,8 @@ public class Cohort implements Comparable<Cohort> {
     }
 
     public String displayStartDate() {
-        return String.format("%02d - %02d - %4d", startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
+        return String.format("%02d - %02d - %4d",
+                startDate.getDayOfMonth(), startDate.getMonthValue(), startDate.getYear());
     }
 
     public String displayEndDate() {
