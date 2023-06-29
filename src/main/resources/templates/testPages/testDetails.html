@@ -43,7 +43,7 @@
                 New section +
             </a>
         </div>
-<!--        <div th:replace="fragments/buttons :: new(@{/test/new/contents/{superTestId}(superTestId=${superTest.assignmentId})})"></div>-->
+
         <div th:fragment="showTestAndParts" class="py-5">
             <div th:each="testPart : ${superTest.testParts}">
                 <h5><span th:text="${testPart.testName}"></span></h5>
