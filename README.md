@@ -16,7 +16,7 @@ test data.
 As an admin, you have access to everything this app has to offer. However, thanks to our military grade security, 
 teachers and students have different views and access to different functionalities.
 
-## **Logging in as a admin, teacher or student**
+## **Logging in as an admin, teacher or student**
 
 As said before, to login as admin, use 'admin' as both username and password. 
 However, you, too, can experience what it is like to be a teacher or student! It's easy! 
