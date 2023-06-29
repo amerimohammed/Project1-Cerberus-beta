@@ -70,7 +70,7 @@ public class User implements UserDetails {
         usernameBuilder.append(".").append(counter);
 
         while (optionalUser.isPresent()) {
-            username = usernameBuilder.toString();
+            username = usernameBuilder.toString().toLowerCase();
             optionalUser = userRepository.findByUsername(username);
             counter++;
             usernameBuilder.deleteCharAt(usernameBuilder.length() - 1).append(counter);

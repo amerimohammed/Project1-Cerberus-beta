@@ -1,7 +1,11 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
+import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Handles all actions concerning users.
@@ -27,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @GetMapping("/changePassword")
     private String showChangePasswordForm() {
@@ -76,6 +84,32 @@ public class UserController {
             model.addAttribute("message", "Your old password is incorrect.");
 
             return "user/changePassword";
+        }
+    }
+
+    protected void createUser(User user, Model model){
+        user.generateUsernameAndPassword(userRepository);
+        String tempPassword = user.getPassword();
+        user.hashPassword();
+        if(user instanceof Teacher){
+
+            addRole(user, "TEACHER");
+        } else if (user instanceof Student){
+            addRole(user, "STUDENT");
+        }
+
+        user.setFirstLogin(true);
+        userRepository.save(user);
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("password", tempPassword);
+    }
+
+    private void addRole(User user, String roleName) {
+        Optional<Role> role = roleRepository.findRoleByRoleName(roleName);
+        if(role.isPresent()){
+            Set<Role> userRoles = new HashSet<>();
+            userRoles.add(role.get());
+            user.setRoles(userRoles);
         }
     }
 }

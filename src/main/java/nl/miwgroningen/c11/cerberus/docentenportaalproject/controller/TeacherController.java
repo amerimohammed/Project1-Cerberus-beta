@@ -1,11 +1,9 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.controller;
 
 import lombok.RequiredArgsConstructor;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Teacher;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.TeacherRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
@@ -29,8 +27,8 @@ import java.util.*;
 public class TeacherController {
     private final TeacherRepository teacherRepository;
     private final SubjectRepository subjectRepository;
-    private final RoleRepository roleRepository;
     private final UserRepository userRepository;
+    private final UserController userController;
 
     @GetMapping({"", "/all"})
     private String showTeacherOverview(Model model) {
@@ -74,16 +72,7 @@ public class TeacherController {
 
         if (!result.hasErrors()) {
             if (teacherToBeSaved.getUserId() == null) {
-                teacherToBeSaved.generateUsernameAndPassword(userRepository);
-                String tempPassword = teacherToBeSaved.getPassword();
-                teacherToBeSaved.hashPassword();
-
-                addTeacherRole(teacherToBeSaved);
-
-                teacherToBeSaved.setFirstLogin(true);
-                teacherRepository.save(teacherToBeSaved);
-                model.addAttribute("username", teacherToBeSaved.getUsername());
-                model.addAttribute("password", tempPassword);
+                userController.createUser(teacherToBeSaved, model);
 
                 addTeacherToSubjects(teacherToBeSaved, teacherToBeSaved.getSubjects());
 
@@ -102,15 +91,6 @@ public class TeacherController {
         }
 
         return "redirect:/teacher/all";
-    }
-
-    private void addTeacherRole(Teacher teacher) {
-        Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
-        if(teacherRole.isPresent()){
-            Set<Role> teacherRoles = new HashSet<>();
-            teacherRoles.add(teacherRole.get());
-            teacher.setRoles(teacherRoles);
-        }
     }
 
     private void removeTeacherFromAllSubjects(Teacher teacher) {

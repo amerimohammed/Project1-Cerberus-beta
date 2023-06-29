@@ -6,7 +6,6 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Role;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Student;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.User;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.CohortRepository;
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.RoleRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.StudentRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +30,7 @@ public class StudentController {
     private final CohortRepository cohortRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final UserController userController;
 
     @GetMapping("/all")
     private String showStudentOverview(Model model) {
@@ -106,20 +105,12 @@ public class StudentController {
     }
 
     @PostMapping("/new")
-    private String saveOrUpdateStudent(@ModelAttribute("student") Student studentToBeSaved, BindingResult result, Model model) {
+    private String saveOrUpdateStudent(@ModelAttribute("student") Student studentToBeSaved,
+                                       BindingResult result, Model model) {
 
         if (!result.hasErrors()) {
             if (studentToBeSaved.getUserId() == null) {
-                studentToBeSaved.generateUsernameAndPassword(userRepository);
-                String tempPassword = studentToBeSaved.getPassword();
-                studentToBeSaved.hashPassword();
-
-                addStudentRole(studentToBeSaved);
-
-                studentToBeSaved.setFirstLogin(true);
-                studentRepository.save(studentToBeSaved);
-                model.addAttribute("username", studentToBeSaved.getUsername());
-                model.addAttribute("password", tempPassword);
+                userController.createUser(studentToBeSaved, model);
 
                 return "student/studentAccount";
             } else {
@@ -131,15 +122,6 @@ public class StudentController {
         }
 
         return "redirect:/student/all";
-    }
-
-    private void addStudentRole(Student student) {
-        Optional<Role> studentRole = roleRepository.findRoleByRoleName("STUDENT");
-        if(studentRole.isPresent()){
-            Set<Role> studentRoles = new HashSet<>();
-            studentRoles.add(studentRole.get());
-            student.setRoles(studentRoles);
-        }
     }
 
     @PostMapping(value = "/new", params = "cancel")
