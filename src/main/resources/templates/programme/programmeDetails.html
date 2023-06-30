@@ -10,7 +10,7 @@
 <div class="container main-content">
     <div class="row mt-3 mb-5">
         <div class="card text-bg-dark">
-            <img th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp'" class="card-img details-img">
+            <img th:src="${programme.image} ? ${programme.image.imagePath} : '/photos/default_program.webp'" class="card-img details-img">
             <div class="card-img-overlay text-center bg-with-opacity">
                 <h1 class="card-title" th:text="${programme.programmeName}"></h1>
                 <p class="card-text" th:text="${programme.shortDescription}">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>

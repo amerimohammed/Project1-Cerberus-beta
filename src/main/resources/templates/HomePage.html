@@ -12,7 +12,7 @@
     <div class="row row-cols-1 row-cols-md-2 g-4">
         <div class="col" th:each="programme : ${allProgrammes}">
             <div class="card programme-card bg-light">
-                <img th:src="${programme.image} ? ${programme.image.imagePath} : '/images/default_program.webp'"
+                <img th:src="${programme.image} ? ${programme.image.imagePath} : '/photos/default_program.webp'"
                      class="card-img-top programme-img">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${programme.programmeName}"></h5>
