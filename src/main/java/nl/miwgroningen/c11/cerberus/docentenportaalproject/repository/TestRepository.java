@@ -1,6 +1,5 @@
 package nl.miwgroningen.c11.cerberus.docentenportaalproject.repository;
 
-import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Subject;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
 
