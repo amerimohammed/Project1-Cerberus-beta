@@ -38,13 +38,13 @@
             </button>
         </div>
         <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
             <div class="text-end m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
                 <button type="submit" name="done" class="btn btn-primary">
                     <span th:replace="fragments/icons :: saveIcon"></span>
                     Done
                 </button>
             </div>
-            <div th:replace="fragments/buttons :: cancel"></div>
         </div>
 
     </form>
