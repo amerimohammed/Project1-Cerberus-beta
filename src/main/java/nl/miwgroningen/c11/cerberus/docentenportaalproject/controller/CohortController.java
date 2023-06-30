@@ -154,7 +154,7 @@ public class CohortController {
 
             if (optionalOldCohort.isPresent()) {
                 Cohort cohort = optionalOldCohort.get();
-                cohort.removeAllStudentsFromCohort();
+                cohort.dismissAllStudents();
             }
         }
     }
@@ -166,7 +166,7 @@ public class CohortController {
         if (optionalCohort.isPresent()) {
             Cohort cohort = optionalCohort.get();
 
-            cohort.removeAllStudentsFromCohort();
+            cohort.dismissAllStudents();
 
             cohortRepository.delete(optionalCohort.get());
         }

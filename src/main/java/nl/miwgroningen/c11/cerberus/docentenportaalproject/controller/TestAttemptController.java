@@ -179,7 +179,7 @@ public class TestAttemptController {
             Set<String> userRoles = user.getRoles().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
             //If teacher saves, testAttempt is considered to be graded
-            if(userRoles.contains("TEACHER")) {
+            if (userRoles.contains("TEACHER")) {
                 testAttemptToBeSaved.setIsGraded(true);
             }
 
