@@ -7,6 +7,8 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -88,18 +90,15 @@ public class SeedController {
     private void createTeacher() {
         for (int index = 0; index < SeedController.TEACHER_AMOUNT; index++) {
             Teacher teacher = new Teacher();
-            teacher.setFullName(createFakeName());
-            teacher.generateUsernameAndPassword(userRepository);
-            teacher.setPassword("teacher");
+            createUserAccount(teacher, "teacher");
 
             Optional<Role> teacherRole = roleRepository.findRoleByRoleName("TEACHER");
-            if(teacherRole.isPresent()){
+            if (teacherRole.isPresent()) {
                 Set<Role> teacherRoles = new HashSet<>();
                 teacherRoles.add(teacherRole.get());
                 teacher.setRoles(teacherRoles);
             }
 
-            teacher.hashPassword();
             teacherRepository.save(teacher);
         }
     }
@@ -136,13 +135,10 @@ public class SeedController {
     private void createStudent() {
         for (int index = 0; index < SeedController.STUDENT_AMOUNT; index++) {
             Student student = new Student();
-            student.setFullName(createFakeName());
-            student.generateUsernameAndPassword(userRepository);
-            student.setPassword("student");
-            student.hashPassword();
+            createUserAccount(student, "student");
 
             Optional<Role> studentRole = roleRepository.findRoleByRoleName("STUDENT");
-            if(studentRole.isPresent()){
+            if (studentRole.isPresent()) {
                 Set<Role> studentRoles = new HashSet<>();
                 studentRoles.add(studentRole.get());
                 student.setRoles(studentRoles);
@@ -153,11 +149,11 @@ public class SeedController {
     }
 
     private void createRandomTest() {
-        List<Test> allRandomSuperTests = createTestsWithList();
+        List<Test> allRandomSuperTests = createTests();
         createTestParts(allRandomSuperTests);
     }
 
-    private List<Test> createTestsWithList() {
+    private List<Test> createTests() {
         Faker faker = new Faker();
         List<Test> allRandomSuperTests = new ArrayList<>();
 
@@ -189,59 +185,38 @@ public class SeedController {
     }
 
     private void createRealisticTest() {
-        Test oopOefenTentamenMilieuzone = Test.builder().testName("Controle Milieuzone").testDate(LocalDate.parse("2023-05-25")).build();
+        Test oopOefenTentamenMilieuzone = createRealisticSuperTest();
 
-        Test milieuZoneDeel1 = Test.builder().testName("Bouw klassenstructuur")
-                                            .superTest(oopOefenTentamenMilieuzone).build();
-        Test milieuZoneStap0 = Test.builder().testName("Verander de welkomstboodschap")
-                                            .testContents("Verander de boodschap zodat je eigen naam verschijnt.")
-                                            .superTest(milieuZoneDeel1).build();
-        Test milieuZoneStap1 = Test.builder().testName("Klasse Auto")
-                                            .testContents("Maak de klasse Auto. Houd hierbij rekening met de volgende eisen:" +
-                                                    "\n- De methode isSchoon() geeft aan of een auto milieutechnisch schoon is. Voor de klasse Auto geldt: deze is nooit schoon. Deze methode wordt goed (beter) geïmplementeerd in de subklassen")
-                                            .superTest(milieuZoneDeel1).build();
-        Test milieuZoneStap2 = Test.builder().testName("Subklasse ElectrischeAuto")
-                                            .testContents("Codeer de subklasse ElectrischeAuto. Houd hierbij rekening met de volgende eisen:" +
-                                                    "\n- Override de methode isSchoon(). Elke elektrische auto is per definitie schoon." +
-                                                    "\n- De methode toString() moet dezelfde output geven als hieronder wordt aangegeven." +
-                                                    "\n- Test je code door in de Launcher class de betreffende testcode te 'uncommenten'.")
-                                            .superTest(milieuZoneDeel1).build();
-        Test milieuZoneStap3 = Test.builder().testName("Subklasse BrandstofAuto")
-                                            .testContents("Codeer de subklasse BrandstofAuto. Houd hierbij rekening met de volgende eisen:" +
-                                                    "\n- Override de methode isSchoon(). Een brandstofauto is schoon als het bouwjaar 1995 of nieuwer is, en het gewicht lichter is dan 2500 en de uitstoot schoon is. Het hangt af van het soort brandstof hoeveel uitstoot “schoon” is: een diesel is schoon bij een uitstoot van maximaal 280, en een schone benzine auto heeft maximaal een uitstoot van 320. Een auto met brandstof gas kan nooit schoon zijn." +
-                                                    "\n- De methode toString() moet dezelfde output geven als hieronder wordt aangegeven." +
-                                                    "\n- Test je code door in de Launcher class de betreffende testcode te “uncommenten”.")
-                                            .superTest(milieuZoneDeel1).build();
-        Test milieuZoneStap4 = Test.builder().testName("Klasse MilieuControle")
-                                            .testContents("Maak de klasse MilieuControle volgens het class diagram, zodat je auto’s aan een controlelijst kunt toevoegen.")
-                                            .superTest(milieuZoneDeel1).build();
-        Test milieuZoneDeel2 = Test.builder().testName("Gebruik klassen, bestand en database")
-                                            .superTest(oopOefenTentamenMilieuzone).build();
-        Test milieuZoneStap5 = Test.builder().testName("Print alle auto’s die de milieuzone in mogen")
-                                            .testContents("Breidt de MilieuZone klasse uit met een methode die alle auto’s afdrukt die de milieuzone in mogen. Een auto mag de milieuzone in wanneer deze schoon is." +
-                                                    "\nDe signatuur van deze methode is als volgt: public void printSchoneAutos()")
-                                            .superTest(milieuZoneDeel2).build();
-        Test milieuZoneStap6 = Test.builder().testName("Print bedrijfsauto’s met een bepaald type brandstof naar een bestand")
-                                            .testContents("Implementeer de methode printBedrijfsautosMetType(String brandstof)in klasse MilieuControle. De methode print alle bedrijfsauto’s met een bepaald brandstoftype naar een bestand. " +
-                                                    "Zorg dat in de methode een tekstbestand gemaakt wordt met de naam bedrijfsautos.txt, waarin de juiste bedrijfsauto’s worden weggeschreven. Sla dit bestand op in de folder ‘resources’ van je project (met pad ‘src/main/resources/’). " +
-                                                    "\nLet wel: Als de eigenaar een bedrijf is, dan is sprake van een bedrijfsauto.")
-                                            .superTest(milieuZoneDeel2).build();
-        Test milieuZoneStap7 = Test.builder().testName("Haal een lijst met auto’s uit de database")
-                                            .testContents("Er is een begin gemaakt met een database genaamd ‘Milieuzone’. Daarin staat een tabel ‘Auto’ met een aantal auto’s. " +
-                                                    "Maak een AutoDAO klasse die het mogelijk maakt om alle auto’s met een bepaald bouwjaar uit de database te halen.")
-                                            .superTest(milieuZoneDeel2).build();
+        List<Test> testPartList = new ArrayList<>();
+        testPartList.add(oopOefenTentamenMilieuzone);
 
+        File file = new File("src/main/resources/static/csv/test.csv");
+
+        try (Scanner scanner = new Scanner(file)) {
+            while (scanner.hasNextLine()) {
+                String[] testPartString = scanner.nextLine().split(";");
+                createTestPartFromString(testPartList, testPartString);
+            }
+        } catch (FileNotFoundException errorMessage) {
+            System.err.println("File not found.");
+        }
+    }
+
+    private Test createRealisticSuperTest() {
+        Test oopOefenTentamenMilieuzone = Test.builder().testName("Controle Milieuzone")
+                .testDate(LocalDate.parse("2023-05-25")).build();
         testRepository.save(oopOefenTentamenMilieuzone);
-        testRepository.save(milieuZoneDeel1);
-        testRepository.save(milieuZoneStap0);
-        testRepository.save(milieuZoneStap1);
-        testRepository.save(milieuZoneStap2);
-        testRepository.save(milieuZoneStap3);
-        testRepository.save(milieuZoneStap4);
-        testRepository.save(milieuZoneDeel2);
-        testRepository.save(milieuZoneStap5);
-        testRepository.save(milieuZoneStap6);
-        testRepository.save(milieuZoneStap7);
+        return oopOefenTentamenMilieuzone;
+    }
+
+    private void createTestPartFromString(List<Test> testPartList, String[] testPartString) {
+        int superTestIndex = Integer.parseInt(testPartString[2]);
+
+        Test testPart = Test.builder().testName(testPartString[0]).testContents(testPartString[1])
+                .superTest(testPartList.get(superTestIndex)).build();
+
+        testRepository.save(testPart);
+        testPartList.add(testPart);
     }
 
     private void createAssignment() {
@@ -255,7 +230,6 @@ public class SeedController {
         }
     }
 
-    //Assign random subjects to programmes
     private void assignSubjectsToProgrammes() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Programme> programmes = programmeRepository.findAll();
@@ -275,12 +249,11 @@ public class SeedController {
         }
     }
 
-    //Assign a random programme to each cohort
     private void assignProgrammesToCohorts() {
         List<Cohort> cohorts = cohortRepository.findAll();
         List<Programme> programmes = programmeRepository.findAll();
 
-        if(programmes.size() < 1) {
+        if (programmes.size() < 1) {
             return;
         }
 
@@ -291,12 +264,11 @@ public class SeedController {
         }
     }
 
-    //Assign a random teacher to each subject
     private void assignTeachersToSubjects() {
         List<Subject> subjects = subjectRepository.findAll();
         List<Teacher> allTeachers = teacherRepository.findAll();
 
-        if(allTeachers.size() < 1) {
+        if (allTeachers.size() < 1) {
             return;
         }
 
@@ -312,12 +284,11 @@ public class SeedController {
         }
     }
 
-    //Assign a random cohort to each student
     private void assignCohortsToStudents() {
         List<Cohort> cohorts = cohortRepository.findAll();
         List<Student> students = studentRepository.findAll();
 
-        if(cohorts.size() < 1) {
+        if (cohorts.size() < 1) {
             return;
         }
 
@@ -332,7 +303,7 @@ public class SeedController {
         List<Subject> subjects = subjectRepository.findAll();
         List<Test> tests = testRepository.findBySuperTestIsNull();
 
-        if(subjects.size() < 1) {
+        if (subjects.size() < 1) {
             return;
         }
 
@@ -364,6 +335,13 @@ public class SeedController {
 
             assignmentRepository.save(assignment);
         }
+    }
+
+    private void createUserAccount(User user, String password) {
+        user.setFullName(createFakeName());
+        user.generateUsernameAndPassword(userRepository);
+        user.setPassword(password);
+        user.hashPassword();
     }
 
     private String createFakeName() {

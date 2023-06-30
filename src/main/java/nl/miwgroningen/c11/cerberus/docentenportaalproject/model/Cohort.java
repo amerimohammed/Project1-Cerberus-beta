@@ -51,7 +51,7 @@ public class Cohort implements Comparable<Cohort> {
         return String.format("%02d - %02d - %4d", endDate.getDayOfMonth(), endDate.getMonthValue(), endDate.getYear());
     }
 
-    public void removeAllStudentsFromCohort() {
+    public void dismissAllStudents() {
         for (Student student : students) {
             student.setCohort(null);
         }

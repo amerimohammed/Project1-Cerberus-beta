@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Testing if methods in test model work as they are expected to.
  */
+
 class TestModelTest {
 
     //This is a constant to avoid having to use the long adres of the Test model.
