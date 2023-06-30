@@ -67,10 +67,10 @@ public class UserController {
     }
 
     @GetMapping("/resetPassword/{userId}")
-    private String resetUserPassword(@PathVariable("userId") Long userId, RedirectAttributes redirectAttributes){
+    private String resetUserPassword(@PathVariable("userId") Long userId, RedirectAttributes redirectAttributes) {
         Optional<User> userOptional = userRepository.findById(userId);
 
-        if(userOptional.isPresent()){
+        if (userOptional.isPresent()) {
             User user = userOptional.get();
             String tempPassword = user.generateRandomPassword();
             user.setPassword(tempPassword);
@@ -81,9 +81,9 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message",
                     "Password resetted successfully. New Password: " + tempPassword);
 
-            if(user instanceof Teacher){
+            if (user instanceof Teacher) {
                 return "redirect:/teacher/edit/" + userId;
-            }else if(user instanceof Student) {
+            } else if (user instanceof Student) {
                 return "redirect:/student/edit/" + userId;
             }
         }

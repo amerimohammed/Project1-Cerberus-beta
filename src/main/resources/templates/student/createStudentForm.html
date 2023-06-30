@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org">
 <head th:replace="fragments/general :: baseheader(~{:: title})">
-  <title>Create or edit student</title>
+    <title>Create or edit student</title>
 </head>
 <body>
 <div th:replace="fragments/general :: navbar"></div>
 
 <div class="container main-content">
-  <h1 class="text-center">Create or edit student</h1>
+    <h1 class="text-center">Create or edit student</h1>
 
-  <div th:if="${message != null}" class="alert alert-success">
-    [[${message}]]
-  </div>
-
-  <form th:action="@{/student/new}" method="post" th:object="${student}">
-    <input type="hidden" th:field="*{userId}">
-    <input type="hidden" th:field="*{username}">
-    <input type="hidden" th:field="*{password}">
-    <input type="hidden" th:field="*{roles}">
-    <div class="m-3">
-      <label for="studentName">Student name:</label>
-      <input id="studentName" class="form-control" type="text" th:field="*{fullName}" minlength="2" required>
-    </div>
-    <div class="m-3">
-      <label for="cohortNumber">Cohort number:</label>
-      <select id="cohortNumber" class="form-select" th:field="*{cohort}">
-        <option th:each="cohort : ${allCohorts}"
-                th:value="${cohort.cohortId}"
-                th:text="${cohort.cohortId}">
-        </option>
-      </select>
+    <div th:if="${message != null}" class="alert alert-success">
+        [[${message}]]
     </div>
 
-    <div class="m-3 row">
-      <div class="col">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" id="studentEnabled"
-                 th:field="*{enabled}" checked>
-          <label class="form-check-label" for="studentEnabled">Enabled Account</label>
+    <form th:action="@{/student/new}" method="post" th:object="${student}">
+        <input type="hidden" th:field="*{userId}">
+        <input type="hidden" th:field="*{username}">
+        <input type="hidden" th:field="*{password}">
+        <input type="hidden" th:field="*{roles}">
+        <div class="m-3">
+            <label for="studentName">Student name:</label>
+            <input id="studentName" class="form-control" type="text" th:field="*{fullName}" minlength="2" required>
         </div>
-      </div>
-      <div class="col" th:if="${student.username != null}">
-        <label>Username: </label>
-        <strong th:text="${student.username}"></strong>
-        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                data-bs-target="#reset-password-modal"
-        >
-          Reset Password
-        </button>
-      </div>
-      <div class="col">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" role="switch" id="teacherFirstLogin"
-                 th:field="*{firstLogin}" checked>
-          <label class="form-check-label" for="teacherFirstLogin">Force to change Password</label>
+        <div class="m-3">
+            <label for="cohortNumber">Cohort number:</label>
+            <select id="cohortNumber" class="form-select" th:field="*{cohort}">
+                <option th:each="cohort : ${allCohorts}"
+                        th:value="${cohort.cohortId}"
+                        th:text="${cohort.cohortId}">
+                </option>
+            </select>
         </div>
-      </div>
-    </div>
 
-    <div class="d-flex justify-content-end">
-      <div th:replace="fragments/buttons :: cancel"></div>
-      <div th:replace="fragments/buttons :: save"></div>
-    </div>
-  </form>
+        <div class="m-3 row">
+            <div class="col">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="studentEnabled"
+                           th:field="*{enabled}" checked>
+                    <label class="form-check-label" for="studentEnabled">Enabled Account</label>
+                </div>
+            </div>
+            <div class="col" th:if="${student.username != null}">
+                <label>Username: </label>
+                <strong th:text="${student.username}"></strong>
+                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                        data-bs-target="#reset-password-modal"
+                >
+                    Reset Password
+                </button>
+            </div>
+            <div class="col">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="teacherFirstLogin"
+                           th:field="*{firstLogin}" checked>
+                    <label class="form-check-label" for="teacherFirstLogin">Force to change Password</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end">
+            <div th:replace="fragments/buttons :: cancel"></div>
+            <div th:replace="fragments/buttons :: save"></div>
+        </div>
+    </form>
 </div>
 
 <div th:replace="fragments/modals :: resetPassword(${student.userId})"></div>
