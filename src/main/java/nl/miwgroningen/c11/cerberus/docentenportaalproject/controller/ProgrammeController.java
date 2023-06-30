@@ -6,6 +6,7 @@ import nl.miwgroningen.c11.cerberus.docentenportaalproject.model.Programme;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ImageRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.ProgrammeRepository;
 import nl.miwgroningen.c11.cerberus.docentenportaalproject.repository.SubjectRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -89,11 +90,18 @@ public class ProgrammeController {
     }
 
     @GetMapping("/home/delete/{programmeId}")
-    private String deleteProgramme(@PathVariable("programmeId") Long programmeId) {
+    private String deleteProgramme(@PathVariable("programmeId") Long programmeId, Model model) {
         Optional<Programme> optionalProgramme = programmeRepository.findById(programmeId);
 
-        if (optionalProgramme.isPresent()) {
-            programmeRepository.delete(optionalProgramme.get());
+        if(optionalProgramme.isPresent()) {
+            try {
+                programmeRepository.delete(optionalProgramme.get());
+            } catch (DataIntegrityViolationException dataIntegrityViolationException) {
+                System.out.println(dataIntegrityViolationException.getMessage());
+                model.addAttribute("errorMessage",
+                        "This Programme can't be deleted due to relation to other entities");
+                return "error";
+            }
         }
 
         return "redirect:/home";
