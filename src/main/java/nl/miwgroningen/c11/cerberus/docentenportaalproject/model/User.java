@@ -78,7 +78,7 @@ public class User implements UserDetails {
         return username;
     }
 
-    private String generateRandomPassword() {
+    public String generateRandomPassword() {
         return new Random().ints(PASSWORD_LENGTH, ASCII_RANGE_MIN, ASCII_RANGE_MAX)
                 .mapToObj(i -> String.valueOf((char) i)).collect(Collectors.joining());
     }

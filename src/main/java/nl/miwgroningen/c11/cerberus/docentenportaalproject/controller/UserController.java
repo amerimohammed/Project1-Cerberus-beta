@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -63,6 +64,30 @@ public class UserController {
 
             return logoutUserAndRedirect(request, model, redirectAttributes);
         }
+    }
+
+    @GetMapping("/resetPassword/{userId}")
+    private String resetUserPassword(@PathVariable("userId") Long userId, RedirectAttributes redirectAttributes){
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if(userOptional.isPresent()){
+            User user = userOptional.get();
+            String tempPassword = user.generateRandomPassword();
+            user.setPassword(tempPassword);
+            user.hashPassword();
+            user.setFirstLogin(true);
+            userRepository.save(user);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "Password resetted successfully. New Password: " + tempPassword);
+
+            if(user instanceof Teacher){
+                return "redirect:/teacher/edit/" + userId;
+            }else if(user instanceof Student) {
+                return "redirect:/student/edit/" + userId;
+            }
+        }
+        return "redirect:/";
     }
 
     private void updateUserPassword(User user, String newPassword) {
