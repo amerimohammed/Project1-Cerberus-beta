@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .antMatchers("/teacher/**", "/seed", "home/delete/**",
                                 "/**/edit/**", "/**/new", "/**/delete/**", "/**/add/**").hasAuthority("ADMIN")
                         .antMatchers(HttpMethod.POST, "/test/**").hasAnyAuthority("ADMIN", "TEACHER")
+                        .antMatchers("/user/resetPassword/**").hasAuthority("ADMIN")
                         .antMatchers("/user/changePassword").authenticated()
                         .antMatchers(HttpMethod.POST, "/**").hasAuthority("ADMIN")
                         .antMatchers("/cohort/**").hasAnyAuthority("ADMIN", "TEACHER")
