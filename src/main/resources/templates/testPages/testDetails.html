@@ -45,9 +45,9 @@
         </div>
 
         <div th:fragment="showTestAndParts" class="py-5">
-            <div th:each="testPart : ${superTest.testParts}">
+            <div class="ms-5 p-2 border rounded" th:each="testPart : ${superTest.testParts}">
                 <h5><span th:text="${testPart.testName}"></span></h5>
-                <p th:text="${testPart.testContents}"></p>
+                <p th:utext="${testPart.testContents}"></p>
                 <div class="mb-4">
                     <div th:replace="fragments/buttons :: edit(@{/test/edit/contents/{testId}(testId=${testPart.assignmentId})})"></div>
                     <div th:replace="fragments/buttons :: delete(@{/test/delete/{testId}(testId=${testPart.assignmentId})})"></div>

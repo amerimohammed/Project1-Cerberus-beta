@@ -18,8 +18,10 @@ import java.util.List;
 
 @Entity
 @SuperBuilder
-@Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Test extends Assignment implements Comparable<Test> {
 
     private String testName;
@@ -102,7 +104,9 @@ public class Test extends Assignment implements Comparable<Test> {
 
         List<Student> allStudentsTakingTest = new ArrayList<>();
         for (Cohort testCohort : testCohorts) {
-            allStudentsTakingTest.addAll(testCohort.getStudents());
+            if (LocalDate.now().isBefore(testCohort.getEndDate()) && LocalDate.now().isAfter(testCohort.getStartDate())) {
+                allStudentsTakingTest.addAll(testCohort.getStudents());
+            }
         }
 
         return allStudentsTakingTest;

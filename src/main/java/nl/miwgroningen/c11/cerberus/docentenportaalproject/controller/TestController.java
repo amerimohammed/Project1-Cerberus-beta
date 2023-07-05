@@ -102,7 +102,7 @@ public class TestController {
                                                             .subTest(optionalTestPart.get())
                                                             .superTest(optionalTestPart.get().getSuperTest()).build());
 
-            testRepository.delete(optionalTestPart.get());
+//            testRepository.delete(optionalTestPart.get());
             return "testPages/createTestPartForm";
         }
 

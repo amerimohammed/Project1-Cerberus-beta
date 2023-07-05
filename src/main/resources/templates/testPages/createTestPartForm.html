@@ -10,6 +10,7 @@
     <h1 class="text-center" th:text="${subTestDto.superTest.testName}"></h1>
 
     <form th:action="@{/test/new/contents}" method="post" th:object="${subTestDto}">
+        <input type="hidden" th:field="*{subTest.assignmentId}">
         <input type="hidden" th:field="*{superTest.assignmentId}">
         <div class="form-group">
             <label for="sectionName" class="form-label">Name of this section</label>
@@ -18,7 +19,7 @@
 
         <div class="form-group">
             <label for="sectionContents" class="form-label">Contents of this section</label>
-            <input id="sectionContents" type="text" class="form-control" th:field="${subTestDto.subTest.testContents}">
+            <textarea id="sectionContents" type="text" class="richTextContent"  th:field="${subTestDto.subTest.testContents}"></textarea>
         </div>
 
         <div class="m-3" sec:authorize="hasAnyAuthority('ADMIN', 'TEACHER')">
@@ -49,5 +50,6 @@
 <div th:replace="fragments/general :: footer"></div>
 <div th:replace="fragments/general :: bottomScripts"></div>
 <div th:replace="fragments/general :: activeLink('#tests')"></div>
+<th:block th:replace="fragments/general :: richText"></th:block>
 </body>
 </html>
